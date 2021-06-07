@@ -8,14 +8,14 @@
       <br />
       <input type="password" v-model="password" placeholder="Password" />
       <br />
-      <button @click="signUp">Sign up</button>
+      <button @click="signUp({ email, password })">Sign up</button>
       <!-- <span><router-link :to="{ name: 'home' }">Home</router-link>. </span> -->
     </div>
   </div>
 </template>
 
 <script>
-import firebase from "firebase";
+import { mapActions } from "vuex";
 
 export default {
   data() {
@@ -25,20 +25,7 @@ export default {
     };
   },
   methods: {
-    signUp() {
-      firebase
-        .auth()
-        .createUserWithEmailAndPassword(this.email, this.password)
-        .then(
-          (userCredential) => {
-            const userId = userCredential.user.uid;
-            this.$router.push({ name: "user", params: { userId } });
-          },
-          (err) => {
-            console.log(err.message);
-          }
-        );
-    },
+    ...mapActions(["signUp"]),
   },
 };
 </script>

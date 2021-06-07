@@ -5,44 +5,37 @@
         <li class="option">
           <router-link :to="{ name: 'home' }">Home</router-link>
         </li>
-        <li class="option">
+        <li v-if="userId" class="option">
           <router-link :to="{ name: 'user', params: { userId } }"
             >Mypage</router-link
           >
         </li>
       </ul>
+      <div v-if="userId">{{ userId }} is now signed in!</div>
       <div>
-        <button @click="signIn">Sign in</button>
-        <button @click="signOut">Sign out</button>
+        <!-- <button @click="signIn">Sign in</button> -->
+        <button v-if="userId" @click="signOut">Sign out</button>
       </div>
     </nav>
   </div>
 </template>
 
 <script>
-import firebase from "firebase";
+import { mapActions } from "vuex";
 
 export default {
   data() {
-    return {
-      isSignedIn: false,
-      userId: null,
-    };
+    return {};
   },
   methods: {
-    signIn() {
-      this.$router.push({ name: "home" });
-    },
-    signOut() {
-      firebase
-        .auth()
-        .signOut()
-        .then(() => {
-          console.log("Sign out successful!!!");
-        })
-        .catch((err) => {
-          console.log("Oh No something went wrong!!", err);
-        });
+    ...mapActions(["signOut"]),
+    // signIn() {
+    //   this.$router.push({ name: "home" });
+    // },
+  },
+  computed: {
+    userId() {
+      return this.$store.state.userId;
     },
   },
 };
