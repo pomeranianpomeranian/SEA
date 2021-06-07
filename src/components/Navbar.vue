@@ -35,7 +35,7 @@ export default {
   },
   computed: {
     userId() {
-      return this.$store.state.userId;
+      return this.$store.state.auth.userId;
     },
   },
 };
