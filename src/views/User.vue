@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>This is {{ username }}'s Page!</h1>
+    <h1>This is {{ userId }}'s Page!</h1>
     <router-link :to="{ name: 'newpost' }">NewPost</router-link>
     |
     <router-link :to="{ name: 'mypost', params: { postId: 'fav_snack' } }"
@@ -13,7 +13,15 @@
 </template>
 
 <script>
+import firebase from "firebase";
 export default {
-  props: ["username"],
+  props: ["userId"],
+  beforeRouteEnter(to, from, next) {
+    if (firebase.auth().currentUser.uid === to.params.userId) {
+      return next();
+    } else {
+      alert("You are not allowed to visit this page!");
+    }
+  },
 };
 </script>

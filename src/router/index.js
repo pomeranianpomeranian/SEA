@@ -35,10 +35,13 @@ const routes = [
     props: true,
   },
   {
-    path: "/user/:username",
+    path: "/user/:userId",
     name: "user",
     component: User,
     props: true,
+    meta: {
+      requireAuth: true,
+    },
   },
   {
     path: "/signup",
@@ -46,22 +49,26 @@ const routes = [
     component: SignUp,
   },
   {
-    path: "/user/:username/new",
+    path: "/user/:userId/new",
     name: "newpost",
     component: NewPost,
     props: true,
   },
   {
-    path: "/user/:username/:postId",
+    path: "/user/:userId/:postId",
     name: "mypost",
     component: MyPost,
     props: true,
   },
   {
-    path: "/user/:username/:postId/edit",
+    path: "/user/:userId/:postId/edit",
     name: "edit",
     component: Edit,
     props: true,
+  },
+  {
+    path: "*",
+    redirect: "/",
   },
 ];
 
