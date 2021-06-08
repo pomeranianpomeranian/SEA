@@ -11,10 +11,21 @@
           >
         </li>
       </ul>
-      <div v-if="userId">{{ userId }} is now signed in!</div>
-      <div>
-        <!-- <button @click="signIn">Sign in</button> -->
-        <button v-if="userId" @click="signOut">Sign out</button>
+      <div class="auth">
+        <div v-if="isSigningIn && !userId">
+          <input type="text" placeholder="email" v-model="email" />
+          <input type="text" placeholder="password" v-model="password" />
+        </div>
+        <div>
+          <button
+            v-if="!userId"
+            @click="signIn({ email, password })"
+            @mouseover="isSigningIn = true"
+          >
+            Sign in
+          </button>
+          <button v-if="userId" @click="signOut">Sign out</button>
+        </div>
       </div>
     </nav>
   </div>
@@ -25,13 +36,14 @@ import { mapActions } from "vuex";
 
 export default {
   data() {
-    return {};
+    return {
+      isSigningIn: false,
+      email: "",
+      password: "",
+    };
   },
   methods: {
-    ...mapActions(["signOut"]),
-    // signIn() {
-    //   this.$router.push({ name: "home" });
-    // },
+    ...mapActions(["signOut", "signIn"]),
   },
   computed: {
     userId() {
@@ -53,6 +65,10 @@ nav {
 .option {
   display: inline-block;
   margin: 0 10px;
+}
+.auth {
+  display: flex;
+  align-items: flex-end;
 }
 button {
   padding: 10px;

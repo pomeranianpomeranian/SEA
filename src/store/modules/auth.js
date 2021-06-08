@@ -3,43 +3,52 @@ import router from "../../router";
 
 const state = {
   userId: null,
+  userData: null,
 };
 const mutations = {
   signIn(state, userCredential) {
     state.userId = userCredential.user.uid;
-    console.log("You successfully signed in!");
   },
   signUp(state, userCredential) {
     state.userId = userCredential.user.uid;
-    console.log("You successfully signed up!");
+    router.push({ name: "user", params: { userId: state.userId } });
   },
   signOut(state) {
     state.userId = null;
+    alert("See you soon!");
     router.push({ name: "home" });
+  },
+  registerUser(state, userData) {
+    state.userData = userData;
+    router.push({ name: "user", params: { userId: state.userId } });
+    alert(`Welcome ${userData.username}!!`);
+  },
+  fetchUserData(state, userData) {
+    state.userData = userData;
+    router.push({ name: "user", params: { userId: state.userId } });
+    alert(`Welcome back ${userData.username}!!`);
   },
 };
 const actions = {
-  signIn({ commit }, payload) {
+  signIn({ commit, dispatch }, userData) {
     firebase
       .auth()
-      .signInWithEmailAndPassword(payload.email, payload.password)
+      .signInWithEmailAndPassword(userData.email, userData.password)
       .then((userCredential) => {
         commit("signIn", userCredential);
       })
+      .then(() => dispatch("fetchUserData"))
       .catch((err) => {
-        alert("ugh, it is not working...");
         console.log(err.message);
       });
   },
-  signUp({ commit }, payload) {
+  signUp({ commit, dispatch }, userData) {
     firebase
       .auth()
-      .createUserWithEmailAndPassword(payload.email, payload.password)
-      .then((userCredential) => {
-        commit("signUp", userCredential);
-      })
+      .createUserWithEmailAndPassword(userData.email, userData.password)
+      .then((userCredential) => commit("signUp", userCredential))
+      .then(() => dispatch("registerUser", userData))
       .catch((err) => {
-        alert("OMG, sign up failed!");
         console.log(err.message);
       });
   },
@@ -51,9 +60,32 @@ const actions = {
         commit("signOut");
       })
       .catch((err) => {
-        alert("Oh No something went wrong!!");
         console.log(err.message);
       });
+  },
+  registerUser({ commit, state }, userData) {
+    firebase
+      .firestore()
+      .collection("users")
+      .doc(state.userId)
+      .set({
+        ...userData,
+      })
+      .then(() => {
+        commit("registerUser", userData);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  },
+  fetchUserData({ commit, state }) {
+    firebase
+      .firestore()
+      .collection("users")
+      .doc(state.userId)
+      .get()
+      .then((doc) => commit("fetchUserData", doc.data()))
+      .catch((err) => console.log(err));
   },
 };
 
