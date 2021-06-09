@@ -44,11 +44,6 @@ const routes = [
     },
   },
   {
-    path: "/signup",
-    name: "signup",
-    component: SignUp,
-  },
-  {
     path: "/user/:userId/new",
     name: "newpost",
     component: NewPost,
@@ -65,6 +60,11 @@ const routes = [
     name: "edit",
     component: Edit,
     props: true,
+  },
+  {
+    path: "/signup",
+    name: "signup",
+    component: SignUp,
   },
   {
     path: "*",

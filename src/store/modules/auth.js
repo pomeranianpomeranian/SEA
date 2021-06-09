@@ -4,6 +4,7 @@ import router from "../../router";
 const state = {
   userId: null,
   userData: null,
+  idToken: null,
 };
 const mutations = {
   signIn(state, userCredential) {
@@ -28,18 +29,28 @@ const mutations = {
     router.push({ name: "user", params: { userId: state.userId } });
     alert(`Welcome back ${userData.username}!!`);
   },
+  storeIdToken(state, idToken) {
+    state.idToken = idToken;
+    localStorage.setItem("idToken", idToken);
+  },
 };
 const actions = {
   signIn({ commit, dispatch }, userData) {
     firebase
       .auth()
-      .signInWithEmailAndPassword(userData.email, userData.password)
-      .then((userCredential) => {
-        commit("signIn", userCredential);
-      })
-      .then(() => dispatch("fetchUserData"))
-      .catch((err) => {
-        console.log(err.message);
+      .setPersistence(firebase.auth.Auth.Persistence.LOCAL)
+      .then(() => {
+        firebase
+          .auth()
+          .signInWithEmailAndPassword(userData.email, userData.password)
+          .then((userCredential) => {
+            commit("signIn", userCredential);
+          })
+          .then(() => dispatch("fetchUserData"))
+          //   .then(() => dispatch("storeIdToken"))
+          .catch((err) => {
+            console.log(err.message);
+          });
       });
   },
   signUp({ commit, dispatch }, userData) {
@@ -87,6 +98,27 @@ const actions = {
       .then((doc) => commit("fetchUserData", doc.data()))
       .catch((err) => console.log(err));
   },
+  //   storeIdToken({ commit }) {
+  //     firebase
+  //       .auth()
+  //       .currentUser.getIdToken(true)
+  //       .then((idToken) => {
+  //         commit("storeIdToken", idToken);
+  //       })
+  //       .catch((err) => console.log(err));
+  //   },
+  //   autoSignIn() {
+  //     const idToken = localStorage.getItem("idToken");
+  //     if (idToken) {
+  //       firebase
+  //         .auth()
+  //         .signInWithCustomToken(idToken)
+  //         .then((res) => {
+  //           console.log(res);
+  //         })
+  //         .catch((err) => console.log(err));
+  //     }
+  //   },
 };
 
 export default {

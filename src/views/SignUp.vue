@@ -25,10 +25,10 @@ import { mapActions } from "vuex";
 export default {
   data() {
     return {
-      email: "",
-      password: "",
       username: "",
       country: "",
+      email: "",
+      password: "",
     };
   },
   methods: {
