@@ -9,14 +9,19 @@
     <p>
       ここはユーザーのマイページで、サインインすると表示される。ここから新しい投稿をするのと、自分の過去の投稿を見れる。
     </p>
+    <myPosts></myPosts>
   </div>
 </template>
 
 <script>
 import firebase from "firebase";
 import router from "../router";
+import myPosts from "../components/MyPosts";
 export default {
   props: ["userId"],
+  components: {
+    myPosts,
+  },
   computed: {
     userData() {
       return this.$store.state.auth.userData;
