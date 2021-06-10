@@ -24,7 +24,6 @@ export default {
   },
   beforeRouteEnter(to, from, next) {
     if (!firebase.auth().currentUser) {
-      alert("You have to sign in!");
       router.push({ name: "home" });
     } else if (firebase.auth().currentUser.uid === to.params.userId) {
       return next();
