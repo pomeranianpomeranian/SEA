@@ -25,7 +25,7 @@ const mutations = {
     router.push({ name: "user", params: { userId: state.userId } });
   },
   fetchUserData(state, userData) {
-    state.userData = userData;
+    state.userDetails = userData;
   },
 };
 const actions = {
