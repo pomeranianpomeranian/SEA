@@ -51,23 +51,24 @@ export default {
     },
     storeImage(event) {
       const file = event.target.files[0];
+      const path = `${this.userId}/${file.name}`;
       firebase
         .storage()
-        .ref(`${this.userId}/${file.name}`)
+        .ref(path)
         .put(file)
         .then(() => {
           console.log("File successfully saved!");
-          this.getImageURL(file);
+          this.getImageURL(path);
         })
         .catch((err) => console.log(err));
     },
-    getImageURL(file) {
+    getImageURL(path) {
       firebase
         .storage()
-        .ref(`${this.userId}/${file.name}`)
+        .ref(path)
         .getDownloadURL()
         .then((url) => {
-          this.postContents.imagesRef.push(url);
+          this.postContents.imagesRef.push({ url, path });
         })
         .catch((err) => console.log(err));
     },

@@ -10,7 +10,7 @@
           @click="transfer(index)"
         >
           <div class="image">
-            <img :src="post.imagesRef[0]" />
+            <img :src="post.imagesRef[0].url" />
           </div>
           <h3>{{ post.title }}</h3>
         </div>
