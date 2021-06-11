@@ -13,7 +13,7 @@
         <input
           type="text"
           v-model="tag"
-          @keydown.enter="addTags"
+          @keydown.enter="addTag"
           placeholder="tags"
         />
         <input type="file" @change="storeImage" />
@@ -45,7 +45,7 @@ export default {
     };
   },
   methods: {
-    addTags() {
+    addTag() {
       this.postContents.tags.push(this.tag);
       this.tag = "";
     },
