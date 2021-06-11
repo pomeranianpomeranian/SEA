@@ -22,9 +22,8 @@ export default {
     getMyPosts() {
       firebase
         .firestore()
-        .collection("users")
-        .doc(this.userId)
-        .collection("myposts")
+        .collection("posts")
+        .where("userId", "==", this.userId)
         .get()
         .then((posts) => {
           posts.forEach((doc) => {
