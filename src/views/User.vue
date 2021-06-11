@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>This is {{ userData.username }}'s Page!</h1>
+    <h1>This is {{ userDetails.username }}'s Page!</h1>
     <router-link :to="{ name: 'newpost' }">NewPost</router-link>
     |
     <router-link :to="{ name: 'mypost', params: { postId: 'fav_snack' } }"
@@ -18,13 +18,12 @@ import firebase from "firebase";
 import router from "../router";
 import myPosts from "../components/MyPosts";
 export default {
-  props: ["userId"],
   components: {
     myPosts,
   },
   computed: {
-    userData() {
-      return this.$store.state.auth.userData;
+    userDetails() {
+      return this.$store.state.auth.userDetails;
     },
   },
   beforeRouteEnter(to, from, next) {
