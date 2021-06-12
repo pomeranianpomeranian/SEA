@@ -13,8 +13,11 @@
     <p>{{ postContents.address }}</p>
     <p>{{ postContents.description }}</p>
     <p>
-      <span v-for="(tag, index) in postContents.tags" :key="index"
-        >#{{ tag }} /
+      <span
+        class="category"
+        v-for="(category, index) in postContents.categories"
+        :key="index"
+        >{{ category }}
       </span>
     </p>
     <div>
@@ -115,5 +118,8 @@ export default {
 img {
   width: 100%;
   height: 100%;
+}
+.category {
+  margin: 0 5px;
 }
 </style>

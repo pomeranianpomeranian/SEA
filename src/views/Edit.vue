@@ -9,21 +9,27 @@
           v-model="postContents.address"
           placeholder="Address"
         />
-        <input
-          type="text"
-          v-model="tag"
-          @keydown.enter="addTag"
-          placeholder="tags"
-        />
-        <div class="tags-holder">
+        <select v-model="selected" @change="addCategory">
+          <option disabled>Please pick up categories</option>
+          <option>Culture</option>
+          <option>Nature</option>
+          <option>Amusement</option>
+          <option>Food</option>
+          <option>Shopping</option>
+          <option>History</option>
+          <option>Sports</option>
+          <option>View</option>
+        </select>
+        <div class="categories-holder" v-if="postContents.categories.length">
           <span
-            v-for="(tag, index) in postContents.tags"
+            v-for="(category, index) in postContents.categories"
             :key="index"
-            @click="deleteTag(index)"
-            >#{{ tag }} /
+            @click="deleteCategory(index)"
+            >{{ category }}
           </span>
         </div>
-        <div class="images-holder">
+        <input type="file" @change="storeImage" />
+        <div class="images-holder" v-if="postContents.imagesRef.length">
           <div
             class="image-container"
             v-for="(image, index) in postContents.imagesRef"
@@ -33,7 +39,6 @@
             <img :src="image.url" />
           </div>
         </div>
-        <input type="file" @change="storeImage" />
         <textarea
           v-model="postContents.description"
           cols="30"
@@ -54,7 +59,7 @@ export default {
   data() {
     return {
       postContents: "",
-      tag: "",
+      selected: "",
     };
   },
   methods: {
@@ -95,12 +100,13 @@ export default {
           .catch((err) => console.log(err));
       }
     },
-    deleteTag(index) {
-      this.postContents.tags.splice(index, 1);
+    addCategory() {
+      if (!this.postContents.categories.includes(this.selected)) {
+        this.postContents.categories.push(this.selected);
+      }
     },
-    addTag() {
-      this.postContents.tags.push(this.tag);
-      this.tag = "";
+    deleteCategory(index) {
+      this.postContents.categories.splice(index, 1);
     },
     update() {
       firebase
@@ -114,6 +120,10 @@ export default {
         })
         .then(() => {
           console.log("Post Updated!");
+          this.$router.push({
+            name: "mypost",
+            params: { userId: this.userId, postId: this.postId },
+          });
         })
         .catch((err) => console.log(err));
     },
@@ -149,8 +159,9 @@ export default {
   flex-direction: column;
   width: 50%;
 }
-.tags-holder {
+.categories-holder {
   border: 1px solid black;
+  padding: 5px;
 }
 .images-holder {
   display: flex;
@@ -164,5 +175,10 @@ export default {
 img {
   width: 100%;
   height: 100%;
+}
+span {
+  border: 1px solid lightgray;
+  padding: 2px;
+  margin: 0 2px;
 }
 </style>
