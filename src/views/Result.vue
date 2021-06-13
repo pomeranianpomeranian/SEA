@@ -38,40 +38,110 @@ export default {
     };
   },
   methods: {
-    showAll() {
-      firebase
-        .firestore()
-        .collection("posts")
-        .get()
-        .then((posts) => {
-          posts.forEach((doc) => {
-            this.results.push({
-              postId: doc.id,
-              ...doc.data(),
-            });
-          });
-        });
+    getPosts() {
+      const postsRef = firebase.firestore().collection("posts");
+      if (this.category === "all") {
+        postsRef
+          .get()
+          .then((posts) => this.showResult(posts))
+          .catch((err) => console.log(err));
+      } else {
+        postsRef
+          .where("categories", "array-contains", this.category)
+          .get()
+          .then((posts) => this.showResult(posts))
+          .catch((err) => console.log(err));
+      }
     },
-    showOne() {
-      firebase
+    showResult(posts) {
+      const likedPosts = this.userDetails.likedPosts;
+      posts.forEach((post) => {
+        if (likedPosts.includes(post.id)) {
+          this.results.push({
+            postId: post.id,
+            isLiked: true,
+            ...post.data(),
+          });
+        } else {
+          this.results.push({
+            postId: post.id,
+            isLiked: false,
+            ...post.data(),
+          });
+        }
+      });
+    },
+    updateLike(index) {
+      const postRef = firebase
         .firestore()
         .collection("posts")
-        .where("categories", "array-contains", this.category)
-        .get()
-        .then((posts) => {
-          posts.forEach((doc) => {
-            this.results.push({
-              postId: doc.id,
-              ...doc.data(),
-            });
-          });
-        });
+        .doc(this.results[index].postId);
+      if (!this.results[index].isLiked) {
+        postRef
+          .update({
+            numLike: firebase.firestore.FieldValue.increment(1),
+          })
+          .then(() => {
+            this.addLike(index);
+          })
+          .catch((err) => console.log(err));
+      } else {
+        postRef
+          .update({
+            numLike: firebase.firestore.FieldValue.increment(-1),
+          })
+          .then(() => {
+            this.removeLike(index);
+          })
+          .catch((err) => console.log(err));
+      }
+    },
+    addLike(index) {
+      const target = this.results[index];
+      firebase
+        .firestore()
+        .collection("users")
+        .doc(this.userId)
+        .update({
+          likedPosts: firebase.firestore.FieldValue.arrayUnion(target.postId),
+        })
+        .then(() => {
+          target.isLiked = true;
+        })
+        .catch((err) => console.log(err));
+    },
+    removeLike(index) {
+      const target = this.results[index];
+      firebase
+        .firestore()
+        .collection("users")
+        .doc(this.userId)
+        .update({
+          likedPosts: firebase.firestore.FieldValue.arrayRemove(target.postId),
+        })
+        .then(() => {
+          target.isLiked = false;
+        })
+        .catch((err) => console.log(err));
+    },
+  },
+  computed: {
+    userId() {
+      return this.$store.state.auth.userId;
+    },
+    userDetails() {
+      return this.$store.state.auth.userDetails;
     },
   },
   created() {
-    if (this.category === "all") {
-      this.showAll();
-    } else this.showOne();
+    if (this.userDetails) {
+      this.getPosts();
+    } else {
+      setTimeout(this.getPosts, 500);
+    }
+  },
+  destroyed() {
+    this.$store.dispatch("fetchUserData", this.userId);
   },
 };
 </script>
