@@ -14,7 +14,7 @@
       <div class="auth">
         <div v-if="isSigningIn && !userId">
           <input type="text" placeholder="email" v-model="email" />
-          <input type="text" placeholder="password" v-model="password" />
+          <input type="password" placeholder="password" v-model="password" />
         </div>
         <div>
           <button
