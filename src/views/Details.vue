@@ -20,13 +20,18 @@
         >{{ category }}
       </span>
     </p>
+    <comment :postId="postId"></comment>
   </div>
 </template>
 
 <script>
 import firebase from "firebase";
+import comment from "../components/Comment";
 export default {
   props: ["postId"],
+  components: {
+    comment,
+  },
   data() {
     return {
       postContents: "",
