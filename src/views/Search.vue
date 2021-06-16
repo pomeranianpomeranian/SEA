@@ -8,7 +8,7 @@
     </p>
 
     <GmapMap
-      :center="{ lat: 35.645974459469834, lng: 139.70496042046145 }"
+      :center="currentPotion"
       :zoom="12"
       map-type-id="terrain"
       style="width: 500px; height: 300px"
@@ -43,7 +43,18 @@ export default {
   data() {
     return {
       selected: "",
+      currentPotion: {},
+      markers: [],
     };
+  },
+  created: function () {
+    this.$getLocation().then((coordinates) => {
+      console.log(coordinates);
+      this.currentPotion = coordinates;
+      this.markers.push({
+        position: this.currentPotion,
+      });
+    });
   },
   methods: {
     search() {

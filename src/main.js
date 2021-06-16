@@ -4,6 +4,8 @@ import router from "./router";
 import "./firebase.js";
 import store from "./store/index";
 import * as VueGoogleMaps from "vue2-google-maps";
+import VueGeolocation from "vue-browser-geolocation";
+Vue.use(VueGeolocation);
 
 Vue.config.productionTip = false;
 
