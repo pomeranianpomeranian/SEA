@@ -11,9 +11,9 @@ export default {
   components: {
     Navbar,
   },
-  // created() {
-  //   this.$store.dispatch("autoSignIn");
-  // },
+  created() {
+    this.$store.dispatch("autoSignIn");
+  },
 };
 </script>
 

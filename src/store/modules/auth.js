@@ -3,51 +3,44 @@ import router from "../../router";
 
 const state = {
   userId: null,
-  userData: null,
-  idToken: null,
+  userDetails: null,
 };
 const mutations = {
-  signIn(state, userCredential) {
-    state.userId = userCredential.user.uid;
+  signIn(state, userId) {
+    state.userId = userId;
+    router.push({ name: "user", params: { userId: state.userId } });
+  },
+  autoSignIn(state, userId) {
+    state.userId = userId;
   },
   signUp(state, userCredential) {
     state.userId = userCredential.user.uid;
-    router.push({ name: "user", params: { userId: state.userId } });
   },
   signOut(state) {
     state.userId = null;
-    alert("See you soon!");
     router.push({ name: "home" });
   },
-  registerUser(state, userData) {
-    state.userData = userData;
+  registerUser(state, userDetails) {
+    state.userDetails = userDetails;
     router.push({ name: "user", params: { userId: state.userId } });
-    alert(`Welcome ${userData.username}!!`);
   },
   fetchUserData(state, userData) {
-    state.userData = userData;
-    router.push({ name: "user", params: { userId: state.userId } });
-    alert(`Welcome back ${userData.username}!!`);
-  },
-  storeIdToken(state, idToken) {
-    state.idToken = idToken;
-    localStorage.setItem("idToken", idToken);
+    state.userDetails = userData;
   },
 };
 const actions = {
   signIn({ commit, dispatch }, userData) {
     firebase
       .auth()
-      .setPersistence(firebase.auth.Auth.Persistence.LOCAL)
+      .setPersistence(firebase.auth.Auth.Persistence.SESSION)
       .then(() => {
         firebase
           .auth()
           .signInWithEmailAndPassword(userData.email, userData.password)
           .then((userCredential) => {
-            commit("signIn", userCredential);
+            commit("signIn", userCredential.user.uid);
+            dispatch("fetchUserData", userCredential.user.uid);
           })
-          .then(() => dispatch("fetchUserData"))
-          //   .then(() => dispatch("storeIdToken"))
           .catch((err) => {
             console.log(err.message);
           });
@@ -56,9 +49,12 @@ const actions = {
   signUp({ commit, dispatch }, userData) {
     firebase
       .auth()
-      .createUserWithEmailAndPassword(userData.email, userData.password)
+      .createUserWithEmailAndPassword(
+        userData.authData.email,
+        userData.authData.password
+      )
       .then((userCredential) => commit("signUp", userCredential))
-      .then(() => dispatch("registerUser", userData))
+      .then(() => dispatch("registerUser", userData.userDetails))
       .catch((err) => {
         console.log(err.message);
       });
@@ -74,51 +70,38 @@ const actions = {
         console.log(err.message);
       });
   },
-  registerUser({ commit, state }, userData) {
+  registerUser({ commit, state }, userDetails) {
     firebase
       .firestore()
       .collection("users")
       .doc(state.userId)
       .set({
-        ...userData,
+        ...userDetails,
       })
       .then(() => {
-        commit("registerUser", userData);
+        commit("registerUser", userDetails);
       })
       .catch((err) => {
         console.log(err);
       });
   },
-  fetchUserData({ commit, state }) {
+  fetchUserData({ commit }, userId) {
     firebase
       .firestore()
       .collection("users")
-      .doc(state.userId)
+      .doc(userId)
       .get()
       .then((doc) => commit("fetchUserData", doc.data()))
       .catch((err) => console.log(err));
   },
-  //   storeIdToken({ commit }) {
-  //     firebase
-  //       .auth()
-  //       .currentUser.getIdToken(true)
-  //       .then((idToken) => {
-  //         commit("storeIdToken", idToken);
-  //       })
-  //       .catch((err) => console.log(err));
-  //   },
-  //   autoSignIn() {
-  //     const idToken = localStorage.getItem("idToken");
-  //     if (idToken) {
-  //       firebase
-  //         .auth()
-  //         .signInWithCustomToken(idToken)
-  //         .then((res) => {
-  //           console.log(res);
-  //         })
-  //         .catch((err) => console.log(err));
-  //     }
-  //   },
+  autoSignIn({ commit, dispatch }) {
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        commit("autoSignIn", user.uid);
+        dispatch("fetchUserData", user.uid);
+      }
+    });
+  },
 };
 
 export default {
