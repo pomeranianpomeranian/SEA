@@ -3,7 +3,7 @@ import router from "../../router";
 
 const state = {
   userId: null,
-  userData: null,
+  userDetails: null,
 };
 const mutations = {
   signIn(state, userId) {
@@ -20,12 +20,12 @@ const mutations = {
     state.userId = null;
     router.push({ name: "home" });
   },
-  registerUser(state, userData) {
-    state.userData = userData;
+  registerUser(state, userDetails) {
+    state.userDetails = userDetails;
     router.push({ name: "user", params: { userId: state.userId } });
   },
   fetchUserData(state, userData) {
-    state.userData = userData;
+    state.userDetails = userData;
   },
 };
 const actions = {
@@ -49,9 +49,12 @@ const actions = {
   signUp({ commit, dispatch }, userData) {
     firebase
       .auth()
-      .createUserWithEmailAndPassword(userData.email, userData.password)
+      .createUserWithEmailAndPassword(
+        userData.authData.email,
+        userData.authData.password
+      )
       .then((userCredential) => commit("signUp", userCredential))
-      .then(() => dispatch("registerUser", userData))
+      .then(() => dispatch("registerUser", userData.userDetails))
       .catch((err) => {
         console.log(err.message);
       });
@@ -67,16 +70,16 @@ const actions = {
         console.log(err.message);
       });
   },
-  registerUser({ commit, state }, userData) {
+  registerUser({ commit, state }, userDetails) {
     firebase
       .firestore()
       .collection("users")
       .doc(state.userId)
       .set({
-        ...userData,
+        ...userDetails,
       })
       .then(() => {
-        commit("registerUser", userData);
+        commit("registerUser", userDetails);
       })
       .catch((err) => {
         console.log(err);

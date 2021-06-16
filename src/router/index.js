@@ -24,9 +24,10 @@ const routes = [
     component: Search,
   },
   {
-    path: "/result",
+    path: "/result/:category",
     name: "result",
     component: Result,
+    props: true,
   },
   {
     path: "/result/:postId",

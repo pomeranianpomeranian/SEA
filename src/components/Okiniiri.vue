@@ -1,6 +1,6 @@
 <template>
   <div class="results-container">
-    <div class="post-frame" v-for="(post, index) in results" :key="index">
+    <div class="post-frame" v-for="(post, index) in posts" :key="index">
       <div class="image-holder">
         <img :src="post.imagesRef[0].url" />
       </div>
@@ -14,9 +14,6 @@
         </div>
         <p>{{ post.description }}</p>
         <div class="fav">
-          <div class="numLike" v-if="post.numLike">
-            Liked by {{ post.numLike }}people
-          </div>
           <div
             class="like"
             :class="{ liked: post.isLiked }"
@@ -31,52 +28,46 @@
 <script>
 import firebase from "firebase";
 export default {
-  props: ["category"],
   data() {
     return {
-      results: [],
+      posts: [],
     };
   },
   methods: {
-    getPosts() {
-      const postsRef = firebase.firestore().collection("posts");
-      if (this.category === "all") {
-        postsRef
-          .get()
-          .then((posts) => this.showResult(posts))
-          .catch((err) => console.log(err));
-      } else {
-        postsRef
-          .where("categories", "array-contains", this.category)
-          .get()
-          .then((posts) => this.showResult(posts))
-          .catch((err) => console.log(err));
-      }
+    getOkiniiriList() {
+      firebase
+        .firestore()
+        .collection("users")
+        .doc(this.userId)
+        .get()
+        .then((doc) => {
+          this.getPosts(doc.data().likedPosts);
+        })
+        .catch((err) => console.log(err));
     },
-    showResult(posts) {
-      const likedPosts = this.userDetails.likedPosts;
-      posts.forEach((post) => {
-        if (likedPosts.includes(post.id)) {
-          this.results.push({
-            postId: post.id,
-            isLiked: true,
-            ...post.data(),
-          });
-        } else {
-          this.results.push({
-            postId: post.id,
-            isLiked: false,
-            ...post.data(),
-          });
-        }
+    getPosts(postsRef) {
+      postsRef.forEach((postRef) => {
+        firebase
+          .firestore()
+          .collection("posts")
+          .doc(postRef)
+          .get()
+          .then((doc) => {
+            this.posts.push({
+              isLiked: true,
+              postId: doc.id,
+              ...doc.data(),
+            });
+          })
+          .catch((err) => console.log(err));
       });
     },
     updateLike(index) {
       const postRef = firebase
         .firestore()
         .collection("posts")
-        .doc(this.results[index].postId);
-      if (!this.results[index].isLiked) {
+        .doc(this.posts[index].postId);
+      if (!this.posts[index].isLiked) {
         postRef
           .update({
             numLike: firebase.firestore.FieldValue.increment(1),
@@ -97,7 +88,7 @@ export default {
       }
     },
     addLike(index) {
-      const target = this.results[index];
+      const target = this.posts[index];
       firebase
         .firestore()
         .collection("users")
@@ -111,7 +102,7 @@ export default {
         .catch((err) => console.log(err));
     },
     removeLike(index) {
-      const target = this.results[index];
+      const target = this.posts[index];
       firebase
         .firestore()
         .collection("users")
@@ -129,19 +120,9 @@ export default {
     userId() {
       return this.$store.state.auth.userId;
     },
-    userDetails() {
-      return this.$store.state.auth.userDetails;
-    },
   },
   created() {
-    if (this.userDetails) {
-      this.getPosts();
-    } else {
-      setTimeout(this.getPosts, 500);
-    }
-  },
-  destroyed() {
-    this.$store.dispatch("fetchUserData", this.userId);
+    this.getOkiniiriList();
   },
 };
 </script>
