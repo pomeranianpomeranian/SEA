@@ -29,116 +29,23 @@
 </template>
 
 <script>
-import firebase from "firebase";
 export default {
   props: ["category"],
-  data() {
-    return {
-      results: [],
-    };
-  },
   methods: {
-    getPosts() {
-      const postsRef = firebase.firestore().collection("posts");
-      if (this.category === "all") {
-        postsRef
-          .get()
-          .then((posts) => this.showResult(posts))
-          .catch((err) => console.log(err));
-      } else {
-        postsRef
-          .where("categories", "array-contains", this.category)
-          .get()
-          .then((posts) => this.showResult(posts))
-          .catch((err) => console.log(err));
-      }
-    },
-    showResult(posts) {
-      const likedPosts = this.userDetails.likedPosts;
-      posts.forEach((post) => {
-        if (likedPosts.includes(post.id)) {
-          this.results.push({
-            postId: post.id,
-            isLiked: true,
-            ...post.data(),
-          });
-        } else {
-          this.results.push({
-            postId: post.id,
-            isLiked: false,
-            ...post.data(),
-          });
-        }
-      });
-    },
     updateLike(index) {
-      const postRef = firebase
-        .firestore()
-        .collection("posts")
-        .doc(this.results[index].postId);
-      if (!this.results[index].isLiked) {
-        postRef
-          .update({
-            numLike: firebase.firestore.FieldValue.increment(1),
-          })
-          .then(() => {
-            this.addLike(index);
-          })
-          .catch((err) => console.log(err));
-      } else {
-        postRef
-          .update({
-            numLike: firebase.firestore.FieldValue.increment(-1),
-          })
-          .then(() => {
-            this.removeLike(index);
-          })
-          .catch((err) => console.log(err));
-      }
-    },
-    addLike(index) {
-      const target = this.results[index];
-      firebase
-        .firestore()
-        .collection("users")
-        .doc(this.userId)
-        .update({
-          likedPosts: firebase.firestore.FieldValue.arrayUnion(target.postId),
-        })
-        .then(() => {
-          target.isLiked = true;
-        })
-        .catch((err) => console.log(err));
-    },
-    removeLike(index) {
-      const target = this.results[index];
-      firebase
-        .firestore()
-        .collection("users")
-        .doc(this.userId)
-        .update({
-          likedPosts: firebase.firestore.FieldValue.arrayRemove(target.postId),
-        })
-        .then(() => {
-          target.isLiked = false;
-        })
-        .catch((err) => console.log(err));
+      this.$store.dispatch("updateLike", index);
     },
   },
   computed: {
     userId() {
       return this.$store.state.auth.userId;
     },
-    userDetails() {
-      return this.$store.state.auth.userDetails;
+    results() {
+      return this.$store.state.post.posts;
     },
   },
   created() {
-    if (this.userDetails) {
-      this.getPosts();
-    } else {
-      setTimeout(this.getPosts, 500);
-    }
+    this.$store.dispatch("searchPosts", this.category);
   },
   destroyed() {
     this.$store.dispatch("fetchUserData", this.userId);

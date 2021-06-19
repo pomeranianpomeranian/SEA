@@ -27,64 +27,32 @@
 </template>
 
 <script>
-import firebase from "firebase";
 export default {
   props: ["postId"],
   data() {
     return {
       input: "",
-      comments: [],
     };
   },
   methods: {
     submit() {
-      const timestamp = firebase.firestore.Timestamp.now().toDate();
-      firebase
-        .firestore()
-        .collection("posts")
-        .doc(this.postId)
-        .collection("comments")
-        .add({
-          username: this.username,
-          comment: this.input,
-          createdAt: timestamp,
-        })
-        .then(() => {
-          this.comments.unshift({
-            username: this.username,
-            comment: this.input,
-            date: `${timestamp.getFullYear()}/${timestamp.getMonth()}/${timestamp.getDate()}`,
-          });
-          this.input = "";
-        })
-        .catch((err) => console.log(err));
+      this.$store.dispatch("submitComments", {
+        comment: this.input,
+        postId: this.postId,
+      });
+      this.input = "";
     },
   },
   computed: {
     username() {
       return this.$store.state.auth.userDetails.username;
     },
+    comments() {
+      return this.$store.state.post.comments;
+    },
   },
   created() {
-    firebase
-      .firestore()
-      .collection("posts")
-      .doc(this.postId)
-      .collection("comments")
-      .orderBy("createdAt", "desc")
-      .get()
-      .then((comments) => {
-        comments.forEach((comment) => {
-          const timestamp = comment.data().createdAt.toDate();
-          const date = `${timestamp.getFullYear()}/${timestamp.getMonth()}/${timestamp.getDate()}`;
-          this.comments.push({
-            username: comment.data().username,
-            comment: comment.data().comment,
-            date,
-          });
-        });
-      })
-      .catch((err) => console.log(err));
+    this.$store.dispatch("getComments", this.postId);
   },
 };
 </script>

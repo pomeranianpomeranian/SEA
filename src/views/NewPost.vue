@@ -34,7 +34,7 @@
             class="image-container"
             v-for="(image, index) in postContents.imagesRef"
             :key="index"
-            @click="deleteImg(index)"
+            @click="deleteImage(index)"
           >
             <img :src="image.url" />
           </div>
@@ -45,28 +45,22 @@
           rows="10"
           placeholder="Description"
         ></textarea>
-        <button @click="submit">Submit</button>
+        <button @click="submitPost(postContents)">Submit</button>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import firebase from "firebase";
+import { mapActions } from "vuex";
 export default {
   data() {
     return {
       selected: "",
-      postContents: {
-        title: "",
-        address: "",
-        categories: [],
-        imagesRef: [],
-        description: "",
-      },
     };
   },
   methods: {
+    ...mapActions(["deleteImage", "storeImage", "submitPost"]),
     addCategory() {
       if (!this.postContents.categories.includes(this.selected)) {
         this.postContents.categories.push(this.selected);
@@ -75,63 +69,14 @@ export default {
     deleteCategory(index) {
       this.postContents.categories.splice(index, 1);
     },
-    storeImage(event) {
-      const file = event.target.files[0];
-      const path = `${this.userId}/${file.name}`;
-      firebase
-        .storage()
-        .ref(path)
-        .put(file)
-        .then(() => {
-          console.log("File successfully saved!");
-          this.getImageURL(path);
-        })
-        .catch((err) => console.log(err));
-    },
-    getImageURL(path) {
-      firebase
-        .storage()
-        .ref(path)
-        .getDownloadURL()
-        .then((url) => {
-          this.postContents.imagesRef.push({ url, path });
-        })
-        .catch((err) => console.log(err));
-    },
-    deleteImg(index) {
-      const files = this.postContents.imagesRef;
-      firebase
-        .storage()
-        .ref(files[index].path)
-        .delete()
-        .then(() => {
-          console.log("Deleted the file");
-          files.splice(index, 1);
-        })
-        .catch((err) => console.log(err));
-    },
-    submit() {
-      firebase
-        .firestore()
-        .collection("posts")
-        .add({
-          ...this.postContents,
-          userId: this.userId,
-          createdAt: firebase.firestore.Timestamp.now().toDate(),
-        })
-        .then((res) => {
-          this.$router.push({
-            name: "mypost",
-            params: { userId: this.userId, postId: res.id },
-          });
-        })
-        .catch((err) => console.log(err));
-    },
   },
   computed: {
-    userId() {
-      return this.$store.state.auth.userId;
+    postContents() {
+      return this.$store.state.post.postContents;
     },
+  },
+  created() {
+    this.$store.commit("clearContents");
   },
 };
 </script>

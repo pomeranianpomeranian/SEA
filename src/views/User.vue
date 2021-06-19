@@ -22,8 +22,6 @@
 </template>
 
 <script>
-import firebase from "firebase";
-import router from "../router";
 import myPosts from "../components/MyPosts";
 import okiniiri from "../components/Okiniiri";
 export default {
@@ -41,15 +39,6 @@ export default {
     userDetails() {
       return this.$store.state.auth.userDetails;
     },
-  },
-  beforeRouteEnter(to, from, next) {
-    if (!firebase.auth().currentUser) {
-      router.push({ name: "home" });
-    } else if (firebase.auth().currentUser.uid === to.params.userId) {
-      return next();
-    } else {
-      alert("You are not allowed to visit this page!");
-    }
   },
 };
 </script>

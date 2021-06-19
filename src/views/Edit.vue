@@ -34,7 +34,7 @@
             class="image-container"
             v-for="(image, index) in postContents.imagesRef"
             :key="index"
-            @click="deleteImg(index)"
+            @click="deleteImage(index)"
           >
             <img :src="image.url" />
           </div>
@@ -45,61 +45,23 @@
           rows="10"
           placeholder="Description"
         ></textarea>
-        <button @click="update">Update</button>
+        <button @click="updatePost({ postId, postContents })">Update</button>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import firebase from "firebase";
-
+import { mapActions } from "vuex";
 export default {
   props: ["postId"],
   data() {
     return {
-      postContents: "",
       selected: "",
     };
   },
   methods: {
-    storeImage(event) {
-      const file = event.target.files[0];
-      const path = `${this.userId}/${file.name}`;
-      firebase
-        .storage()
-        .ref(path)
-        .put(file)
-        .then(() => {
-          console.log("File successfully saved!");
-          this.getImageURL(path);
-        })
-        .catch((err) => console.log(err));
-    },
-    getImageURL(path) {
-      firebase
-        .storage()
-        .ref(path)
-        .getDownloadURL()
-        .then((url) => {
-          this.postContents.imagesRef.push({ url, path });
-        })
-        .catch((err) => console.log(err));
-    },
-    deleteImg(index) {
-      const files = this.postContents.imagesRef;
-      if (confirm("Are you sure?")) {
-        firebase
-          .storage()
-          .ref(files[index].path)
-          .delete()
-          .then(() => {
-            console.log("Deleted the file");
-            files.splice(index, 1);
-          })
-          .catch((err) => console.log(err));
-      }
-    },
+    ...mapActions(["deleteImage", "storeImage", "updatePost"]),
     addCategory() {
       if (!this.postContents.categories.includes(this.selected)) {
         this.postContents.categories.push(this.selected);
@@ -108,43 +70,14 @@ export default {
     deleteCategory(index) {
       this.postContents.categories.splice(index, 1);
     },
-    update() {
-      firebase
-        .firestore()
-        .collection("posts")
-        .doc(this.postId)
-        .set({
-          ...this.postContents,
-          userId: this.userId,
-          createdAt: firebase.firestore.Timestamp.now().toDate(),
-        })
-        .then(() => {
-          console.log("Post Updated!");
-          this.$router.push({
-            name: "mypost",
-            params: { userId: this.userId, postId: this.postId },
-          });
-        })
-        .catch((err) => console.log(err));
-    },
   },
   computed: {
-    userId() {
-      return this.$store.state.auth.userId;
+    postContents() {
+      return this.$store.state.post.postContents;
     },
   },
   created() {
-    firebase
-      .firestore()
-      .collection("posts")
-      .doc(this.postId)
-      .get()
-      .then((doc) => {
-        this.postContents = {
-          ...doc.data(),
-        };
-      })
-      .catch((err) => console.log(err));
+    this.$store.dispatch("getDetails", this.postId);
   },
 };
 </script>

@@ -5,7 +5,7 @@
       <div class="card-container">
         <div
           class="card"
-          v-for="(post, index) in myposts"
+          v-for="(post, index) in myPosts"
           :key="index"
           @click="transfer(index)"
         >
@@ -20,16 +20,10 @@
 </template>
 
 <script>
-import firebase from "firebase";
 export default {
-  data() {
-    return {
-      myposts: [],
-    };
-  },
   methods: {
     transfer(index) {
-      const postId = this.myposts[index].postId;
+      const postId = this.myPosts[index].postId;
       this.$router.push({
         name: "mypost",
         params: { userId: this.userId, postId },
@@ -37,25 +31,12 @@ export default {
     },
   },
   computed: {
-    userId() {
-      return this.$store.state.auth.userId;
+    myPosts() {
+      return this.$store.state.post.posts;
     },
   },
   created() {
-    firebase
-      .firestore()
-      .collection("posts")
-      .where("userId", "==", this.userId)
-      .orderBy("createdAt", "desc")
-      .get()
-      .then((posts) => {
-        posts.forEach((doc) => {
-          this.myposts.push({
-            postId: doc.id,
-            ...doc.data(),
-          });
-        });
-      });
+    this.$store.dispatch("getMyPosts");
   },
 };
 </script>
