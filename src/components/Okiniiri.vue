@@ -1,6 +1,6 @@
 <template>
   <div class="results-container">
-    <div class="post-frame" v-for="(post, index) in results" :key="index">
+    <div class="post-frame" v-for="(post, index) in posts" :key="index">
       <div class="image-holder">
         <img :src="post.imagesRef[0].url" />
       </div>
@@ -14,9 +14,6 @@
         </div>
         <p>{{ post.description }}</p>
         <div class="fav">
-          <div class="numLike" v-if="post.numLike">
-            Liked by {{ post.numLike }}people
-          </div>
           <div
             class="like"
             :class="{ liked: post.isLiked }"
@@ -30,7 +27,6 @@
 
 <script>
 export default {
-  props: ["category"],
   methods: {
     updateLike(index) {
       this.$store.dispatch("updateLike", index);
@@ -40,12 +36,12 @@ export default {
     userId() {
       return this.$store.state.auth.userId;
     },
-    results() {
+    posts() {
       return this.$store.state.post.posts;
     },
   },
   created() {
-    this.$store.dispatch("searchPosts", this.category);
+    this.$store.dispatch("getOkiniiriList");
   },
   destroyed() {
     this.$store.dispatch("fetchUserData", this.userId);
