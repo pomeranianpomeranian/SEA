@@ -244,10 +244,10 @@ const actions = {
         commit("registerComment", newComment);
       });
   },
-  submitPost({ commit, rootState }, postContents) {
+  submitPost({ commit, state, rootState }) {
     postRef
       .add({
-        ...postContents,
+        ...state.postContents,
         userId: rootState.auth.userId,
         createdAt: firebase.firestore.Timestamp.now(),
       })
@@ -278,18 +278,18 @@ const actions = {
         });
     }
   },
-  updatePost({ commit, rootState }, request) {
+  updatePost({ commit, state, rootState }, postId) {
     postRef
-      .doc(request.postId)
+      .doc(postId)
       .set({
-        ...request.postContents,
+        ...state.postContents,
         userId: rootState.auth.userId,
         createdAt: firebase.firestore.Timestamp.now(),
       })
       .then(() => {
         commit("transfer", {
           userId: rootState.auth.userId,
-          postId: request.postId,
+          postId,
         });
       });
   },
