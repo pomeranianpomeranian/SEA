@@ -2,6 +2,7 @@
     "nav": {
         "home": "ホーム",
         "mypage": "マイページ",
+        "search": "検索",
         "signin": "サインイン",
         "signout": "サインアウト"
       }

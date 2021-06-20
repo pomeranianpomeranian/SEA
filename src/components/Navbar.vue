@@ -10,6 +10,11 @@
             $t("nav.mypage")
           }}</router-link>
         </li>
+        <li class="option">
+          <router-link :to="{ name: 'search' }">{{
+            $t("nav.search")
+          }}</router-link>
+        </li>
       </ul>
       <div class="auth">
         <div v-if="isSigningIn && !userId">
