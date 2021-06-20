@@ -1,9 +1,16 @@
 import firebase from "firebase";
 import router from "../../router";
+// import heic2any from "heic2any";
 
 const postRef = firebase.firestore().collection("posts");
 const userRef = firebase.firestore().collection("users");
 const storage = firebase.storage();
+
+const heicDetector = function (path) {
+  if (path.split("").reverse().slice(0, 4).reverse().join("") === "heic")
+    return true;
+  else return false;
+};
 
 const state = {
   comments: [],
@@ -157,6 +164,7 @@ const actions = {
       .ref(path)
       .getDownloadURL()
       .then((url) => {
+        // if (heicDetector(path)) dispatch("heicConverter", { url, path });
         state.postContents.imagesRef.push({ url, path });
       });
   },
@@ -168,6 +176,24 @@ const actions = {
       .get()
       .then((posts) => commit("registerPosts", posts));
   },
+  //   heicConverter({ state }, file) {
+  //     fetch(file.url)
+  //       .then((res) => res.blob())
+  //       .then((blob) => {
+  //         heic2any({
+  //           blob,
+  //           toType: "image/jpag",
+  //         });
+  //       })
+  //       .then((res) => {
+  //         const url = URL.createObjectURL(res);
+  //         console.log(url);
+  //         state.postContents.imagesRef.filter(
+  //           (ref) => ref.path === file.path
+  //         ).url = url;
+  //       })
+  //       .catch((err) => console.log(err));
+  //   },
   removeLike({ state, rootState }, index) {
     const target = state.posts[index];
     userRef
@@ -193,12 +219,16 @@ const actions = {
   storeImage({ dispatch, rootState }, event) {
     const file = event.target.files[0];
     const path = `${rootState.auth.userId}/${file.name}`;
-    storage
-      .ref(path)
-      .put(file)
-      .then(() => {
-        dispatch("getImageURL", path);
-      });
+    if (heicDetector(path))
+      alert("Invalid file format. Make sure the format is 'jpeg' or 'png'");
+    else {
+      storage
+        .ref(path)
+        .put(file)
+        .then(() => {
+          dispatch("getImageURL", path);
+        });
+    }
   },
   submitComments({ commit, rootState }, contents) {
     const newComment = {

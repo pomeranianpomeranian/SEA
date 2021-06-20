@@ -28,7 +28,7 @@
             >{{ category }}
           </span>
         </div>
-        <input type="file" @change="storeImage" />
+        <input type="file" accept=".jpg, .jpeg, .png" @change="storeImage" />
         <div class="images-holder" v-if="postContents.imagesRef.length">
           <div
             class="image-container"

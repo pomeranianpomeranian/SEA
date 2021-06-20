@@ -34,6 +34,9 @@ export default {
     myPosts() {
       return this.$store.state.post.posts;
     },
+    userId() {
+      return this.$store.state.auth.userId;
+    },
   },
   created() {
     this.$store.dispatch("getMyPosts");
