@@ -10,7 +10,12 @@
         placeholder="Username"
       />
       <br />
-      <input type="text" v-model="userDetails.country" placeholder="Country" />
+      <!-- <input type="text" v-model="userDetails.country" placeholder="Country" /> -->
+      <select v-model="userDetails.language">
+        <option disabled>Preferred Language</option>
+        <option value="en">English</option>
+        <option value="ja">日本語</option>
+      </select>
       <br />
       <input type="text" v-model="authData.email" placeholder="Email" />
       <br />
@@ -33,7 +38,7 @@ export default {
     return {
       userDetails: {
         username: "",
-        country: "",
+        language: "",
       },
       authData: {
         email: "",

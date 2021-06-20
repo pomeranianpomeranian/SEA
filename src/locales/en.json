@@ -1,3 +1,8 @@
 {
-  "message": "hello i18n !!"
+  "nav": {
+    "home": "Home",
+    "mypage": "Mypage",
+    "signin": "Sign in",
+    "signout": "Sign out"
+  }
 }
