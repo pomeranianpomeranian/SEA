@@ -1,29 +1,34 @@
 <template>
   <div>
-    <h1>HOME PAGE!</h1>
-    <router-link :to="{ name: 'search' }">Search</router-link> |
-    <router-link :to="{ name: 'signup' }">Sign Up</router-link>
-    <p>Welcome to Japan! 的な。</p>
-    <div v-if="!userId" class="sign-in">
-      <input type="text" v-model="email" placeholder="Email" /><br />
-      <input type="password" v-model="password" placeholder="Password" /><br />
-      <button @click="signIn({ email, password })">Sign in</button>
+    <div class="form-container" v-if="!userId">
+      <span
+        v-for="(tab, index) in tabs"
+        @click="selectedTab = tab"
+        :class="{ activeTab: selectedTab === tab }"
+        :key="index"
+        >{{ tab }}</span
+      >
+      <div class="form">
+        <signinForm v-if="selectedTab === $t('nav.signin')" />
+        <signupForm v-if="selectedTab === $t('nav.signup')" />
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import { mapActions } from "vuex";
-
+import signinForm from "../components/SignIn";
+import signupForm from "../components/SignUp";
 export default {
+  components: {
+    signinForm,
+    signupForm,
+  },
   data() {
     return {
-      email: "",
-      password: "",
+      selectedTab: this.$t("nav.signin"),
+      tabs: [this.$t("nav.signin"), this.$t("nav.signup")],
     };
-  },
-  methods: {
-    ...mapActions(["signIn"]),
   },
   computed: {
     userId() {
@@ -34,7 +39,16 @@ export default {
 </script>
 
 <style scoped>
-.sign-in {
+.form-container {
   margin-top: 30px;
+}
+span {
+  margin: 10px;
+}
+.form {
+  margin-top: 10px;
+}
+.activeTab {
+  color: darkgray;
 }
 </style>

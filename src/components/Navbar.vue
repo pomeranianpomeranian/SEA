@@ -3,12 +3,17 @@
     <nav>
       <ul class="options">
         <li class="option">
-          <router-link :to="{ name: 'home' }">Home</router-link>
+          <router-link :to="{ name: 'home' }">{{ $t("nav.home") }}</router-link>
         </li>
         <li v-if="userId" class="option">
-          <router-link :to="{ name: 'user', params: { userId } }"
-            >Mypage</router-link
-          >
+          <router-link :to="{ name: 'user', params: { userId } }">{{
+            $t("nav.mypage")
+          }}</router-link>
+        </li>
+        <li class="option">
+          <router-link :to="{ name: 'search' }">{{
+            $t("nav.search")
+          }}</router-link>
         </li>
       </ul>
       <div class="auth">
@@ -17,14 +22,20 @@
           <input type="password" placeholder="password" v-model="password" />
         </div>
         <div>
+          <select v-model="lang" @change="switchLang">
+            <option value="en">English</option>
+            <option value="ja">日本語</option>
+          </select>
           <button
             v-if="!userId"
             @click="signIn({ email, password })"
             @mouseover="isSigningIn = true"
           >
-            Sign in
+            {{ $t("nav.signin") }}
           </button>
-          <button v-if="userId" @click="signOut">Sign out</button>
+          <button v-if="userId" @click="signOut">
+            {{ $t("nav.signout") }}
+          </button>
         </div>
       </div>
     </nav>
@@ -40,10 +51,14 @@ export default {
       isSigningIn: false,
       email: "",
       password: "",
+      lang: "",
     };
   },
   methods: {
     ...mapActions(["signOut", "signIn"]),
+    switchLang() {
+      this.$i18n.locale = this.lang;
+    },
   },
   computed: {
     userId() {

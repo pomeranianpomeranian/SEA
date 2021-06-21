@@ -1,10 +1,7 @@
 <template>
   <div>
-    <h1>This is {{ userDetails.username }}'s Page!</h1>
-    <router-link :to="{ name: 'newpost' }">NewPost</router-link>
-    <p>
-      ここはユーザーのマイページで、サインインすると表示される。ここから新しい投稿をするのと、自分の過去の投稿を見れる。
-    </p>
+    <h1>{{ userDetails.username }}</h1>
+    <router-link :to="{ name: 'newpost' }">{{ $t("nav.newpost") }}</router-link>
     <div class="tabs-container">
       <div
         class="tab"
@@ -16,8 +13,8 @@
         {{ tab }}
       </div>
     </div>
-    <myPosts v-if="selectedTab === 'myPosts'"></myPosts>
-    <okiniiri v-if="selectedTab === 'okiniiri'"></okiniiri>
+    <myPosts v-if="selectedTab === $t('nav.myposts')"></myPosts>
+    <okiniiri v-if="selectedTab === $t('nav.liked')"></okiniiri>
   </div>
 </template>
 
@@ -31,8 +28,8 @@ export default {
   },
   data() {
     return {
-      tabs: ["myPosts", "okiniiri"],
-      selectedTab: "myPosts",
+      selectedTab: this.$t("nav.myposts"),
+      tabs: [this.$t("nav.myposts"), this.$t("nav.liked")],
     };
   },
   computed: {

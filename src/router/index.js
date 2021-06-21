@@ -8,7 +8,6 @@ import NewPost from "../views/NewPost.vue";
 import MyPost from "../views/MyPost.vue";
 import Edit from "../views/Edit.vue";
 import User from "../views/User.vue";
-import SignUp from "../views/SignUp.vue";
 
 Vue.use(VueRouter);
 
@@ -61,11 +60,6 @@ const routes = [
     name: "edit",
     component: Edit,
     props: true,
-  },
-  {
-    path: "/signup",
-    name: "signup",
-    component: SignUp,
   },
   {
     path: "*",

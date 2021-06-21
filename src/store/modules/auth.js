@@ -1,5 +1,9 @@
 import firebase from "firebase";
 import router from "../../router";
+import i18n from "../../i18n";
+
+const authRef = firebase.auth();
+const userRef = firebase.firestore().collection("users");
 
 const state = {
   userId: null,
@@ -27,75 +31,57 @@ const mutations = {
   fetchUserData(state, userData) {
     state.userDetails = userData;
   },
+  setLang(state) {
+    i18n.locale = state.userDetails.language;
+  },
 };
 const actions = {
   signIn({ commit, dispatch }, userData) {
-    firebase
-      .auth()
-      .setPersistence(firebase.auth.Auth.Persistence.SESSION)
-      .then(() => {
-        firebase
-          .auth()
-          .signInWithEmailAndPassword(userData.email, userData.password)
-          .then((userCredential) => {
-            commit("signIn", userCredential.user.uid);
-            dispatch("fetchUserData", userCredential.user.uid);
-          })
-          .catch((err) => {
-            console.log(err.message);
-          });
-      });
+    authRef.setPersistence(firebase.auth.Auth.Persistence.SESSION).then(() => {
+      authRef
+        .signInWithEmailAndPassword(userData.email, userData.password)
+        .then((userCredential) => {
+          commit("signIn", userCredential.user.uid);
+          dispatch("fetchUserData", userCredential.user.uid);
+        });
+    });
   },
   signUp({ commit, dispatch }, userData) {
-    firebase
-      .auth()
+    authRef
       .createUserWithEmailAndPassword(
         userData.authData.email,
         userData.authData.password
       )
       .then((userCredential) => commit("signUp", userCredential))
-      .then(() => dispatch("registerUser", userData.userDetails))
-      .catch((err) => {
-        console.log(err.message);
-      });
+      .then(() => dispatch("registerUser", userData.userDetails));
   },
   signOut({ commit }) {
-    firebase
-      .auth()
-      .signOut()
-      .then(() => {
-        commit("signOut");
-      })
-      .catch((err) => {
-        console.log(err.message);
-      });
+    authRef.signOut().then(() => {
+      commit("signOut");
+    });
   },
   registerUser({ commit, state }, userDetails) {
-    firebase
-      .firestore()
-      .collection("users")
+    userRef
       .doc(state.userId)
       .set({
         ...userDetails,
       })
       .then(() => {
         commit("registerUser", userDetails);
-      })
-      .catch((err) => {
-        console.log(err);
+        commit("setLang");
       });
   },
   fetchUserData({ commit }, userId) {
-    firebase
-      .firestore()
-      .collection("users")
+    userRef
       .doc(userId)
       .get()
-      .then((doc) => commit("fetchUserData", doc.data()))
-      .catch((err) => console.log(err));
+      .then((doc) => {
+        commit("fetchUserData", doc.data());
+        commit("setLang");
+      });
   },
   autoSignIn({ commit, dispatch }) {
-    firebase.auth().onAuthStateChanged((user) => {
+    authRef.onAuthStateChanged((user) => {
       if (user) {
         commit("autoSignIn", user.uid);
         dispatch("fetchUserData", user.uid);

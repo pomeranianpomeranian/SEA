@@ -1,0 +1,44 @@
+{
+    "nav": {
+        "home": "ホーム",
+        "mypage": "マイページ",
+        "search": "検索",
+        "newpost": "新規投稿",
+        "myposts": "投稿",
+        "liked": "お気に入り",
+        "edit": "編集する",
+        "delete": "削除する",
+        "signin": "ログイン",
+        "signout": "ログアウト",
+        "signup": "サインアップ"
+      },
+      "comment": {
+        "nocomment": "まだコメントはありません",
+        "send": "送る",
+        "placeholder": "コメントを入力してください"
+      },
+      "form": {
+        "title": "題名",
+        "description": "紹介文",
+        "email": "メールアドレス",
+        "password": "パスワード",
+        "username": "ユーザーネーム",
+        "language": "言語",
+        "update": "更新する",
+        "submit": "投稿する"
+      },
+      "category": {
+        "all": "すべて",
+        "culture": "文化",
+        "nature": "自然",
+        "amusement": "娯楽",
+        "food": "食べもの",
+        "shopping": "ショッピング",
+        "history": "歴史",
+        "sports": "スポーツ",
+        "view": "景色"
+      },
+      "search": {
+        "search": "検索"
+      }
+}

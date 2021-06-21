@@ -1,7 +1,6 @@
 <template>
   <div>
     <div class="my-posts">
-      <h2>My Posts!</h2>
       <div class="card-container">
         <div
           class="card"

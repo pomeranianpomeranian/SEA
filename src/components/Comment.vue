@@ -1,7 +1,7 @@
 <template>
   <div class="comment-box">
     <div class="comment-container">
-      <p v-if="!comments[0]">There's no comment yet</p>
+      <p v-if="!comments[0]">{{ $t("comment.nocomment") }}</p>
       <div
         class="comment-holder"
         v-for="(comment, index) in comments"
@@ -19,9 +19,11 @@
         v-model="input"
         cols="30"
         rows="2"
-        placeholder="comment"
+        :placeholder="$t('comment.placeholder')"
       ></textarea>
-      <div><button @click="submit">Send</button></div>
+      <div>
+        <button @click="submit">{{ $t("comment.send") }}</button>
+      </div>
     </div>
   </div>
 </template>
