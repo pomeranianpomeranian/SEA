@@ -1,8 +1,12 @@
 <template>
   <div class="sign-in">
-    <input type="text" v-model="email" placeholder="Email" /><br />
-    <input type="password" v-model="password" placeholder="Password" /><br />
-    <button @click="signIn">Sign in</button>
+    <input type="text" v-model="email" :placeholder="$t('form.email')" /><br />
+    <input
+      type="password"
+      v-model="password"
+      :placeholder="$t('form.password')"
+    /><br />
+    <button @click="signIn">{{ $t("nav.signin") }}</button>
   </div>
 </template>
 

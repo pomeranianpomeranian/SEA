@@ -1,7 +1,5 @@
 <template>
   <div>
-    <h1>HOME PAGE!</h1>
-    <p>Welcome to Japan! 的な。</p>
     <div class="form-container" v-if="!userId">
       <span
         v-for="(tab, index) in tabs"
@@ -11,8 +9,8 @@
         >{{ tab }}</span
       >
       <div class="form">
-        <signinForm v-if="selectedTab === 'Sign In'" />
-        <signupForm v-if="selectedTab === 'Sign Up'" />
+        <signinForm v-if="selectedTab === $t('nav.signin')" />
+        <signupForm v-if="selectedTab === $t('nav.signup')" />
       </div>
     </div>
   </div>
@@ -28,8 +26,8 @@ export default {
   },
   data() {
     return {
-      selectedTab: "Sign In",
-      tabs: ["Sign In", "Sign Up"],
+      selectedTab: this.$t("nav.signin"),
+      tabs: [this.$t("nav.signin"), this.$t("nav.signup")],
     };
   },
   computed: {

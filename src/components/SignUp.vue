@@ -1,18 +1,30 @@
 <template>
   <div>
-    <input type="text" v-model="userDetails.username" placeholder="Username" />
+    <input
+      type="text"
+      v-model="userDetails.username"
+      :placeholder="$t('form.username')"
+    />
     <br />
     <select v-model="userDetails.language">
-      <option disabled>Preferred Language</option>
+      <option disabled>{{ $t("form.language") }}</option>
       <option value="en">English</option>
       <option value="ja">日本語</option>
     </select>
     <br />
-    <input type="text" v-model="authData.email" placeholder="Email" />
+    <input
+      type="text"
+      v-model="authData.email"
+      :placeholder="$t('form.email')"
+    />
     <br />
-    <input type="password" v-model="authData.password" placeholder="Password" />
+    <input
+      type="password"
+      v-model="authData.password"
+      :placeholder="$t('form.password')"
+    />
     <br />
-    <button @click="signUp">Sign up</button>
+    <button @click="signUp">{{ $t("nav.signup") }}</button>
   </div>
 </template>
 

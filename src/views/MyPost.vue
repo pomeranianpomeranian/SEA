@@ -21,8 +21,8 @@
       </span>
     </p>
     <div>
-      <button @click="edit">Edit</button>
-      <button @click="deleteFiles">Delete</button>
+      <button @click="edit">{{ $t("nav.edit") }}</button>
+      <button @click="deleteFiles">{{ $t("nav.delete") }}</button>
     </div>
   </div>
 </template>

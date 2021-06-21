@@ -1,9 +1,8 @@
 <template>
   <div>
-    <h1>New Post!</h1>
     <div class="submit-form">
       <postForm />
-      <button @click="submitPost">Submit</button>
+      <button @click="submitPost">{{ $t("form.submit") }}</button>
     </div>
   </div>
 </template>

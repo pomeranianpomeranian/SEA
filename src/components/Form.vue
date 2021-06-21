@@ -1,17 +1,19 @@
 <template>
   <div class="form-contents">
-    <input type="text" v-model="postContents.title" placeholder="Title" />
-    <input type="text" v-model="postContents.address" placeholder="Address" />
+    <input
+      type="text"
+      v-model="postContents.title"
+      :placeholder="$t('form.title')"
+    />
     <select v-model="selected" @change="addCategory">
-      <option disabled>Please pick up categories</option>
-      <option>Culture</option>
-      <option>Nature</option>
-      <option>Amusement</option>
-      <option>Food</option>
-      <option>Shopping</option>
-      <option>History</option>
-      <option>Sports</option>
-      <option>View</option>
+      <option value="culture">{{ $t("category.culture") }}</option>
+      <option value="nature">{{ $t("category.nature") }}</option>
+      <option value="amusement">{{ $t("category.amusement") }}</option>
+      <option value="food">{{ $t("category.food") }}</option>
+      <option value="shopping">{{ $t("category.shopping") }}</option>
+      <option value="history">{{ $t("category.history") }}</option>
+      <option value="sports">{{ $t("category.sports") }}</option>
+      <option value="view">{{ $t("category.view") }}</option>
     </select>
     <div class="categories-holder" v-if="postContents.categories.length">
       <span
@@ -36,7 +38,7 @@
       v-model="postContents.description"
       cols="30"
       rows="10"
-      placeholder="Description"
+      :placeholder="$t('form.description')"
     ></textarea>
   </div>
 </template>

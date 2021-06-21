@@ -14,14 +14,13 @@
         </div>
         <p>{{ post.description }}</p>
         <div class="fav">
-          <div class="numLike" v-if="post.numLike">
-            Liked by {{ post.numLike }}people
-          </div>
           <div
             class="like"
             :class="{ liked: post.isLiked }"
             @click="updateLike(index)"
-          ></div>
+          >
+            <span>{{ post.numLike }}</span>
+          </div>
         </div>
       </div>
     </div>
