@@ -3,6 +3,7 @@
     "home": "Home",
     "mypage": "Mypage",
     "search": "Search",
+    "pend": "Translator",
     "newpost": "New Post",
     "myposts": "My Posts",
     "liked": "Liked Posts",
@@ -25,7 +26,9 @@
     "username": "Username",
     "language": "Preferred Language",
     "update": "Update",
-    "submit": "Submit"
+    "submit": "Submit",
+    "save": "Ask for translation",
+    "send": "Send"
   },
   "category": {
     "all": "All",

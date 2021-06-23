@@ -16,13 +16,13 @@ const state = {
   comments: [],
   posts: [],
   postContents: null,
+  suggestions: [],
 };
 
 const mutations = {
   clearContents(state) {
     return (state.postContents = {
       title: "",
-      address: "",
       categories: [],
       imagesRef: [],
       description: "",
@@ -39,22 +39,31 @@ const mutations = {
     });
   },
   registerPosts(state, posts) {
-    const likedPosts = this.state.auth.userDetails.likedPosts;
-    posts.forEach((post) => {
-      if (likedPosts.includes(post.id)) {
+    if (this.state.auth.userDetails) {
+      const likedPosts = this.state.auth.userDetails.likedPosts;
+      posts.forEach((post) => {
+        if (likedPosts.includes(post.id)) {
+          state.posts.push({
+            postId: post.id,
+            isLiked: true,
+            ...post.data(),
+          });
+        } else {
+          state.posts.push({
+            postId: post.id,
+            isLiked: false,
+            ...post.data(),
+          });
+        }
+      });
+    } else {
+      posts.forEach((post) => {
         state.posts.push({
           postId: post.id,
-          isLiked: true,
           ...post.data(),
         });
-      } else {
-        state.posts.push({
-          postId: post.id,
-          isLiked: false,
-          ...post.data(),
-        });
-      }
-    });
+      });
+    }
   },
   transfer(state, path) {
     state.postContents = null;
@@ -109,6 +118,52 @@ const actions = {
         });
       });
   },
+  getComments({ commit, state }, postId) {
+    state.comments = [];
+    postRef
+      .doc(postId)
+      .collection("comments")
+      .orderBy("createdAt")
+      .get()
+      .then((comments) =>
+        comments.forEach((comment) => {
+          commit("registerComment", comment.data());
+        })
+      );
+  },
+  getDetails({ state, dispatch }, postId) {
+    state.postContents = null;
+    postRef
+      .doc(postId)
+      .get()
+      .then((post) => {
+        state.postContents = {
+          ...post.data(),
+        };
+        dispatch("getSuggestions", postId);
+      });
+  },
+  getImageURL({ state }, path) {
+    if (!state.postContents) {
+      state.postContents = { imagesRef: [] };
+    }
+    storage
+      .ref(path)
+      .getDownloadURL()
+      .then((url) => {
+        // if (heicDetector(path)) dispatch("heicConverter", { url, path });
+        state.postContents.imagesRef.push({ url, path });
+      });
+  },
+  getMyPosts({ commit, state, rootState }, pending) {
+    state.posts = [];
+    postRef
+      .where("pending", "==", pending)
+      .where("userId", "==", rootState.auth.userId)
+      .orderBy("createdAt", "desc")
+      .get()
+      .then((posts) => commit("registerPosts", posts));
+  },
   getOkiniiriList({ dispatch, rootState }) {
     userRef
       .doc(rootState.auth.userId)
@@ -132,49 +187,29 @@ const actions = {
         });
     }
   },
-  getComments({ commit, state }, postId) {
-    state.comments = [];
-    postRef
-      .doc(postId)
-      .collection("comments")
-      .orderBy("createdAt")
-      .get()
-      .then((comments) =>
-        comments.forEach((comment) => {
-          commit("registerComment", comment.data());
-        })
-      );
-  },
-  getDetails({ state }, postId) {
-    state.postContents = null;
-    postRef
-      .doc(postId)
-      .get()
-      .then((post) => {
-        state.postContents = {
-          ...post.data(),
-        };
-      });
-  },
-  getImageURL({ state }, path) {
-    if (!state.postContents) {
-      state.postContents = { imagesRef: [] };
-    }
-    storage
-      .ref(path)
-      .getDownloadURL()
-      .then((url) => {
-        // if (heicDetector(path)) dispatch("heicConverter", { url, path });
-        state.postContents.imagesRef.push({ url, path });
-      });
-  },
-  getMyPosts({ commit, state, rootState }) {
+  getPendingPosts({ commit, state }) {
     state.posts = [];
     postRef
-      .where("userId", "==", rootState.auth.userId)
+      .where("pending", "==", true)
       .orderBy("createdAt", "desc")
       .get()
-      .then((posts) => commit("registerPosts", posts));
+      .then((posts) => {
+        commit("registerPosts", posts);
+      });
+  },
+  getSuggestions({ state }, postId) {
+    state.suggestions = [];
+    postRef
+      .doc(postId)
+      .collection("suggestions")
+      .get()
+      .then((suggestions) => {
+        suggestions.forEach((suggestion) => {
+          state.suggestions.push({
+            ...suggestion.data(),
+          });
+        });
+      });
   },
   //   heicConverter({ state }, file) {
   //     fetch(file.url)
@@ -208,13 +243,35 @@ const actions = {
   searchPosts({ commit, state }, category) {
     state.posts = [];
     if (category === "all") {
-      postRef.get().then((posts) => commit("registerPosts", posts));
+      postRef
+        .where("pending", "==", false)
+        .get()
+        .then((posts) => commit("registerPosts", posts));
     } else {
       postRef
+        .where("pending", "==", false)
         .where("categories", "array-contains", category)
         .get()
         .then((posts) => commit("registerPosts", posts));
     }
+  },
+  sendSuggestion({ rootState }, suggestion) {
+    postRef
+      .doc(suggestion.postId)
+      .collection("suggestions")
+      .add({
+        title: suggestion.title,
+        description: suggestion.description,
+        name: rootState.auth.userDetails.username,
+      })
+      .then(() => {
+        postRef.doc(suggestion.postId).update({
+          numSuggestions: firebase.firestore.FieldValue.increment(1),
+        });
+      })
+      .then(() => {
+        router.push({ name: "pend" });
+      });
   },
   storeImage({ dispatch, rootState }, event) {
     const file = event.target.files[0];
@@ -244,12 +301,13 @@ const actions = {
         commit("registerComment", newComment);
       });
   },
-  submitPost({ commit, state, rootState }) {
+  submitPost({ commit, state, rootState }, pending) {
     postRef
       .add({
         ...state.postContents,
         userId: rootState.auth.userId,
         createdAt: firebase.firestore.Timestamp.now(),
+        pending,
       })
       .then((res) => {
         commit("transfer", {
@@ -285,6 +343,7 @@ const actions = {
         ...state.postContents,
         userId: rootState.auth.userId,
         createdAt: firebase.firestore.Timestamp.now(),
+        pending: false,
       })
       .then(() => {
         commit("transfer", {

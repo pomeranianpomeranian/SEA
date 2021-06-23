@@ -3,6 +3,7 @@
         "home": "ホーム",
         "mypage": "マイページ",
         "search": "検索",
+        "pend": "翻訳",
         "newpost": "新規投稿",
         "myposts": "投稿",
         "liked": "お気に入り",
@@ -25,7 +26,9 @@
         "username": "ユーザーネーム",
         "language": "言語",
         "update": "更新する",
-        "submit": "投稿する"
+        "submit": "投稿する",
+        "save": "翻訳を依頼する",
+        "send": "送る"
       },
       "category": {
         "all": "すべて",

@@ -15,6 +15,9 @@
             $t("nav.search")
           }}</router-link>
         </li>
+        <li class="option" v-if="userId">
+          <router-link :to="{ name: 'pend' }">{{ $t("nav.pend") }}</router-link>
+        </li>
       </ul>
       <div class="auth">
         <div v-if="isSigningIn && !userId">

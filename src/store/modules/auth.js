@@ -22,6 +22,7 @@ const mutations = {
   },
   signOut(state) {
     state.userId = null;
+    state.userDetails = null;
     router.push({ name: "home" });
   },
   registerUser(state, userDetails) {
