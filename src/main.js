@@ -10,6 +10,7 @@ import VueAxios from "vue-axios"; //追記
 Vue.use(VueAxios, axios); //追記
 
 Vue.use(VueGeolocation);
+import i18n from "./i18n";
 
 Vue.config.productionTip = false;
 
@@ -30,5 +31,6 @@ Vue.use(VueGoogleMaps, {
 new Vue({
   router,
   store,
+  i18n,
   render: (h) => h(App),
 }).$mount("#app");
