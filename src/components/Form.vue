@@ -74,7 +74,7 @@ export default {
 .form-contents {
   display: flex;
   flex-direction: column;
-  width: 50%;
+  width: 45%;
 }
 .categories-holder {
   border: 1px solid black;

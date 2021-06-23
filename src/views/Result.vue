@@ -32,7 +32,7 @@ export default {
   props: ["category"],
   methods: {
     updateLike(index) {
-      this.$store.dispatch("updateLike", index);
+      if (this.userId) this.$store.dispatch("updateLike", index);
     },
   },
   computed: {

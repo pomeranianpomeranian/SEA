@@ -14,7 +14,7 @@
         </div>
       </div>
     </div>
-    <div class="input">
+    <div class="input" v-if="userId">
       <textarea
         v-model="input"
         cols="30"
@@ -46,6 +46,9 @@ export default {
     },
   },
   computed: {
+    userId() {
+      return this.$store.state.auth.userId;
+    },
     username() {
       return this.$store.state.auth.userDetails.username;
     },

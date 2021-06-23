@@ -1,16 +1,29 @@
 <template>
-  <div>
-    <div class="form-container" v-if="!userId">
+  <div v-if="!userId">
+    <div class="form-container" v-if="$i18n.locale === 'ja'">
       <span
-        v-for="(tab, index) in tabs"
-        @click="selectedTab = tab"
-        :class="{ activeTab: selectedTab === tab }"
+        v-for="(tab, index) in ja.tabs"
+        @click="ja.selectedTab = tab"
+        :class="{ activeTab: ja.selectedTab === tab }"
         :key="index"
         >{{ tab }}</span
       >
       <div class="form">
-        <signinForm v-if="selectedTab === $t('nav.signin')" />
-        <signupForm v-if="selectedTab === $t('nav.signup')" />
+        <signinForm v-if="ja.selectedTab === 'ログイン'" />
+        <signupForm v-if="ja.selectedTab === 'サインアップ'" />
+      </div>
+    </div>
+    <div class="form-container" v-if="$i18n.locale === 'en'">
+      <span
+        v-for="(tab, index) in en.tabs"
+        @click="en.selectedTab = tab"
+        :class="{ activeTab: en.selectedTab === tab }"
+        :key="index"
+        >{{ tab }}</span
+      >
+      <div class="form">
+        <signinForm v-if="en.selectedTab === 'Sign in'" />
+        <signupForm v-if="en.selectedTab === 'Sign up'" />
       </div>
     </div>
   </div>
@@ -26,8 +39,14 @@ export default {
   },
   data() {
     return {
-      selectedTab: this.$t("nav.signin"),
-      tabs: [this.$t("nav.signin"), this.$t("nav.signup")],
+      ja: {
+        selectedTab: "ログイン",
+        tabs: ["ログイン", "サインアップ"],
+      },
+      en: {
+        selectedTab: "Sign in",
+        tabs: ["Sign in", "Sign up"],
+      },
     };
   },
   computed: {
