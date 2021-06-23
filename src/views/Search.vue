@@ -9,11 +9,19 @@
 
     <GmapMap
       :center="currentPotion"
-      :zoom="12"
+      :zoom="10"
       map-type-id="terrain"
-      style="width: 500px; height: 300px"
+      style="width: 100%; height: 600px"
       justifiy-content-center
     >
+      <GmapInfoWindow
+        :options="infoOptions"
+        :position="infoWindowPos"
+        :opened="infoWinOpen"
+        @closeclick="infoWinOpen = false"
+      >
+        hoge</GmapInfoWindow
+      >
       <GmapMarker
         :key="index"
         v-for="(m, index) in markers"
@@ -23,6 +31,7 @@
         @click="center = m.position"
       />
     </GmapMap>
+
     <select v-model="selected">
       <option disabled>Pick up a category</option>
       <option>Culture</option>
@@ -44,7 +53,22 @@ export default {
     return {
       selected: "",
       currentPotion: {},
-      markers: [],
+      markers: [
+        { position: { lat: 10, lng: 10 } },
+        { position: { lat: 11, lng: 11 } },
+      ],
+      infoOptions: {
+        pixelOffset: {
+          width: 0,
+          height: -35,
+        },
+      },
+      infoWindowPos: null,
+      infoWinOpen: false,
+      headers: {
+        "Content-Type": "application/json;charset=UTF-8",
+        "Access-Control-Allow-Origin": "*",
+      },
     };
   },
   created: function () {
@@ -56,7 +80,15 @@ export default {
       });
     });
   },
+
   methods: {
+    onDragEnd() {
+      console.log("hoge");
+    },
+    toggleInfoWindow(marker) {
+      this.infoWindowPos = marker.position;
+      this.infoWinOpen = true;
+    },
     search() {
       if (!this.selected) {
         this.$router.push({ name: "result", params: { category: "all" } });
@@ -67,6 +99,34 @@ export default {
         });
       }
     },
+  },
+  mounted: function () {
+    let origin = "41.43206,-81.38992";
+    let destination = "46.43206,-80.38992";
+    let key = "AIzaSyBdqpd-ViC5zdoC3XS1lOjhSNfNBcaznkw";
+    let url =
+      "/maps/api/directions/json?origin=" +
+      origin +
+      "&destination=" +
+      destination +
+      "&key=" +
+      key;
+    console.log(url);
+
+    fetch(url, {
+      mode: "no-cors",
+    })
+      .then((res) => {
+        console.log("status", res.status);
+        console.log("body", res.data);
+        return res.json();
+      })
+      .then((data) => {
+        console.log(data);
+      })
+      .catch((err) => {
+        console.log("err", err);
+      });
   },
 };
 </script>

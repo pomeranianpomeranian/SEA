@@ -8,30 +8,14 @@
       <input type="text" v-model="email" placeholder="Email" /><br />
       <input type="password" v-model="password" placeholder="Password" /><br />
       <button @click="signIn({ email, password })">Sign in</button>
-
-      <GmapMap
-        :center="{ lat: 35.645974459469834, lng: 139.70496042046145 }"
-        :zoom="12"
-        map-type-id="terrain"
-        style="width: 500px; height: 300px"
-      >
-        <!-- <GmapMarker
-          :key="index"
-          v-for="(m, index) in markers"
-          :position="m.position"
-          :clickable="true"
-          :draggable="true"
-          @click="center = m.position"
-        /> -->
-      </GmapMap>
     </div>
   </div>
 </template>
 
 <script>
 import { mapActions } from "vuex";
-
 export default {
+  name: "HelloWorld",
   data() {
     return {
       email: "",
@@ -41,7 +25,6 @@ export default {
   methods: {
     ...mapActions(["signIn"]),
   },
-
   computed: {
     userId() {
       return this.$store.state.auth.userId;
