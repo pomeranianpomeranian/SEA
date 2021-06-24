@@ -13,7 +13,6 @@
       map-type-id="terrain"
       style="width: 100%; height: 600px"
       justifiy-content-center
-      @click="getPosition($event)"
     >
       <GmapInfoWindow
         :options="infoOptions"
@@ -29,7 +28,7 @@
         :position="m.position"
         :clickable="true"
         :draggable="true"
-        @click="toggleInfoWindow(m.position)"
+        @click="getPosition(m)"
       />
     </GmapMap>
 
@@ -49,16 +48,14 @@
 </template>
 
 <script>
+import firebase from "firebase";
 export default {
   data() {
     return {
       windowTitle: "hoge",
       selected: "all",
       currentPotion: {},
-      markers: [
-        { position: { lat: 10, lng: 10 } },
-        { position: { lat: 11, lng: 11 } },
-      ],
+      markers: [],
       infoOptions: {
         pixelOffset: {
           width: 0,
@@ -78,17 +75,32 @@ export default {
       console.log(coordinates);
       this.currentPotion = coordinates;
       this.markers.push({
+        title: "現在地",
         position: this.currentPotion,
       });
     });
+    firebase
+      .firestore()
+      .collection("posts")
+      .get()
+      .then((snapshot) => {
+        snapshot.docs.forEach((doc) => {
+          this.markers.push({
+            id: this.markers.length,
+            postid: doc.id,
+            ...doc.data(),
+          });
+        });
+      });
+    console.log(this.markers);
   },
 
   methods: {
     onDragEnd() {
       console.log("hoge");
     },
-    toggleInfoWindow(position) {
-      this.infoWindowPos = position;
+    toggleInfoWindow(marker) {
+      this.infoWindowPos = marker.position;
       this.infoWinOpen = true;
     },
     search() {
@@ -97,21 +109,9 @@ export default {
         params: { category: this.selected },
       });
     },
-    getPosition: function (event) {
-      console.log(event.latLng.lat());
-      if (event) {
-        this.markers.push({
-          id: this.markers.length,
-          title: "新規登録",
-          infowWindow: true,
-          position: { lat: event.latLng.lat(), lng: event.latLng.lng() },
-        });
-      }
-      this.windowTitle = "新規登録";
-      this.toggleInfoWindow({
-        lat: event.latLng.lat(),
-        lng: event.latLng.lng(),
-      });
+    getPosition: function (marker) {
+      this.windowTitle = marker.title;
+      this.toggleInfoWindow(marker);
     },
   },
   mounted: function () {
