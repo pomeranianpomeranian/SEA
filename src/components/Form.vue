@@ -40,6 +40,30 @@
       rows="10"
       :placeholder="$t('form.description')"
     ></textarea>
+    <GmapMap
+      :center="currentPotion"
+      :zoom="10"
+      map-type-id="terrain"
+      style="width: 100%; height: 600px"
+      @click="getPosition($event)"
+    >
+      <GmapInfoWindow
+        :options="infoOptions"
+        :position="postContents.position"
+        :opened="infoWinOpen"
+        @closeclick="infoWinOpen = false"
+      >
+        {{ windowTitle }}</GmapInfoWindow
+      >
+      <GmapMarker
+        :key="index"
+        v-for="(m, index) in markers"
+        :position="m.position"
+        :clickable="true"
+        :draggable="true"
+        @click="toggleInfoWindow(m.position)"
+      />
+    </GmapMap>
   </div>
 </template>
 
@@ -48,7 +72,18 @@ import { mapActions } from "vuex";
 export default {
   data() {
     return {
+      windowTitle: "hoge",
       selected: "",
+      currentPotion: {},
+      markers: [],
+      infoOptions: {
+        pixelOffset: {
+          width: 0,
+          height: -35,
+        },
+      },
+      infoWindowPos: null,
+      infoWinOpen: false,
     };
   },
   methods: {
@@ -61,6 +96,39 @@ export default {
     deleteCategory(index) {
       this.postContents.categories.splice(index, 1);
     },
+    toggleInfoWindow(position) {
+      this.postContents.position = position;
+      this.infoWinOpen = true;
+    },
+    getPosition: function (event) {
+      if (this.markers.length >= 1) {
+        this.markers.splice(1);
+      }
+      console.log(event.latLng.lat());
+      if (event) {
+        this.markers.push({
+          id: this.markers.length,
+          title: "新規登録",
+          infowWindow: true,
+          position: { lat: event.latLng.lat(), lng: event.latLng.lng() },
+        });
+      }
+      this.windowTitle = "新規登録";
+      this.toggleInfoWindow({
+        lat: event.latLng.lat(),
+        lng: event.latLng.lng(),
+      });
+    },
+  },
+  created() {
+    this.$getLocation().then((coordinates) => {
+      console.log(coordinates);
+      this.currentPotion = coordinates;
+      this.markers.push({
+        position: this.currentPotion,
+      });
+    });
+    this.$store.commit("clearContents");
   },
   computed: {
     postContents() {

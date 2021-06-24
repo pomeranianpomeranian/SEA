@@ -12,6 +12,7 @@
             <img :src="post.imagesRef[0].url" />
           </div>
           <h3>{{ post.title }}</h3>
+          <div>{{ post.position }}</div>
         </div>
       </div>
     </div>
