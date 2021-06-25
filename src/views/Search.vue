@@ -1,23 +1,17 @@
 <template>
   <div>
-    <h1>This is Search Page!</h1>
-
-    <p>
-      ここにgoogle
-      mapと検索バーとか置く（ユーザーがホームの次に訪れるページのイメージ）
-    </p>
     <select v-model="selected">
-      <option disabled>Pick up a category</option>
-      <option>Culture</option>
-      <option>Nature</option>
-      <option>Amusement</option>
-      <option>Food</option>
-      <option>Shopping</option>
-      <option>History</option>
-      <option>Sports</option>
-      <option>View</option>
+      <option value="all">{{ $t("category.all") }}</option>
+      <option value="culture">{{ $t("category.culture") }}</option>
+      <option value="nature">{{ $t("category.nature") }}</option>
+      <option value="amusement">{{ $t("category.amusement") }}</option>
+      <option value="food">{{ $t("category.food") }}</option>
+      <option value="shopping">{{ $t("category.shopping") }}</option>
+      <option value="history">{{ $t("category.history") }}</option>
+      <option value="sports">{{ $t("category.sports") }}</option>
+      <option value="view">{{ $t("category.view") }}</option>
     </select>
-    <button @click="search">Search</button>
+    <button @click="search">{{ $t("search.search") }}</button>
   </div>
 </template>
 
@@ -25,19 +19,15 @@
 export default {
   data() {
     return {
-      selected: "",
+      selected: "all",
     };
   },
   methods: {
     search() {
-      if (!this.selected) {
-        this.$router.push({ name: "result", params: { category: "all" } });
-      } else {
-        this.$router.push({
-          name: "result",
-          params: { category: this.selected },
-        });
-      }
+      this.$router.push({
+        name: "result",
+        params: { category: this.selected },
+      });
     },
   },
 };

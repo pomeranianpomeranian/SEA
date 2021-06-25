@@ -1,33 +1,71 @@
 <template>
   <div>
-    <nav>
-      <ul class="options">
-        <li class="option">
-          <router-link :to="{ name: 'home' }">Home</router-link>
-        </li>
-        <li v-if="userId" class="option">
-          <router-link :to="{ name: 'user', params: { userId } }"
-            >Mypage</router-link
-          >
-        </li>
-      </ul>
-      <div class="auth">
-        <div v-if="isSigningIn && !userId">
-          <input type="text" placeholder="email" v-model="email" />
-          <input type="password" placeholder="password" v-model="password" />
-        </div>
-        <div>
-          <button
-            v-if="!userId"
-            @click="signIn({ email, password })"
-            @mouseover="isSigningIn = true"
-          >
-            Sign in
-          </button>
-          <button v-if="userId" @click="signOut">Sign out</button>
-        </div>
-      </div>
-    </nav>
+    <div>
+      <b-navbar toggleable="sm" type="light" variant="light">
+        <b-navbar-brand @click="transfer('home')">POME</b-navbar-brand>
+
+        <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
+
+        <b-collapse id="nav-collapse" is-nav>
+          <b-navbar-nav>
+            <b-nav-item @click="transfer('search')">{{
+              $t("nav.search")
+            }}</b-nav-item>
+            <b-nav-item @click="transfer('pend')">{{
+              $t("nav.pend")
+            }}</b-nav-item>
+          </b-navbar-nav>
+
+          <b-navbar-nav class="ml-auto">
+            <b-nav-item-dropdown :text="$t('form.language')" right>
+              <b-dropdown-item @click="$i18n.locale = 'en'"
+                >English</b-dropdown-item
+              >
+              <b-dropdown-item @click="$i18n.locale = 'ja'"
+                >日本語</b-dropdown-item
+              >
+            </b-nav-item-dropdown>
+
+            <b-nav-item-dropdown
+              v-if="userDetails"
+              :text="userDetails.username"
+              right
+            >
+              <b-dropdown-item @click="transfer('user', userId)">{{
+                $t("nav.mypage")
+              }}</b-dropdown-item>
+              <b-dropdown-item @click="signOut">{{
+                $t("nav.signout")
+              }}</b-dropdown-item>
+            </b-nav-item-dropdown>
+
+            <b-nav-item-dropdown
+              v-if="!userDetails"
+              :text="$t('nav.signin')"
+              right
+            >
+              <b-nav-form>
+                <b-form-input
+                  size="sm"
+                  type="email"
+                  v-model="email"
+                  :placeholder="$t('form.email')"
+                ></b-form-input>
+                <b-form-input
+                  size="sm"
+                  type="password"
+                  v-model="password"
+                  :placeholder="$t('form.password')"
+                ></b-form-input>
+                <b-button size="sm" @click="signIn({ email, password })">{{
+                  $t("nav.signin")
+                }}</b-button>
+              </b-nav-form>
+            </b-nav-item-dropdown>
+          </b-navbar-nav>
+        </b-collapse>
+      </b-navbar>
+    </div>
   </div>
 </template>
 
@@ -37,40 +75,23 @@ import { mapActions } from "vuex";
 export default {
   data() {
     return {
-      isSigningIn: false,
       email: "",
       password: "",
     };
   },
   methods: {
     ...mapActions(["signOut", "signIn"]),
+    transfer(name, params) {
+      this.$router.push({ name, params: { params } });
+    },
   },
   computed: {
     userId() {
       return this.$store.state.auth.userId;
     },
+    userDetails() {
+      return this.$store.state.auth.userDetails;
+    },
   },
 };
 </script>
-
-<style scoped>
-nav {
-  border-bottom: 1px solid black;
-  display: flex;
-  justify-content: space-between;
-}
-.options {
-  list-style-type: none;
-}
-.option {
-  display: inline-block;
-  margin: 0 10px;
-}
-.auth {
-  display: flex;
-  align-items: flex-end;
-}
-button {
-  padding: 10px;
-}
-</style>
