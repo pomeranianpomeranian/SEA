@@ -25,40 +25,22 @@
 </template>
 
 <script>
-import firebase from "firebase";
 import comment from "../components/Comment";
 export default {
   props: ["postId"],
   components: {
     comment,
   },
-  data() {
-    return {
-      postContents: "",
-    };
-  },
-  methods: {
-    getPost() {
-      firebase
-        .firestore()
-        .collection("posts")
-        .doc(this.postId)
-        .get()
-        .then((doc) => {
-          this.postContents = {
-            ...doc.data(),
-          };
-        })
-        .catch((err) => console.log(err));
-    },
-  },
   computed: {
     userId() {
       return this.$store.state.auth.userId;
     },
+    postContents() {
+      return this.$store.state.post.postContents;
+    },
   },
   created() {
-    this.getPost();
+    this.$store.dispatch("getDetails", this.postId);
   },
 };
 </script>

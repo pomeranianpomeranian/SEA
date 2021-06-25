@@ -1,18 +1,20 @@
 <template>
   <div>
-    <div class="my-posts">
+    <div class="pending-posts">
       <div class="card-container">
         <div
           class="card"
-          v-for="(post, index) in myPosts"
+          v-for="(post, index) in posts"
           :key="index"
           @click="transfer(index)"
         >
+          <div class="notification" v-if="post.numSuggestions">
+            {{ post.numSuggestions }}
+          </div>
           <div class="image">
             <img :src="post.imagesRef[0].url" />
           </div>
           <h3>{{ post.title }}</h3>
-          <div>{{ post.position }}</div>
         </div>
       </div>
     </div>
@@ -23,29 +25,25 @@
 export default {
   methods: {
     transfer(index) {
-      const postId = this.myPosts[index].postId;
       this.$router.push({
-        name: "mypost",
-        params: { userId: this.userId, postId },
+        name: "edit",
+        params: { postId: this.posts[index].postId },
       });
     },
   },
   computed: {
-    myPosts() {
+    posts() {
       return this.$store.state.post.posts;
-    },
-    userId() {
-      return this.$store.state.auth.userId;
     },
   },
   created() {
-    this.$store.dispatch("getMyPosts", false);
+    this.$store.dispatch("getMyPosts", true);
   },
 };
 </script>
 
 <style scoped>
-.my-posts {
+.pending-posts {
   border: 3px solid darkgray;
   border-radius: 10px;
   display: flex;
@@ -64,6 +62,10 @@ export default {
   flex-direction: column;
   width: 30%;
   margin: 5px;
+}
+.notification {
+  background-color: red;
+  color: white;
 }
 .image {
   height: 250px;

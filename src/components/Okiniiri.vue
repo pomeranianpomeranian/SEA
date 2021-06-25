@@ -26,103 +26,25 @@
 </template>
 
 <script>
-import firebase from "firebase";
 export default {
-  data() {
-    return {
-      posts: [],
-    };
-  },
   methods: {
-    getOkiniiriList() {
-      firebase
-        .firestore()
-        .collection("users")
-        .doc(this.userId)
-        .get()
-        .then((doc) => {
-          this.getPosts(doc.data().likedPosts);
-        })
-        .catch((err) => console.log(err));
-    },
-    getPosts(postsRef) {
-      postsRef.forEach((postRef) => {
-        firebase
-          .firestore()
-          .collection("posts")
-          .doc(postRef)
-          .get()
-          .then((doc) => {
-            this.posts.push({
-              isLiked: true,
-              postId: doc.id,
-              ...doc.data(),
-            });
-          })
-          .catch((err) => console.log(err));
-      });
-    },
     updateLike(index) {
-      const postRef = firebase
-        .firestore()
-        .collection("posts")
-        .doc(this.posts[index].postId);
-      if (!this.posts[index].isLiked) {
-        postRef
-          .update({
-            numLike: firebase.firestore.FieldValue.increment(1),
-          })
-          .then(() => {
-            this.addLike(index);
-          })
-          .catch((err) => console.log(err));
-      } else {
-        postRef
-          .update({
-            numLike: firebase.firestore.FieldValue.increment(-1),
-          })
-          .then(() => {
-            this.removeLike(index);
-          })
-          .catch((err) => console.log(err));
-      }
-    },
-    addLike(index) {
-      const target = this.posts[index];
-      firebase
-        .firestore()
-        .collection("users")
-        .doc(this.userId)
-        .update({
-          likedPosts: firebase.firestore.FieldValue.arrayUnion(target.postId),
-        })
-        .then(() => {
-          target.isLiked = true;
-        })
-        .catch((err) => console.log(err));
-    },
-    removeLike(index) {
-      const target = this.posts[index];
-      firebase
-        .firestore()
-        .collection("users")
-        .doc(this.userId)
-        .update({
-          likedPosts: firebase.firestore.FieldValue.arrayRemove(target.postId),
-        })
-        .then(() => {
-          target.isLiked = false;
-        })
-        .catch((err) => console.log(err));
+      this.$store.dispatch("updateLike", index);
     },
   },
   computed: {
     userId() {
       return this.$store.state.auth.userId;
     },
+    posts() {
+      return this.$store.state.post.posts;
+    },
   },
   created() {
-    this.getOkiniiriList();
+    this.$store.dispatch("getOkiniiriList");
+  },
+  destroyed() {
+    this.$store.dispatch("fetchUserData", this.userId);
   },
 };
 </script>

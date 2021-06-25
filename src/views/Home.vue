@@ -1,13 +1,30 @@
 <template>
-  <div>
-    <h1>HOME PAGE!</h1>
-    <router-link :to="{ name: 'search' }">Search</router-link> |
-    <router-link :to="{ name: 'signup' }">Sign Up</router-link>
-    <p>Welcome to Japan! 的な。</p>
-    <div v-if="!userId" class="sign-in">
-      <input type="text" v-model="email" placeholder="Email" /><br />
-      <input type="password" v-model="password" placeholder="Password" /><br />
-      <button @click="signIn({ email, password })">Sign in</button>
+  <div v-if="!userId">
+    <div class="form-container" v-if="$i18n.locale === 'ja'">
+      <span
+        v-for="(tab, index) in ja.tabs"
+        @click="ja.selectedTab = tab"
+        :class="{ activeTab: ja.selectedTab === tab }"
+        :key="index"
+        >{{ tab }}</span
+      >
+      <div class="form">
+        <signinForm v-if="ja.selectedTab === 'ログイン'" />
+        <signupForm v-if="ja.selectedTab === 'サインアップ'" />
+      </div>
+    </div>
+    <div class="form-container" v-if="$i18n.locale === 'en'">
+      <span
+        v-for="(tab, index) in en.tabs"
+        @click="en.selectedTab = tab"
+        :class="{ activeTab: en.selectedTab === tab }"
+        :key="index"
+        >{{ tab }}</span
+      >
+      <div class="form">
+        <signinForm v-if="en.selectedTab === 'Sign in'" />
+        <signupForm v-if="en.selectedTab === 'Sign up'" />
+      </div>
     </div>
     <GmapMap
       :center="{ lat: 35.645974459469834, lng: 139.70496042046145 }"
@@ -29,17 +46,24 @@
 </template>
 
 <script>
-import { mapActions } from "vuex";
-
+import signinForm from "../components/SignIn";
+import signupForm from "../components/SignUp";
 export default {
+  components: {
+    signinForm,
+    signupForm,
+  },
   data() {
     return {
-      email: "",
-      password: "",
+      ja: {
+        selectedTab: "ログイン",
+        tabs: ["ログイン", "サインアップ"],
+      },
+      en: {
+        selectedTab: "Sign in",
+        tabs: ["Sign in", "Sign up"],
+      },
     };
-  },
-  methods: {
-    ...mapActions(["signIn"]),
   },
   computed: {
     userId() {
@@ -50,7 +74,16 @@ export default {
 </script>
 
 <style scoped>
-.sign-in {
-  margin-top: 30px;
+.form-container {
+  margin-top: 100px;
+}
+span {
+  margin: 10px;
+}
+.form {
+  margin-top: 10px;
+}
+.activeTab {
+  color: darkgray;
 }
 </style>

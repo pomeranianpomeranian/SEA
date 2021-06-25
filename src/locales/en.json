@@ -1,0 +1,53 @@
+{
+  "nav": {
+    "home": "Home",
+    "mypage": "Mypage",
+    "search": "Search",
+    "pend": "Translator",
+    "newpost": "New Post",
+    "myposts": "My Posts",
+    "liked": "Liked Posts",
+    "edit": "Edit",
+    "delete": "Delete",
+    "signin": "Sign in",
+    "signout": "Sign out",
+    "signup": "Sign up"
+  },
+  "comment": {
+    "nocomment": "There has been no comment yet",
+    "send": "Send",
+    "placeholder": "comment"
+  },
+  "form": {
+    "title": "Title",
+    "description": "Description",
+    "image": "Images",
+    "category": "Category",
+    "email": "Email",
+    "password": "Password",
+    "username": "Username",
+    "language": "Language",
+    "add": "Add",
+    "update": "Update",
+    "submit": "Submit",
+    "save": "Ask for translation",
+    "send": "Send"
+  },
+  "category": {
+    "all": "All",
+    "culture": "Culture",
+    "nature": "Nature",
+    "amusement": "Amusement",
+    "food": "Food",
+    "shopping": "Shopping",
+    "history": "History",
+    "sports": "Sports",
+    "view": "View"
+  },
+  "search": {
+    "search": "Search"
+  },
+  "map": {
+    "current": "Current Location"
+  }
+}

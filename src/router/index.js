@@ -8,7 +8,8 @@ import NewPost from "../views/NewPost.vue";
 import MyPost from "../views/MyPost.vue";
 import Edit from "../views/Edit.vue";
 import User from "../views/User.vue";
-import SignUp from "../views/SignUp.vue";
+import PendingBoard from "../views/PendingBoard.vue";
+import Translate from "../views/Translate.vue";
 
 Vue.use(VueRouter);
 
@@ -17,6 +18,17 @@ const routes = [
     path: "/",
     name: "home",
     component: Home,
+  },
+  {
+    path: "/pend_board",
+    name: "pend",
+    component: PendingBoard,
+  },
+  {
+    path: "/pend_board/:postId/translate",
+    name: "translate",
+    component: Translate,
+    props: true,
   },
   {
     path: "/search",
@@ -61,11 +73,6 @@ const routes = [
     name: "edit",
     component: Edit,
     props: true,
-  },
-  {
-    path: "/signup",
-    name: "signup",
-    component: SignUp,
   },
   {
     path: "*",

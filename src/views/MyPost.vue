@@ -21,20 +21,14 @@
       </span>
     </p>
     <div>
-      <button @click="edit">Edit</button>
-      <button @click="deleteFiles">Delete</button>
+      <button @click="edit">{{ $t("nav.edit") }}</button>
+      <button @click="deleteFiles">{{ $t("nav.delete") }}</button>
     </div>
   </div>
 </template>
 <script>
-import firebase from "firebase";
 export default {
   props: ["postId"],
-  data() {
-    return {
-      postContents: "",
-    };
-  },
   methods: {
     edit() {
       this.$router.push({
@@ -43,56 +37,21 @@ export default {
       });
     },
     deleteFiles() {
-      const files = this.postContents.imagesRef;
       if (confirm("Are you sure?")) {
-        for (let i = 0; i <= files.length - 1; i++) {
-          firebase
-            .storage()
-            .ref(files[i].path)
-            .delete()
-            .then(() => {
-              console.log("Deleted the file");
-              if (i === files.length - 1) {
-                this.deleteDoc();
-              }
-            })
-            .catch((err) => console.log(err));
-        }
+        this.$store.dispatch("deleteFiles", this.postId);
       }
-    },
-    deleteDoc() {
-      firebase
-        .firestore()
-        .collection("posts")
-        .doc(this.postId)
-        .delete()
-        .then(() => {
-          console.log("Deleted the document!");
-          this.$router.push({
-            name: "user",
-            params: { userId: this.userId },
-          });
-        })
-        .catch((err) => console.log(err));
     },
   },
   computed: {
     userId() {
       return this.$store.state.auth.userId;
     },
+    postContents() {
+      return this.$store.state.post.postContents;
+    },
   },
   created() {
-    firebase
-      .firestore()
-      .collection("posts")
-      .doc(this.postId)
-      .get()
-      .then((doc) => {
-        this.postContents = {
-          ...doc.data(),
-        };
-      })
-      .catch((err) => console.log(err));
+    this.$store.dispatch("getDetails", this.postId);
   },
 };
 </script>
