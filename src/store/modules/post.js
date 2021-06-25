@@ -277,7 +277,9 @@ const actions = {
     const file = event.target.files[0];
     const path = `${rootState.auth.userId}/${file.name}`;
     if (heicDetector(path))
-      alert("Invalid file format. Make sure the format is 'jpeg' or 'png'");
+      alert(
+        "Invalid file format. Make sure the format is 'jpg', 'jpeg' or 'png'"
+      );
     else {
       storage
         .ref(path)

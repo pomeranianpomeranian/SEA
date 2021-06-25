@@ -21,10 +21,13 @@
       "form": {
         "title": "題名",
         "description": "紹介文",
+        "image": "画像",
+        "category": "カテゴリー",
         "email": "メールアドレス",
         "password": "パスワード",
         "username": "ユーザーネーム",
         "language": "言語",
+        "add": "追加",
         "update": "更新する",
         "submit": "投稿する",
         "save": "翻訳を依頼する",
