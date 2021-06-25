@@ -46,5 +46,8 @@
       },
       "search": {
         "search": "検索"
+      },
+      "map": {
+        "current": "現在地"
       }
 }
