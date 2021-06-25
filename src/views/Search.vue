@@ -1,5 +1,34 @@
 <template>
   <div>
+    <GmapMap
+      :center="currentPotion"
+      :zoom="10"
+      map-type-id="terrain"
+      style="width: 100%; height: 600px"
+      justifiy-content-center
+    >
+      <GmapInfoWindow
+        :options="infoOptions"
+        :position="infoWindowPos"
+        :opened="infoWinOpen"
+        @closeclick="infoWinOpen = false"
+        ><span v-if="!selectedMarker.postId">{{ selectedMarker.title }}</span>
+        <router-link
+          v-else
+          :to="{ name: 'details', params: { postId: selectedMarker.postId } }"
+          >{{ selectedMarker.title }}</router-link
+        ></GmapInfoWindow
+      >
+      <GmapMarker
+        :key="index"
+        v-for="(m, index) in markers"
+        :position="m.position"
+        :clickable="true"
+        :draggable="true"
+        @click="getPosition(m)"
+      />
+    </GmapMap>
+
     <select v-model="selected">
       <option value="all">{{ $t("category.all") }}</option>
       <option value="culture">{{ $t("category.culture") }}</option>
@@ -16,19 +45,88 @@
 </template>
 
 <script>
+import firebase from "firebase";
 export default {
   data() {
     return {
       selected: "all",
+      selectedMarker: {},
+      currentPotion: {},
+      markers: [],
+      infoOptions: {
+        pixelOffset: {
+          width: 0,
+          height: -35,
+        },
+      },
+      infoWindowPos: null,
+      infoWinOpen: false,
+      headers: {
+        "Content-Type": "application/json;charset=UTF-8",
+        "Access-Control-Allow-Origin": "*",
+      },
     };
   },
+  created() {
+    this.$getLocation().then((coordinates) => {
+      this.currentPotion = coordinates;
+      this.markers.push({
+        title: this.$t("map.current"),
+        position: this.currentPotion,
+      });
+    });
+    firebase
+      .firestore()
+      .collection("posts")
+      .get()
+      .then((snapshot) => {
+        snapshot.docs.forEach((doc) => {
+          this.markers.push({
+            id: this.markers.length,
+            postId: doc.id,
+            ...doc.data(),
+          });
+        });
+      });
+  },
+
   methods: {
+    toggleInfoWindow(marker) {
+      this.infoWindowPos = marker.position;
+      this.infoWinOpen = true;
+    },
     search() {
       this.$router.push({
         name: "result",
         params: { category: this.selected },
       });
     },
+    getPosition(marker) {
+      this.selectedMarker = marker;
+      this.toggleInfoWindow(marker);
+    },
+  },
+  mounted() {
+    let origin = "41.43206,-81.38992";
+    let destination = "46.43206,-80.38992";
+    let key = "AIzaSyBdqpd-ViC5zdoC3XS1lOjhSNfNBcaznkw";
+    let url =
+      "/maps/api/directions/json?origin=" +
+      origin +
+      "&destination=" +
+      destination +
+      "&key=" +
+      key;
+
+    fetch(url, {
+      mode: "no-cors",
+    })
+      .then((res) => {
+        return res.json();
+      })
+      .catch((err) => {
+        console.log("err", err);
+      });
   },
 };
 </script>
