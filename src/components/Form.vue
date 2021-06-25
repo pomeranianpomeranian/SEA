@@ -108,12 +108,12 @@ export default {
       if (event) {
         this.markers.push({
           id: this.markers.length,
-          title: "新規登録",
+          title: this.postContents.title,
           infowWindow: true,
           position: { lat: event.latLng.lat(), lng: event.latLng.lng() },
         });
       }
-      this.windowTitle = "新規登録";
+      this.windowTitle = this.postContents.title;
       this.toggleInfoWindow({
         lat: event.latLng.lat(),
         lng: event.latLng.lng(),

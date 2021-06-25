@@ -1,12 +1,5 @@
 <template>
   <div>
-    <h1>This is Search Page!</h1>
-
-    <p>
-      ここにgoogle
-      mapと検索バーとか置く（ユーザーがホームの次に訪れるページのイメージ）
-    </p>
-
     <GmapMap
       :center="currentPotion"
       :zoom="10"
@@ -19,8 +12,12 @@
         :position="infoWindowPos"
         :opened="infoWinOpen"
         @closeclick="infoWinOpen = false"
-      >
-        {{ windowTitle }}</GmapInfoWindow
+        ><span v-if="!selectedMarker.postId">{{ selectedMarker.title }}</span>
+        <router-link
+          v-else
+          :to="{ name: 'details', params: { postId: selectedMarker.postId } }"
+          >{{ selectedMarker.title }}</router-link
+        ></GmapInfoWindow
       >
       <GmapMarker
         :key="index"
@@ -52,8 +49,8 @@ import firebase from "firebase";
 export default {
   data() {
     return {
-      windowTitle: "hoge",
       selected: "all",
+      selectedMarker: {},
       currentPotion: {},
       markers: [],
       infoOptions: {
@@ -70,12 +67,11 @@ export default {
       },
     };
   },
-  created: function () {
+  created() {
     this.$getLocation().then((coordinates) => {
-      console.log(coordinates);
       this.currentPotion = coordinates;
       this.markers.push({
-        title: "現在地",
+        title: this.$t("map.current"),
         position: this.currentPotion,
       });
     });
@@ -87,18 +83,14 @@ export default {
         snapshot.docs.forEach((doc) => {
           this.markers.push({
             id: this.markers.length,
-            postid: doc.id,
+            postId: doc.id,
             ...doc.data(),
           });
         });
       });
-    console.log(this.markers);
   },
 
   methods: {
-    onDragEnd() {
-      console.log("hoge");
-    },
     toggleInfoWindow(marker) {
       this.infoWindowPos = marker.position;
       this.infoWinOpen = true;
@@ -109,12 +101,12 @@ export default {
         params: { category: this.selected },
       });
     },
-    getPosition: function (marker) {
-      this.windowTitle = marker.title;
+    getPosition(marker) {
+      this.selectedMarker = marker;
       this.toggleInfoWindow(marker);
     },
   },
-  mounted: function () {
+  mounted() {
     let origin = "41.43206,-81.38992";
     let destination = "46.43206,-80.38992";
     let key = "AIzaSyBdqpd-ViC5zdoC3XS1lOjhSNfNBcaznkw";
@@ -125,18 +117,12 @@ export default {
       destination +
       "&key=" +
       key;
-    console.log(url);
 
     fetch(url, {
       mode: "no-cors",
     })
       .then((res) => {
-        console.log("status", res.status);
-        console.log("body", res.data);
         return res.json();
-      })
-      .then((data) => {
-        console.log(data);
       })
       .catch((err) => {
         console.log("err", err);
