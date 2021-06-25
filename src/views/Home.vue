@@ -59,7 +59,7 @@ export default {
 
 <style scoped>
 .form-container {
-  margin-top: 30px;
+  margin-top: 100px;
 }
 span {
   margin: 10px;

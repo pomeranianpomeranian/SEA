@@ -2,10 +2,10 @@
   <div>
     <div class="submit-form">
       <postForm />
-      <div>
+      <!-- <div>
         <button @click="submitPost(false)">{{ $t("form.submit") }}</button>
         <button @click="submitPost(true)">{{ $t("form.save") }}</button>
-      </div>
+      </div> -->
     </div>
   </div>
 </template>
@@ -16,11 +16,11 @@ export default {
   components: {
     postForm,
   },
-  methods: {
-    submitPost(pending) {
-      this.$store.dispatch("submitPost", pending);
-    },
-  },
+  // methods: {
+  //   submitPost(pending) {
+  //     this.$store.dispatch("submitPost", pending);
+  //   },
+  // },
   created() {
     this.$store.commit("clearContents");
   },

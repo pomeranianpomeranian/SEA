@@ -21,10 +21,13 @@
   "form": {
     "title": "Title",
     "description": "Description",
+    "image": "Images",
+    "category": "Category",
     "email": "Email",
     "password": "Password",
     "username": "Username",
     "language": "Language",
+    "add": "Add",
     "update": "Update",
     "submit": "Submit",
     "save": "Ask for translation",
