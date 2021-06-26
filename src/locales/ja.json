@@ -1,53 +1,63 @@
 {
-    "nav": {
-        "home": "ホーム",
-        "mypage": "マイページ",
-        "search": "検索",
-        "pend": "翻訳",
-        "newpost": "新規投稿",
-        "myposts": "投稿",
-        "liked": "お気に入り",
-        "edit": "編集する",
-        "delete": "削除する",
-        "signin": "ログイン",
-        "signout": "ログアウト",
-        "signup": "サインアップ"
-      },
-      "comment": {
-        "nocomment": "まだコメントはありません",
-        "send": "送る",
-        "placeholder": "コメントを入力してください"
-      },
-      "form": {
-        "title": "題名",
-        "description": "紹介文",
-        "image": "画像",
-        "category": "カテゴリー",
-        "email": "メールアドレス",
-        "password": "パスワード",
-        "username": "ユーザーネーム",
-        "language": "言語",
-        "add": "追加",
-        "update": "更新する",
-        "submit": "投稿する",
-        "save": "翻訳を依頼する",
-        "send": "送る"
-      },
-      "category": {
-        "all": "すべて",
-        "culture": "文化",
-        "nature": "自然",
-        "amusement": "娯楽",
-        "food": "食べもの",
-        "shopping": "ショッピング",
-        "history": "歴史",
-        "sports": "スポーツ",
-        "view": "景色"
-      },
-      "search": {
-        "search": "検索"
-      },
-      "map": {
-        "current": "現在地"
-      }
+  "nav": {
+    "home": "ホーム",
+    "mypage": "マイページ",
+    "search": "検索",
+    "pend": "翻訳",
+    "newpost": "新規投稿",
+    "myposts": "投稿",
+    "liked": "お気に入り",
+    "edit": "編集する",
+    "delete": "削除する",
+    "signin": "ログイン",
+    "signout": "ログアウト",
+    "signup": "サインアップ"
+  },
+  "comment": {
+    "nocomment": "まだコメントはありません",
+    "send": "送る",
+    "placeholder": "コメントを入力してください"
+  },
+  "form": {
+    "title": "題名",
+    "description": "紹介文",
+    "image": "画像",
+    "preview": "選択した画像 :",
+    "category": "カテゴリー",
+    "selected": "選択したカテゴリー :",
+    "location": "場所 :",
+    "email": "メールアドレス",
+    "password": "パスワード",
+    "username": "ユーザーネーム",
+    "language": "言語",
+    "add": "追加",
+    "update": "更新する",
+    "submit": "投稿する",
+    "save": "翻訳を依頼する",
+    "send": "送る"
+  },
+  "placeholder": {
+    "title": "素敵な題名をつけてください",
+    "category": "カテゴリーを選んでください",
+    "description": "つい行きたくなってしまうような説明をお願いします",
+    "image": "クリックして画像を選択してください",
+    "delete": "画像はクリックすると削除されます"
+  },
+  "category": {
+    "all": "すべて",
+    "culture": "文化",
+    "nature": "自然",
+    "amusement": "娯楽",
+    "food": "食べもの",
+    "shopping": "ショッピング",
+    "history": "歴史",
+    "sports": "スポーツ",
+    "view": "景色"
+  },
+  "search": {
+    "search": "検索"
+  },
+  "map": {
+    "current": "現在地"
+  }
 }
