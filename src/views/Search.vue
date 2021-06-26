@@ -29,7 +29,54 @@
       />
     </GmapMap>
 
-    <select v-model="selected">
+    <div class="selected">
+      <h1>{{ $t("form.category") }}</h1>
+      <h2>{{ selected }}</h2>
+
+      <div class="selectCategory">
+        <b-button variant="outline-primary" @click="selectCulture"
+          ><img src="../images/H_SHODO.png" alt="" width="50rem" height="50rem"
+        /></b-button>
+        <b-button variant="outline-secondary" @click="selectNature"
+          ><img src="../images/H_KODO.png" alt="" width="50rem" height="50rem"
+        /></b-button>
+        <b-button variant="outline-success" @click="selectSports"
+          ><img src="../images/H_SUMO.png" alt="" width="50rem" height="50rem"
+        /></b-button>
+        <b-button variant="outline-danger" @click="selectFood"
+          ><img
+            src="../images/F_WASHOKU.png"
+            alt=""
+            width="50rem"
+            height="50rem"
+        /></b-button>
+        <b-button variant="outline-warning" @click="selectShopping"
+          ><img
+            src="../images/B_BAITEN.png"
+            alt=""
+            width="50rem"
+            height="50rem"
+        /></b-button>
+        <b-button variant="outline-info" @click="selectHistory"
+          ><img
+            src="../images/H_SHIRO-ATO.png"
+            alt=""
+            width="50rem"
+            height="50rem"
+        /></b-button>
+        <b-button variant="outline-dark" @click="selectView"
+          ><img
+            src="../images/N_HINODE.png"
+            alt=""
+            width="50rem"
+            height="50rem"
+        /></b-button>
+        <b-button variant="outline-light" @click="selectAmusement"
+          ><img src="../images/H_NINJA.png" alt="" width="50rem" height="50rem"
+        /></b-button>
+      </div>
+
+      <!--<select v-model="selected">
       <option value="all">{{ $t("category.all") }}</option>
       <option value="culture">{{ $t("category.culture") }}</option>
       <option value="nature">{{ $t("category.nature") }}</option>
@@ -39,8 +86,9 @@
       <option value="history">{{ $t("category.history") }}</option>
       <option value="sports">{{ $t("category.sports") }}</option>
       <option value="view">{{ $t("category.view") }}</option>
-    </select>
-    <button @click="search">{{ $t("search.search") }}</button>
+    </select-->
+      <button @click="search">{{ $t("search.search") }}</button>
+    </div>
   </div>
 </template>
 
@@ -95,6 +143,30 @@ export default {
       this.infoWindowPos = marker.position;
       this.infoWinOpen = true;
     },
+    selectCulture() {
+      this.selected = "culture";
+    },
+    selectNature() {
+      this.selected = "nature";
+    },
+    selectSports() {
+      this.selected = "sports";
+    },
+    selectFood() {
+      this.selected = "food";
+    },
+    selectShopping() {
+      this.selected = "shopping";
+    },
+    selectHistory() {
+      this.selected = "history";
+    },
+    selectView() {
+      this.selected = "view";
+    },
+    selectAmusement() {
+      this.selected = "amusement";
+    },
     search() {
       this.$router.push({
         name: "result",
@@ -130,3 +202,20 @@ export default {
   },
 };
 </script>
+
+<style>
+.selected {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+.selected h2 {
+  color: rgba(0, 0, 0, 0.5);
+}
+.selectCategory {
+  display: flex;
+  justify-content: space-around;
+  padding: 30px 150px;
+}
+</style>
