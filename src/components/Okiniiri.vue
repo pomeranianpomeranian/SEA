@@ -1,5 +1,5 @@
 <template>
-  <div class="container d-flex flex-nowrap border rounded p-3 mt-5">
+  <div class="container d-flex flex-nowrap p-3">
     <div class="holder px-2" v-for="(post, index) in posts" :key="index">
       <b-card :img-src="post.imagesRef[0].url" img-alt="Image" img-top>
         <template #header>
@@ -17,9 +17,11 @@
         </template>
 
         <b-card-body class="m-0 p-0">
-          <b-card-title class="title" @click="transfer(post.postId)">{{
-            post.title
-          }}</b-card-title>
+          <b-card-title
+            class="title text-center"
+            @click="transfer(post.postId)"
+            >{{ post.title }}</b-card-title
+          >
         </b-card-body>
       </b-card>
     </div>

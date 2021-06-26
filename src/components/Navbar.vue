@@ -34,6 +34,9 @@
               <b-dropdown-item @click="transfer('user', userId)">{{
                 $t("nav.mypage")
               }}</b-dropdown-item>
+              <b-dropdown-item @click="transfer('newpost', userId)">{{
+                $t("nav.newpost")
+              }}</b-dropdown-item>
               <b-dropdown-item @click="signOut">{{
                 $t("nav.signout")
               }}</b-dropdown-item>
