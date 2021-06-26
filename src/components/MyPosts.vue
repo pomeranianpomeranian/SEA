@@ -1,20 +1,14 @@
 <template>
-  <div>
-    <div class="my-posts">
-      <div class="card-container">
-        <div
-          class="card"
-          v-for="(post, index) in myPosts"
-          :key="index"
-          @click="transfer(index)"
-        >
-          <div class="image">
-            <img :src="post.imagesRef[0].url" />
-          </div>
-          <h3>{{ post.title }}</h3>
-          <div>{{ post.position }}</div>
-        </div>
-      </div>
+  <div class="container d-flex flex-nowrap border rounded p-3 mt-5">
+    <div class="holder px-2" v-for="(post, index) in myPosts" :key="index">
+      <b-card
+        @click="transfer(index)"
+        :title="post.title"
+        :img-src="post.imagesRef[0].url"
+        img-alt="Image"
+        img-top
+      >
+      </b-card>
     </div>
   </div>
 </template>
@@ -45,31 +39,10 @@ export default {
 </script>
 
 <style scoped>
-.my-posts {
-  border: 3px solid darkgray;
-  border-radius: 10px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 5px;
+.container {
+  overflow-x: scroll;
 }
-.card-container {
-  display: flex;
-  flex-wrap: wrap;
-  width: 80%;
-}
-.card {
-  border: 1px solid black;
-  display: flex;
-  flex-direction: column;
-  width: 30%;
-  margin: 5px;
-}
-.image {
-  height: 250px;
-}
-img {
-  width: 100%;
-  height: 100%;
+.holder {
+  min-width: 30%;
 }
 </style>
