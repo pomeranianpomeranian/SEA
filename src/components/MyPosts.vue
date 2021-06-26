@@ -1,13 +1,12 @@
 <template>
   <div class="container d-flex flex-nowrap border rounded p-3 mt-5">
     <div class="holder px-2" v-for="(post, index) in myPosts" :key="index">
-      <b-card
-        @click="transfer(index)"
-        :title="post.title"
-        :img-src="post.imagesRef[0].url"
-        img-alt="Image"
-        img-top
-      >
+      <b-card :img-src="post.imagesRef[0].url" img-alt="Image" img-top>
+        <b-card-body class="m-0 p-0">
+          <b-card-title class="title" @click="transfer(post.postId)">{{
+            post.title
+          }}</b-card-title>
+        </b-card-body>
       </b-card>
     </div>
   </div>
@@ -16,8 +15,7 @@
 <script>
 export default {
   methods: {
-    transfer(index) {
-      const postId = this.myPosts[index].postId;
+    transfer(postId) {
       this.$router.push({
         name: "mypost",
         params: { userId: this.userId, postId },
@@ -44,5 +42,9 @@ export default {
 }
 .holder {
   min-width: 30%;
+}
+.title:hover {
+  cursor: pointer;
+  color: lightseagreen;
 }
 </style>
