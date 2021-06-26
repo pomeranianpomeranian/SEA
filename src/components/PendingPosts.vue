@@ -1,22 +1,23 @@
 <template>
-  <div>
-    <div class="pending-posts">
-      <div class="card-container">
-        <div
-          class="card"
-          v-for="(post, index) in posts"
-          :key="index"
-          @click="transfer(index)"
-        >
-          <div class="notification" v-if="post.numSuggestions">
-            {{ post.numSuggestions }}
-          </div>
-          <div class="image">
-            <img :src="post.imagesRef[0].url" />
-          </div>
-          <h3>{{ post.title }}</h3>
-        </div>
-      </div>
+  <div class="container d-flex flex-nowrap p-3">
+    <div class="holder px-2" v-for="(post, index) in posts" :key="index">
+      <b-card :img-src="post.imagesRef[0].url" img-alt="Image" img-top>
+        <template v-if="post.numSuggestions" #header>
+          <p class="text-center mt-1 mb-0 p-1 bg-danger text-light">
+            翻訳案が {{ post.numSuggestions }} 件届いています
+          </p>
+        </template>
+        <template v-else #header>
+          <p class="text-center">翻訳案は届いていません</p>
+        </template>
+        <b-card-body class="m-0 p-0">
+          <b-card-title
+            class="title text-center"
+            @click="transfer(post.postId)"
+            >{{ post.title }}</b-card-title
+          >
+        </b-card-body>
+      </b-card>
     </div>
   </div>
 </template>
@@ -24,10 +25,10 @@
 <script>
 export default {
   methods: {
-    transfer(index) {
+    transfer(postId) {
       this.$router.push({
         name: "edit",
-        params: { postId: this.posts[index].postId },
+        params: { postId },
       });
     },
   },
@@ -43,35 +44,15 @@ export default {
 </script>
 
 <style scoped>
-.pending-posts {
-  border: 3px solid darkgray;
-  border-radius: 10px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 5px;
+.container {
+  overflow-x: scroll;
 }
-.card-container {
-  display: flex;
-  flex-wrap: wrap;
-  width: 80%;
+.holder {
+  min-width: 20%;
+  max-width: 30%;
 }
-.card {
-  border: 1px solid black;
-  display: flex;
-  flex-direction: column;
-  width: 30%;
-  margin: 5px;
-}
-.notification {
-  background-color: red;
-  color: white;
-}
-.image {
-  height: 250px;
-}
-img {
-  width: 100%;
-  height: 100%;
+.title:hover {
+  cursor: pointer;
+  color: lightseagreen;
 }
 </style>

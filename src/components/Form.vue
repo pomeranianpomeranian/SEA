@@ -1,12 +1,12 @@
 <template>
   <b-container>
     <b-form-row>
-      <b-form @submit.prevent="send">
+      <b-form class="col">
         <b-form-group :label="`${$t('form.title')} :`" label-for="title">
           <b-form-input
             id="title"
             type="text"
-            placeholder="Put a fancy title"
+            :placeholder="$t('placeholder.title')"
             v-model="postContents.title"
             required
           ></b-form-input>
@@ -26,6 +26,17 @@
               }}</b-button>
             </b-input-group-append>
           </b-input-group>
+          <div class="categories-list my-2 p-1">
+            <span>{{ $t("form.selected") }}</span>
+            <span
+              class="category p-1 mx-1"
+              v-for="(category, index) in postContents.categories"
+              :key="index"
+              @click="deleteCategory(index)"
+            >
+              {{ $t(`category.${category}`) }}
+            </span>
+          </div>
         </b-form-group>
 
         <b-form-group
@@ -34,7 +45,7 @@
         >
           <b-form-textarea
             id="description"
-            placeholder="Describe the place"
+            :placeholder="$t('placeholder.description')"
             v-model="postContents.description"
             rows="3"
             max-rows="6"
@@ -46,58 +57,30 @@
           <b-form-file
             id="images"
             accept=".jpg, .jpeg, .png"
-            placeholder="Choose a file or drop it here..."
+            :placeholder="$t('placeholder.image')"
             @change.self="storeImage"
             required
           ></b-form-file>
         </b-form-group>
-        <div v-if="postContents.imagesRef.length">
-          <div
-            v-for="(image, index) in postContents.imagesRef"
-            :key="index"
-            @click="deleteImage(index)"
-          >
-            <img :src="image.url" />
-          </div>
-        </div>
 
-        <div v-if="$route.name === 'newpost'">
-          <b-button type="submit">{{ $t("form.submit") }}</b-button>
-          <b-button type="submit">{{ $t("form.save") }}</b-button>
-        </div>
-        <div v-if="$route.name === 'edit'">
-          <b-button type="submit" name="action" value="update">{{
-            $t("form.update")
-          }}</b-button>
-        </div>
+        <p class="mb-2">{{ $t("form.preview") }}</p>
+        <b-container class="img-container">
+          <p v-if="postContents.imagesRef.length">
+            {{ $t("placeholder.delete") }}
+          </p>
+          <b-container class="d-flex" v-if="postContents.imagesRef.length">
+            <b-row
+              cols="7"
+              v-for="(image, index) in postContents.imagesRef"
+              :key="index"
+              @click="deleteImage(index)"
+            >
+              <b-img :src="image.url" fluid thumbnail />
+            </b-row>
+          </b-container>
+        </b-container>
       </b-form>
     </b-form-row>
-    <div>
-      <GmapMap
-        :center="currentPotion"
-        :zoom="10"
-        map-type-id="terrain"
-        style="width: 100%; height: 600px"
-        @click="getPosition($event)"
-      >
-        <GmapInfoWindow
-          :options="infoOptions"
-          :position="postContents.position"
-          :opened="infoWinOpen"
-          @closeclick="infoWinOpen = false"
-        >
-          {{ windowTitle }}</GmapInfoWindow
-        >
-        <GmapMarker
-          :key="index"
-          v-for="(m, index) in markers"
-          :position="m.position"
-          :clickable="true"
-          :draggable="true"
-          @click="toggleInfoWindow(m.position)"
-        />
-      </GmapMap>
-    </div>
   </b-container>
 </template>
 
@@ -106,10 +89,9 @@ import { mapActions } from "vuex";
 export default {
   data() {
     return {
-      windowTitle: "hoge",
       selected: "",
       categories: [
-        { value: "", text: "Please select categories", disabled: true },
+        { value: "", text: this.$t("placeholder.category"), disabled: true },
         { value: "culture", text: this.$t("category.culture") },
         { value: "nature", text: this.$t("category.nature") },
         { value: "amusement", text: this.$t("category.amusement") },
@@ -119,20 +101,10 @@ export default {
         { value: "sports", text: this.$t("category.sports") },
         { value: "view", text: this.$t("category.view") },
       ],
-      currentPotion: {},
-      markers: [],
-      infoOptions: {
-        pixelOffset: {
-          width: 0,
-          height: -35,
-        },
-      },
-      infoWindowPos: null,
-      infoWinOpen: false,
     };
   },
   methods: {
-    ...mapActions(["deleteImage", "storeImage", "submitPost", "updatePost"]),
+    ...mapActions(["deleteImage", "storeImage", "updatePost"]),
     addCategory() {
       if (!this.postContents.categories.includes(this.selected)) {
         this.postContents.categories.push(this.selected);
@@ -141,44 +113,6 @@ export default {
     deleteCategory(index) {
       this.postContents.categories.splice(index, 1);
     },
-    send() {
-      if (this.$_POST["action"] === "submit") this.submitPost(false);
-      else if (this.$_POST["action"] === "save") this.submitPost(true);
-      else if (this.$_POST["action"] === "update") this.updatePost;
-    },
-    toggleInfoWindow(position) {
-      this.postContents.position = position;
-      this.infoWinOpen = true;
-    },
-    getPosition: function (event) {
-      if (this.markers.length >= 1) {
-        this.markers.splice(1);
-      }
-      console.log(event.latLng.lat());
-      if (event) {
-        this.markers.push({
-          id: this.markers.length,
-          title: this.postContents.title,
-          infowWindow: true,
-          position: { lat: event.latLng.lat(), lng: event.latLng.lng() },
-        });
-      }
-      this.windowTitle = this.postContents.title;
-      this.toggleInfoWindow({
-        lat: event.latLng.lat(),
-        lng: event.latLng.lng(),
-      });
-    },
-  },
-  created() {
-    this.$getLocation().then((coordinates) => {
-      console.log(coordinates);
-      this.currentPotion = coordinates;
-      this.markers.push({
-        position: this.currentPotion,
-      });
-    });
-    this.$store.commit("clearContents");
   },
   computed: {
     postContents() {
@@ -187,3 +121,22 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.img-container {
+  border: 1px solid lightgray;
+  border-radius: 0.3rem;
+  min-height: 15rem;
+}
+img {
+  cursor: pointer;
+}
+.categories-list {
+  border: 1px solid lightgray;
+  border-radius: 0.2rem;
+}
+.category {
+  font-weight: bold;
+  cursor: pointer;
+}
+</style>
