@@ -1,20 +1,15 @@
 <template>
-  <div>
-    <div class="my-posts">
-      <div class="card-container">
-        <div
-          class="card"
-          v-for="(post, index) in myPosts"
-          :key="index"
-          @click="transfer(index)"
-        >
-          <div class="image">
-            <img :src="post.imagesRef[0].url" />
-          </div>
-          <h3>{{ post.title }}</h3>
-          <div>{{ post.position }}</div>
-        </div>
-      </div>
+  <div class="container d-flex flex-nowrap p-3">
+    <div class="holder px-2" v-for="(post, index) in myPosts" :key="index">
+      <b-card :img-src="post.imagesRef[0].url" img-alt="Image" img-top>
+        <b-card-body class="m-0 p-0">
+          <b-card-title
+            class="title text-center"
+            @click="transfer(post.postId)"
+            >{{ post.title }}</b-card-title
+          >
+        </b-card-body>
+      </b-card>
     </div>
   </div>
 </template>
@@ -22,8 +17,7 @@
 <script>
 export default {
   methods: {
-    transfer(index) {
-      const postId = this.myPosts[index].postId;
+    transfer(postId) {
       this.$router.push({
         name: "mypost",
         params: { userId: this.userId, postId },
@@ -45,31 +39,14 @@ export default {
 </script>
 
 <style scoped>
-.my-posts {
-  border: 3px solid darkgray;
-  border-radius: 10px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 5px;
+.container {
+  overflow-x: scroll;
 }
-.card-container {
-  display: flex;
-  flex-wrap: wrap;
-  width: 80%;
+.holder {
+  min-width: 30%;
 }
-.card {
-  border: 1px solid black;
-  display: flex;
-  flex-direction: column;
-  width: 30%;
-  margin: 5px;
-}
-.image {
-  height: 250px;
-}
-img {
-  width: 100%;
-  height: 100%;
+.title:hover {
+  cursor: pointer;
+  color: lightseagreen;
 }
 </style>

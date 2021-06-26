@@ -22,10 +22,11 @@ const state = {
 const mutations = {
   clearContents(state) {
     return (state.postContents = {
-      title: "",
+      title: null,
       categories: [],
       imagesRef: [],
-      description: "",
+      description: null,
+      position: null,
     });
   },
   registerComment(state, comment) {

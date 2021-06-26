@@ -1,26 +1,29 @@
 <template>
-  <div class="results-container">
-    <div class="post-frame" v-for="(post, index) in posts" :key="index">
-      <div class="image-holder">
-        <img :src="post.imagesRef[0].url" />
-      </div>
-      <div class="description">
-        <div>
-          <router-link
-            class="title"
-            :to="{ name: 'details', params: { postId: post.postId } }"
-            >{{ post.title }}</router-link
-          >
-        </div>
-        <p>{{ post.description }}</p>
-        <div class="fav">
-          <div
-            class="like"
-            :class="{ liked: post.isLiked }"
+  <div class="container d-flex flex-nowrap p-3">
+    <div class="holder px-2" v-for="(post, index) in posts" :key="index">
+      <b-card :img-src="post.imagesRef[0].url" img-alt="Image" img-top>
+        <template #header>
+          <b-icon
+            icon="heart-fill"
+            v-if="post.isLiked"
+            variant="danger"
             @click="updateLike(index)"
-          ></div>
-        </div>
-      </div>
+          ></b-icon>
+          <b-icon
+            icon="heart"
+            v-if="!post.isLiked"
+            @click="updateLike(index)"
+          ></b-icon>
+        </template>
+
+        <b-card-body class="m-0 p-0">
+          <b-card-title
+            class="title text-center"
+            @click="transfer(post.postId)"
+            >{{ post.title }}</b-card-title
+          >
+        </b-card-body>
+      </b-card>
     </div>
   </div>
 </template>
@@ -30,6 +33,9 @@ export default {
   methods: {
     updateLike(index) {
       this.$store.dispatch("updateLike", index);
+    },
+    transfer(postId) {
+      this.$router.push({ name: "details", params: { postId } });
     },
   },
   computed: {
@@ -50,47 +56,15 @@ export default {
 </script>
 
 <style scoped>
-.results-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+.container {
+  overflow-x: scroll;
 }
-.post-frame {
-  display: flex;
-  padding: 5px;
-  border: 1px solid lightslategrey;
-  width: 90%;
-  height: 200px;
+.holder {
+  min-width: 10%;
+  max-width: 30%;
 }
-.image-holder {
-  width: 40%;
-  margin-right: 5px;
-}
-img {
-  width: 100%;
-  height: 100%;
-}
-.description {
-  width: 60%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-}
-.title {
-  font-weight: bold;
-  font-size: 20px;
-}
-.fav {
-  display: flex;
-  justify-content: flex-end;
-}
-.like {
-  width: 20px;
-  height: 20px;
-  border: 1px solid gray;
-  border-radius: 50%;
-}
-.liked {
-  background-color: red;
+.title:hover {
+  cursor: pointer;
+  color: lightseagreen;
 }
 </style>

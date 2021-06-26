@@ -1,37 +1,38 @@
 <template>
-  <div>
-    <h1>{{ userDetails.username }}</h1>
-    <router-link :to="{ name: 'newpost' }">{{ $t("nav.newpost") }}</router-link>
+  <div class="container mt-5">
     <div v-if="$i18n.locale === 'ja'">
-      <div class="tabs-container">
-        <div
-          class="tab"
-          :class="{ activeTab: ja.selectedTab === tab }"
-          v-for="(tab, index) in ja.tabs"
-          :key="index"
-          @click="ja.selectedTab = tab"
-        >
-          {{ tab }}
-        </div>
-      </div>
-      <myPosts v-if="ja.selectedTab === '投稿'"></myPosts>
-      <okiniiri v-if="ja.selectedTab === 'お気に入り'"></okiniiri>
-      <pendingposts v-if="ja.selectedTab === '翻訳待ち'"></pendingposts>
+      <b-card no-body>
+        <b-tabs card>
+          <b-tab
+            v-bind="{ active: ja.selectedTab === tab }"
+            v-for="(tab, index) in ja.tabs"
+            :key="index"
+            :title="tab"
+            @click="ja.selectedTab = tab"
+          >
+          </b-tab>
+          <myPosts v-if="ja.selectedTab === '投稿'"></myPosts>
+          <okiniiri v-if="ja.selectedTab === 'お気に入り'"></okiniiri>
+          <pendingposts v-if="ja.selectedTab === '翻訳待ち'"></pendingposts>
+        </b-tabs>
+      </b-card>
     </div>
+
     <div v-if="$i18n.locale === 'en'">
-      <div class="tabs-container">
-        <div
-          class="tab"
-          :class="{ activeTab: en.selectedTab === tab }"
-          v-for="(tab, index) in en.tabs"
-          :key="index"
-          @click="en.selectedTab = tab"
-        >
-          {{ tab }}
-        </div>
-      </div>
-      <myPosts v-if="en.selectedTab === 'My Posts'"></myPosts>
-      <okiniiri v-if="en.selectedTab === 'Liked Posts'"></okiniiri>
+      <b-card no-body>
+        <b-tabs card>
+          <b-tab
+            v-bind="{ active: en.selectedTab === tab }"
+            v-for="(tab, index) in en.tabs"
+            :key="index"
+            :title="tab"
+            @click="en.selectedTab = tab"
+          >
+          </b-tab>
+          <myPosts v-if="en.selectedTab === 'My Posts'"></myPosts>
+          <okiniiri v-if="en.selectedTab === 'Liked Posts'"></okiniiri>
+        </b-tabs>
+      </b-card>
     </div>
   </div>
 </template>
@@ -65,18 +66,3 @@ export default {
   },
 };
 </script>
-
-<style scoped>
-.tabs-container {
-  display: flex;
-  justify-content: center;
-}
-.tab {
-  margin: 5px;
-}
-.activeTab {
-  font-size: 120%;
-  font-weight: bold;
-  color: lightgreen;
-}
-</style>

@@ -22,7 +22,11 @@
     "title": "Title",
     "description": "Description",
     "image": "Images",
+    "preview": "Images Preview :",
     "category": "Category",
+    "selected": "Selected categories :",
+    "location": "Location :",
+    "suggestion": "Suggestions",
     "email": "Email",
     "password": "Password",
     "username": "Username",
@@ -32,6 +36,13 @@
     "submit": "Submit",
     "save": "Ask for translation",
     "send": "Send"
+  },
+  "placeholder": {
+    "title": "Put a fancy title here...",
+    "category": "Select a category or some",
+    "description": "Describe the place here...",
+    "image": "Choose a file or drop it here...",
+    "delete": "Click each image to delete..."
   },
   "category": {
     "all": "All",
