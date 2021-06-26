@@ -1,25 +1,23 @@
 <template>
   <div class="container">
-    <div class="next">
-      <button @click="back" v-bind="{ disabled: selected === 0 }">back</button>
-    </div>
-    <div class="suggestion-holder">
-      <p class="header">{{ $t("form.username") }}</p>
-      <p>{{ suggestions[selected].name }}</p>
+    <h5 class="text-center">{{ $t("form.suggestion") }}</h5>
+    <div class="suggestion-holder my-3">
+      <p>{{ $t("form.username") }} :</p>
+      <p class="body">{{ suggestions[index].name }}</p>
       <hr />
-      <p class="header">{{ $t("form.title") }}</p>
-      <p>{{ suggestions[selected].title }}</p>
+      <p>{{ $t("form.title") }} :</p>
+      <p class="body">{{ suggestions[index].title }}</p>
       <hr />
-      <p class="header">{{ $t("form.description") }}</p>
-      <p>{{ suggestions[selected].description }}</p>
+      <p>{{ $t("form.description") }} :</p>
+      <p class="body">{{ suggestions[index].description }}</p>
     </div>
-    <div class="next">
-      <button
-        @click="next"
-        v-bind="{ disabled: selected === suggestions.length - 1 }"
-      >
-        next
-      </button>
+    <div class="overflow-auto">
+      <b-pagination
+        align="center"
+        v-model="selected"
+        :total-rows="numSuggestions"
+        per-page="1"
+      ></b-pagination>
     </div>
   </div>
 </template>
@@ -29,43 +27,31 @@ export default {
   props: ["suggestions"],
   data() {
     return {
-      selected: 0,
+      selected: 1,
     };
   },
-  methods: {
-    next() {
-      this.selected += 1;
+  computed: {
+    numSuggestions() {
+      return this.suggestions.length;
     },
-    back() {
-      this.selected -= 1;
+    index() {
+      return this.selected - 1;
     },
   },
 };
 </script>
 
 <style scoped>
-.container {
-  display: flex;
-  width: 45%;
-  border: 1px solid darkgray;
-}
-button {
-  height: 100%;
-}
-.next {
-  width: 10%;
-}
-.back {
-  width: 10%;
-}
 .suggestion-holder {
-  width: 80%;
+  border: 1px solid lightgray;
+  border-radius: 0.5rem;
+  width: 100%;
   padding: 10px;
 }
 p {
   text-align: start;
 }
-.header {
+.body {
   font-weight: bold;
 }
 </style>

@@ -68,29 +68,17 @@
           <p v-if="postContents.imagesRef.length">
             {{ $t("placeholder.delete") }}
           </p>
-          <b-row v-if="postContents.imagesRef.length">
-            <b-col
-              cols="6"
+          <b-container class="d-flex" v-if="postContents.imagesRef.length">
+            <b-row
+              cols="7"
               v-for="(image, index) in postContents.imagesRef"
               :key="index"
               @click="deleteImage(index)"
             >
               <b-img :src="image.url" fluid thumbnail />
-            </b-col>
-          </b-row>
+            </b-row>
+          </b-container>
         </b-container>
-
-        <div class="mt-3" v-if="$route.name === 'edit'">
-          <b-button
-            class="col"
-            variant="outline-info"
-            type="button"
-            size="lg"
-            @click="updatePost"
-            v-bind="{ disabled: !completed }"
-            >{{ $t("form.update") }}</b-button
-          >
-        </div>
       </b-form>
     </b-form-row>
   </b-container>
@@ -139,7 +127,6 @@ export default {
   border: 1px solid lightgray;
   border-radius: 0.3rem;
   min-height: 15rem;
-  max-height: 30rem;
 }
 img {
   cursor: pointer;
