@@ -1,5 +1,30 @@
 <template>
   <div class="container mt-5">
+    <GmapMap
+      :center="currentPosition"
+      :zoom="10"
+      map-type-id="terrain"
+      style="width: 100%; height: 600px"
+      justifiy-content-center
+    >
+      <GmapInfoWindow
+        :options="infoOptions"
+        :position="infoWindowPos"
+        :opened="infoWinOpen"
+        @closeclick="infoWinOpen = false"
+        ><span>
+          {{ selectedMarker.title }}
+        </span>
+      </GmapInfoWindow>
+      <GmapMarker
+        :key="index"
+        v-for="(m, index) in markers"
+        :position="m.position"
+        :clickable="true"
+        :draggable="true"
+        @click="getPosition(m)"
+      />
+    </GmapMap>
     <b-card no-body class="overflow-hidden">
       <b-row no-gutters>
         <b-col cols="4">
@@ -46,6 +71,35 @@ export default {
   components: {
     comment,
   },
+  data() {
+    return {
+      selectedMarker: {},
+      markers: [],
+      currentPosition: {},
+      infoOptions: {
+        pixelOffset: {
+          width: 0,
+          height: -35,
+        },
+      },
+      infoWindowPos: null,
+      infoWinOpen: false,
+      headers: {
+        "Content-Type": "application/json;charset=UTF-8",
+        "Access-Control-Allow-Origin": "*",
+      },
+    };
+  },
+  methods: {
+    toggleInfoWindow(marker) {
+      this.infoWindowPos = marker.position;
+      this.infoWinOpen = true;
+    },
+    getPosition(marker) {
+      this.selectedMarker = marker;
+      this.toggleInfoWindow(marker);
+    },
+  },
   computed: {
     userId() {
       return this.$store.state.auth.userId;
@@ -61,7 +115,38 @@ export default {
     },
   },
   created() {
-    this.$store.dispatch("getDetails", this.postId);
+    this.$getLocation()
+      .then((coordinates) => {
+        this.currentPosition = coordinates;
+        this.markers.push({
+          title: this.$t("map.current"),
+          position: this.currentPosition,
+        });
+      })
+      .then(() => this.$store.dispatch("getDetails", this.postId));
+    this.markers.push(this.postContents);
+  },
+  mounted() {
+    let origin = "41.43206,-81.38992";
+    let destination = "46.43206,-80.38992";
+    let key = "AIzaSyBdqpd-ViC5zdoC3XS1lOjhSNfNBcaznkw";
+    let url =
+      "/maps/api/directions/json?origin=" +
+      origin +
+      "&destination=" +
+      destination +
+      "&key=" +
+      key;
+
+    fetch(url, {
+      mode: "no-cors",
+    })
+      .then((res) => {
+        return res.json();
+      })
+      .catch((err) => {
+        console.log("err", err);
+      });
   },
 };
 </script>
