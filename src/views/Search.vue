@@ -58,7 +58,7 @@ export default {
       categories: [
         {
           text: this.$t("category.all"),
-          icon: "H_SHODO.png",
+          icon: "T_HIKOKI.png",
           value: "all",
         },
         {

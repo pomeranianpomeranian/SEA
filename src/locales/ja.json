@@ -62,5 +62,8 @@
   },
   "map": {
     "current": "現在地"
+  },
+  "title": {
+    "pendboard": "翻訳待ちの投稿"
   }
 }

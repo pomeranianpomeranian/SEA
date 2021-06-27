@@ -32,7 +32,7 @@
                 v-for="(category, index) in post.categories"
                 :key="index"
               >
-                {{ category }}
+                #{{ category }}
               </span>
             </div>
             <div class="d-flex justify-content-between h5 mb-0">

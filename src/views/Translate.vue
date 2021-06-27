@@ -1,8 +1,11 @@
 <template>
-  <div class="container">
-    <client :postId="postId"></client>
-
-    <translateform :postId="postId"></translateform>
+  <div class="container d-flex justify-content-center mt-5">
+    <div class="col-6">
+      <client :postId="postId"></client>
+    </div>
+    <div class="col-6">
+      <translateform :postId="postId"></translateform>
+    </div>
   </div>
 </template>
 
@@ -17,13 +20,3 @@ export default {
   },
 };
 </script>
-
-<style scoped>
-.container {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-around;
-  align-content: space-around;
-  margin: 30px 0;
-}
-</style>
