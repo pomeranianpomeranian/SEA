@@ -14,7 +14,7 @@
         </div>
       </div>
     </div>
-    <div class="input" v-if="userId">
+    <div class="input" v-if="userId && $route.name !== 'mypost'">
       <textarea
         v-model="input"
         cols="30"
@@ -64,7 +64,7 @@ export default {
 
 <style scoped>
 .comment-box {
-  width: 80%;
+  width: 100%;
 }
 .comment-container {
   border: 1px solid black;
