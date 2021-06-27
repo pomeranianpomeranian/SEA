@@ -1,30 +1,5 @@
 <template>
   <div class="container mt-5">
-    <GmapMap
-      :center="currentPosition"
-      :zoom="10"
-      map-type-id="terrain"
-      style="width: 100%; height: 600px"
-      justifiy-content-center
-    >
-      <GmapInfoWindow
-        :options="infoOptions"
-        :position="infoWindowPos"
-        :opened="infoWinOpen"
-        @closeclick="infoWinOpen = false"
-        ><span>
-          {{ selectedMarker.title }}
-        </span>
-      </GmapInfoWindow>
-      <GmapMarker
-        :key="index"
-        v-for="(m, index) in markers"
-        :position="m.position"
-        :clickable="true"
-        :draggable="true"
-        @click="getPosition(m)"
-      />
-    </GmapMap>
     <b-card no-body class="overflow-hidden">
       <b-row no-gutters>
         <b-col cols="4">
@@ -57,6 +32,33 @@
           </b-card-body>
         </b-col>
       </b-row>
+      <div class="container p-5">
+        <GmapMap
+          :center="currentPosition"
+          :zoom="10"
+          map-type-id="terrain"
+          style="width: 100%; height: 600px"
+          justifiy-content-center
+        >
+          <GmapInfoWindow
+            :options="infoOptions"
+            :position="infoWindowPos"
+            :opened="infoWinOpen"
+            @closeclick="infoWinOpen = false"
+            ><span>
+              {{ selectedMarker.title }}
+            </span>
+          </GmapInfoWindow>
+          <GmapMarker
+            :key="index"
+            v-for="(m, index) in markers"
+            :position="m.position"
+            :clickable="true"
+            :draggable="true"
+            @click="getPosition(m)"
+          />
+        </GmapMap>
+      </div>
       <template #footer>
         <p class="footer mb-0 text-muted">Last updated : {{ date }}</p>
       </template>
