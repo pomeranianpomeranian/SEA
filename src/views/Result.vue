@@ -48,6 +48,7 @@
             >{{ post.title }}</router-link
           >
         </div>
+        <span>{{ post.date }}</span>
         <p>{{ post.description }}</p>
         <div class="fav">
           <div

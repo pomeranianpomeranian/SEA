@@ -60,8 +60,7 @@ export default {
   overflow-x: scroll;
 }
 .holder {
-  min-width: 10%;
-  max-width: 30%;
+  min-width: 30%;
 }
 .title:hover {
   cursor: pointer;
