@@ -43,16 +43,23 @@ const mutations = {
     if (this.state.auth.userDetails) {
       const likedPosts = this.state.auth.userDetails.likedPosts;
       posts.forEach((post) => {
+        const timestamp = post.data().createdAt.toDate();
         if (likedPosts.includes(post.id)) {
           state.posts.push({
             postId: post.id,
             isLiked: true,
+            date: `${timestamp.getFullYear()}/${
+              timestamp.getMonth() + 1
+            }/${timestamp.getDate()}`,
             ...post.data(),
           });
         } else {
           state.posts.push({
             postId: post.id,
             isLiked: false,
+            date: `${timestamp.getFullYear()}/${
+              timestamp.getMonth() + 1
+            }/${timestamp.getDate()}`,
             ...post.data(),
           });
         }

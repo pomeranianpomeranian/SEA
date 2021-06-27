@@ -1,26 +1,41 @@
 <template>
-  <div class="post">
-    <h1>{{ postContents.title }}</h1>
-    <div class="images-holder">
-      <div
-        class="images-container"
-        v-for="(image, index) in postContents.imagesRef"
-        :key="index"
-      >
-        <img :src="image.url" alt="" />
-      </div>
-    </div>
-    <p>{{ postContents.address }}</p>
-    <p>{{ postContents.description }}</p>
-    <p>
-      <span
-        class="category"
-        v-for="(category, index) in postContents.categories"
-        :key="index"
-        >{{ category }}
-      </span>
-    </p>
-    <comment :postId="postId"></comment>
+  <div class="container mt-5">
+    <b-card no-body class="overflow-hidden">
+      <b-row no-gutters>
+        <b-col cols="4">
+          <div class="images-container d-flex p-3">
+            <b-card-img
+              class="img-thumbnail"
+              v-for="(image, index) in postContents.imagesRef"
+              :key="index"
+              :src="image.url"
+            ></b-card-img>
+          </div>
+        </b-col>
+        <b-col cols="8">
+          <b-card-body class="card-body container" :title="postContents.title">
+            <div>
+              <b-card-text>
+                {{ postContents.description }}
+              </b-card-text>
+            </div>
+            <div>
+              <span
+                v-for="(category, index) in postContents.categories"
+                :key="index"
+                >#{{ $t(`category.${category}`) }}</span
+              >
+            </div>
+            <div>
+              <comment :postId="postId"></comment>
+            </div>
+          </b-card-body>
+        </b-col>
+      </b-row>
+      <template #footer>
+        <p class="footer mb-0 text-muted">Last updated : {{ date }}</p>
+      </template>
+    </b-card>
   </div>
 </template>
 
@@ -38,6 +53,12 @@ export default {
     postContents() {
       return this.$store.state.post.postContents;
     },
+    date() {
+      const timestamp = this.postContents.createdAt.toDate();
+      return `${timestamp.getFullYear()}/${
+        timestamp.getMonth() + 1
+      }/${timestamp.getDate()}`;
+    },
   },
   created() {
     this.$store.dispatch("getDetails", this.postId);
@@ -46,28 +67,17 @@ export default {
 </script>
 
 <style scoped>
-.post {
+.images-container {
+  width: 100%;
+  overflow-x: scroll;
+}
+.card-body {
+  height: 100%;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  justify-content: space-between;
 }
-.images-holder {
-  display: flex;
-  justify-content: space-around;
-  height: 250px;
-  border: 1px solid lightblue;
-  border-radius: 10px;
-  padding: 15px;
-}
-.images-container {
-  width: 25%;
-  height: 100%;
-}
-img {
-  width: 100%;
-  height: 100%;
-}
-.category {
-  margin: 0 5px;
+.footer {
+  text-align: end;
 }
 </style>
