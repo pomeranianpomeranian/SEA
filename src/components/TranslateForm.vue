@@ -1,5 +1,26 @@
 <template>
-  <div class="container">
+  <div>
+    <h2>{{ $t("form.changed") }}</h2>
+    <div class="card">
+      <div class="card-header">
+        <input type="text" :placeholder="$t('form.title')" v-model="title" />
+      </div>
+      <div class="card-body">
+        <blockquote class="blockquote mb-0">
+          <textarea
+            cols="30"
+            rows="10"
+            :placeholder="$t('form.description')"
+            v-model="description"
+          ></textarea>
+        </blockquote>
+      </div>
+    </div>
+    <div>
+      <button @click="sendSuggestion">{{ $t("form.send") }}</button>
+    </div>
+  </div>
+  <!--<div class="container">
     <div>
       <input type="text" :placeholder="$t('form.title')" v-model="title" />
     </div>
@@ -12,7 +33,7 @@
     <div>
       <button @click="sendSuggestion">{{ $t("form.send") }}</button>
     </div>
-  </div>
+  </div>-->
 </template>
 <script>
 export default {

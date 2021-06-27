@@ -1,6 +1,42 @@
 <template>
   <div class="results-container">
-    <div class="post-frame" v-for="(post, index) in results" :key="index">
+    <div
+      class="card mb-3"
+      v-for="(post, index) in results"
+      :key="index"
+      style="max-width: 540px"
+    >
+      <div class="row g-0">
+        <div class="col-md-4">
+          <img :src="post.imagesRef[0].url" alt="" width="100%" height="100%" />
+        </div>
+        <div class="col-md-8">
+          <div class="card-body">
+            <h5 class="card-title">
+              <router-link
+                class="title"
+                :to="{ name: 'details', params: { postId: post.postId } }"
+                >{{ post.title }}</router-link
+              >
+            </h5>
+            <p class="card-text">{{ post.description }}</p>
+            <p class="card-text">
+              <small class="text-muted">Last updated 3 mins ago</small>
+            </p>
+            <div class="fav">
+              <div
+                class="like"
+                :class="{ liked: post.isLiked }"
+                @click="updateLike(index)"
+              >
+                <span>{{ post.numLike }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--<div class="post-frame" v-for="(post, index) in results" :key="index">
       <div class="image-holder">
         <img :src="post.imagesRef[0].url" />
       </div>
@@ -23,7 +59,7 @@
           </div>
         </div>
       </div>
-    </div>
+    </div>-->
   </div>
 </template>
 

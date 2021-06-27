@@ -1,6 +1,7 @@
 <template>
   <div class="container">
     <client :postId="postId"></client>
+
     <translateform :postId="postId"></translateform>
   </div>
 </template>
@@ -20,7 +21,9 @@ export default {
 <style scoped>
 .container {
   display: flex;
+  align-items: flex-start;
   justify-content: space-around;
+  align-content: space-around;
   margin: 30px 0;
 }
 </style>

@@ -1,5 +1,19 @@
 <template>
-  <div class="container">
+  <div>
+    <h2>{{ $t("form.original") }}</h2>
+    <!--<div class="container">-->
+    <div class="card">
+      <div class="card-header">
+        {{ $t("form.title") }}:{{ postContents.title }}
+      </div>
+      <div class="card-body">
+        <blockquote class="blockquote mb-0">
+          <p>{{ $t("form.description") }}:{{ postContents.description }}</p>
+        </blockquote>
+      </div>
+    </div>
+  </div>
+  <!--</div>
     <div class="holder">
       <p class="header">{{ $t("form.title") }}:</p>
       <p class="body">{{ postContents.title }}</p>
@@ -8,7 +22,7 @@
       <p class="header">{{ $t("form.description") }}:</p>
       <p class="body">{{ postContents.description }}</p>
     </div>
-  </div>
+  </div>-->
 </template>
 
 <script>
@@ -26,6 +40,14 @@ export default {
 </script>
 
 <style scoped>
+.card-header {
+  width: 333px;
+  height: 65px;
+}
+.card-body {
+  width: 333px;
+  height: 353px;
+}
 .container {
   display: flex;
   flex-direction: column;

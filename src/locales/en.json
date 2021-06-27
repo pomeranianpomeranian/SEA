@@ -35,7 +35,9 @@
     "update": "Update",
     "submit": "Submit",
     "save": "Ask for translation",
-    "send": "Send"
+    "send": "Send",
+    "original": "original post",
+    "changed": "transleted post"
   },
   "placeholder": {
     "title": "Put a fancy title here...",
