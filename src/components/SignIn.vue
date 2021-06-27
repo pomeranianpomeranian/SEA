@@ -1,8 +1,12 @@
 <template>
   <b-container>
     <b-form-row>
-      <b-form @submit="signIn">
-        <b-form-group :label="`${$t('form.email')} :`" label-for="email">
+      <b-form class="signInForm" @submit="signIn">
+        <b-form-group
+          :label="`${$t('form.email')} :`"
+          label-for="email"
+          class="colorStting"
+        >
           <b-form-input
             v-model="email"
             id="email"
@@ -12,7 +16,11 @@
           ></b-form-input>
         </b-form-group>
 
-        <b-form-group :label="`${$t('form.password')} :`" label-for="password">
+        <b-form-group
+          :label="`${$t('form.password')} :`"
+          label-for="password"
+          class="colorStting"
+        >
           <b-form-input
             v-model="password"
             id="password"
@@ -49,3 +57,12 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.d-block {
+  color: white;
+}
+.signInForm {
+  width: 120%;
+}
+</style>
