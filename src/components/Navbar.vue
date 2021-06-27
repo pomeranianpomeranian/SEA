@@ -18,7 +18,7 @@
             <b-nav-item @click="transfer('search')">{{
               $t("nav.search")
             }}</b-nav-item>
-            <b-nav-item @click="transfer('pend')">{{
+            <b-nav-item v-if="userId" @click="transfer('pend')">{{
               $t("nav.pend")
             }}</b-nav-item>
           </b-navbar-nav>
