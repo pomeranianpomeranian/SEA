@@ -14,16 +14,18 @@
         </div>
       </div>
     </div>
-    <div class="input" v-if="userId && $route.name !== 'mypost'">
-      <textarea
-        v-model="input"
-        cols="30"
-        rows="2"
-        :placeholder="$t('comment.placeholder')"
-      ></textarea>
-      <div>
-        <button @click="submit">{{ $t("comment.send") }}</button>
-      </div>
+    <div v-if="userId && $route.name !== 'mypost'">
+      <b-input-group class="mt-3" sixe="lg">
+        <b-form-textarea
+          v-model="input"
+          :placeholder="$t('comment.placeholder')"
+        ></b-form-textarea>
+        <b-input-group-append>
+          <b-button variant="outline-info" @click="submit">{{
+            $t("comment.send")
+          }}</b-button>
+        </b-input-group-append>
+      </b-input-group>
     </div>
   </div>
 </template>
@@ -101,12 +103,5 @@ export default {
   font-weight: lighter;
   color: darkgrey;
   margin: 0;
-}
-.input {
-  display: flex;
-  flex-direction: column;
-}
-button {
-  width: 100%;
 }
 </style>
