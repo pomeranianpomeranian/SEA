@@ -5,6 +5,7 @@
         <b-navbar-brand @click="transfer('home')"
           ><img
             src="../images/suSEAnaSEA.png"
+            class="logo"
             alt=""
             width="80px"
             height="30px"
@@ -104,3 +105,9 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.logo:hover {
+  cursor: pointer;
+}
+</style>

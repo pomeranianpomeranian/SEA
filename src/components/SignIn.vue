@@ -1,7 +1,7 @@
 <template>
   <b-container>
     <b-form-row>
-      <b-form @submit="signIn">
+      <b-form class="signInForm" @submit="signIn">
         <b-form-group
           :label="`${$t('form.email')} :`"
           label-for="email"
@@ -61,5 +61,8 @@ export default {
 <style scoped>
 .d-block {
   color: white;
+}
+.signInForm {
+  width: 120%;
 }
 </style>

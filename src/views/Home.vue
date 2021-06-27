@@ -18,13 +18,15 @@
         </div>
       </div>
       <div class="form-container" v-if="$i18n.locale === 'en'">
-        <span
-          v-for="(tab, index) in en.tabs"
-          @click="en.selectedTab = tab"
-          :class="{ activeTab: en.selectedTab === tab }"
-          :key="index"
-          >{{ tab }}</span
-        >
+        <div>
+          <span
+            v-for="(tab, index) in en.tabs"
+            @click="en.selectedTab = tab"
+            :class="{ activeTab: en.selectedTab === tab }"
+            :key="index"
+            >{{ tab }}</span
+          >
+        </div>
         <div class="form">
           <signinForm v-if="en.selectedTab === 'Sign in'" />
           <signupForm v-if="en.selectedTab === 'Sign up'" />

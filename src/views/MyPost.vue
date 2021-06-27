@@ -21,9 +21,10 @@
             </div>
             <div>
               <span
+                class="badge bg-info text-light"
                 v-for="(category, index) in postContents.categories"
                 :key="index"
-                >#{{ $t(`category.${category}`) }}</span
+                >#{{ category }}</span
               >
             </div>
             <div>
@@ -86,6 +87,9 @@ export default {
   created() {
     this.$store.dispatch("getDetails", this.postId);
   },
+  destroyed() {
+    this.$store.commit("clearContents");
+  },
 };
 </script>
 
@@ -93,6 +97,10 @@ export default {
 .images-container {
   width: 100%;
   overflow-x: scroll;
+}
+.badge {
+  font-size: 1rem;
+  margin-right: 0.5rem;
 }
 .card-body {
   height: 100%;
