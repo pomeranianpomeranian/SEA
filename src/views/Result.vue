@@ -1,26 +1,58 @@
 <template>
-  <div class="results-container">
-    <div class="post-frame" v-for="(post, index) in results" :key="index">
-      <div class="image-holder">
-        <img :src="post.imagesRef[0].url" />
-      </div>
-      <div class="description">
-        <div>
-          <router-link
-            class="title"
-            :to="{ name: 'details', params: { postId: post.postId } }"
-            >{{ post.title }}</router-link
-          >
+  <div class="container d-flex flex-column align-items-center mt-3">
+    <div
+      class="card mb-3"
+      v-for="(post, index) in results"
+      :key="index"
+      style="width: 80%"
+    >
+      <div class="row g-0">
+        <div class="col-md-4">
+          <img
+            class="img-thumbnail"
+            :src="post.imagesRef[0].url"
+            alt=""
+            width="100%"
+            height="100%"
+          />
         </div>
-        <span>{{ post.date }}</span>
-        <p>{{ post.description }}</p>
-        <div class="fav">
-          <div
-            class="like"
-            :class="{ liked: post.isLiked }"
-            @click="updateLike(index)"
-          >
-            <span>{{ post.numLike }}</span>
+        <div class="col-md-8">
+          <div class="card-body d-flex flex-column justify-content-between">
+            <div>
+              <router-link
+                class="title"
+                :to="{ name: 'details', params: { postId: post.postId } }"
+                >{{ post.title }}</router-link
+              >
+            </div>
+            <p class="card-text pr-5">{{ post.description }}</p>
+            <div>
+              <span
+                class="badge bg-info text-light"
+                v-for="(category, index) in post.categories"
+                :key="index"
+              >
+                #{{ category }}
+              </span>
+            </div>
+            <div class="d-flex justify-content-between h5 mb-0">
+              <div>
+                <span class="text-muted">{{ post.date }}</span>
+              </div>
+              <div>
+                <b-icon
+                  icon="heart-fill"
+                  v-if="post.isLiked"
+                  variant="danger"
+                  @click="updateLike(index)"
+                ></b-icon>
+                <b-icon
+                  icon="heart"
+                  v-if="!post.isLiked"
+                  @click="updateLike(index)"
+                ></b-icon>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -54,10 +86,15 @@ export default {
 </script>
 
 <style scoped>
-.results-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+.card-body {
+  height: 100%;
+}
+.card-text {
+  font-size: 1.2rem;
+}
+.badge {
+  font-size: 1rem;
+  margin-right: 0.5rem;
 }
 .post-frame {
   display: flex;
@@ -82,7 +119,7 @@ img {
 }
 .title {
   font-weight: bold;
-  font-size: 20px;
+  font-size: 2rem;
 }
 .fav {
   display: flex;

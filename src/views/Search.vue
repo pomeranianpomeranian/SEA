@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="container mt-3">
     <GmapMap
       :center="currentPotion"
       :zoom="10"
@@ -13,11 +13,17 @@
         :opened="infoWinOpen"
         @closeclick="infoWinOpen = false"
         ><span v-if="!selectedMarker.postId">{{ selectedMarker.title }}</span>
-        <router-link
-          v-else
-          :to="{ name: 'details', params: { postId: selectedMarker.postId } }"
-          >{{ selectedMarker.title }}</router-link
-        ></GmapInfoWindow
+        <div v-else>
+          <img
+            :src="getIcon(selectedMarker.icon)"
+            width="30rem"
+            height="30rem"
+          />
+          <router-link
+            :to="{ name: 'details', params: { postId: selectedMarker.postId } }"
+            >{{ selectedMarker.title }}
+          </router-link>
+        </div></GmapInfoWindow
       >
       <GmapMarker
         :key="index"
@@ -29,18 +35,17 @@
       />
     </GmapMap>
 
-    <select v-model="selected">
-      <option value="all">{{ $t("category.all") }}</option>
-      <option value="culture">{{ $t("category.culture") }}</option>
-      <option value="nature">{{ $t("category.nature") }}</option>
-      <option value="amusement">{{ $t("category.amusement") }}</option>
-      <option value="food">{{ $t("category.food") }}</option>
-      <option value="shopping">{{ $t("category.shopping") }}</option>
-      <option value="history">{{ $t("category.history") }}</option>
-      <option value="sports">{{ $t("category.sports") }}</option>
-      <option value="view">{{ $t("category.view") }}</option>
-    </select>
-    <button @click="search">{{ $t("search.search") }}</button>
+    <div class="selectCategory">
+      <b-button
+        v-for="(category, index) in categories"
+        :key="index"
+        v-b-popover.hover.top="category.text"
+        variant="outline-info"
+        @click="search(category.value)"
+      >
+        <img :src="getIcon(category.icon)" width="50rem" height="50rem" />
+      </b-button>
+    </div>
   </div>
 </template>
 
@@ -49,8 +54,49 @@ import firebase from "firebase";
 export default {
   data() {
     return {
-      selected: "all",
       selectedMarker: {},
+      categories: [
+        {
+          text: this.$t("category.all"),
+          icon: "T_HIKOKI.png",
+          value: "all",
+        },
+        {
+          text: this.$t("category.culture"),
+          icon: "H_SHODO.png",
+          value: "culture",
+        },
+        {
+          text: this.$t("category.nature"),
+          icon: "H_KODO.png",
+          value: "nature",
+        },
+        {
+          text: this.$t("category.sports"),
+          icon: "H_SUMO.png",
+          value: "sports",
+        },
+        {
+          text: this.$t("category.food"),
+          icon: "F_WASHOKU.png",
+          value: "food",
+        },
+        {
+          text: this.$t("category.shopping"),
+          icon: "B_BAITEN.png",
+          value: "shopping",
+        },
+        {
+          text: this.$t("category.history"),
+          icon: "H_SHIRO-ATO.png",
+          value: "history",
+        },
+        {
+          text: this.$t("category.view"),
+          icon: "N_HINODE.png",
+          value: "view",
+        },
+      ],
       currentPotion: {},
       markers: [],
       infoOptions: {
@@ -66,6 +112,37 @@ export default {
         "Access-Control-Allow-Origin": "*",
       },
     };
+  },
+  methods: {
+    toggleInfoWindow(marker) {
+      this.infoWindowPos = marker.position;
+      this.infoWinOpen = true;
+    },
+    search(category) {
+      this.$router.push({
+        name: "result",
+        params: { category },
+      });
+    },
+    getPosition(marker) {
+      this.selectedMarker = {
+        ...marker,
+        icon: this.selectIcon(marker),
+      };
+      this.toggleInfoWindow(marker);
+    },
+    getIcon(icon) {
+      return require(`@/images/${icon}`);
+    },
+    selectIcon(marker) {
+      if (marker.categories) {
+        for (let category of this.categories) {
+          if (category.value === marker.categories[0]) {
+            return category.icon;
+          }
+        }
+      }
+    },
   },
   created() {
     this.$getLocation().then((coordinates) => {
@@ -88,23 +165,6 @@ export default {
           });
         });
       });
-  },
-
-  methods: {
-    toggleInfoWindow(marker) {
-      this.infoWindowPos = marker.position;
-      this.infoWinOpen = true;
-    },
-    search() {
-      this.$router.push({
-        name: "result",
-        params: { category: this.selected },
-      });
-    },
-    getPosition(marker) {
-      this.selectedMarker = marker;
-      this.toggleInfoWindow(marker);
-    },
   },
   mounted() {
     let origin = "41.43206,-81.38992";
@@ -130,3 +190,20 @@ export default {
   },
 };
 </script>
+
+<style>
+.selected {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+.selected h2 {
+  color: rgba(0, 0, 0, 0.5);
+}
+.selectCategory {
+  display: flex;
+  justify-content: space-around;
+  padding: 30px 150px;
+}
+</style>

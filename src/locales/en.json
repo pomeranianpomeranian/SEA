@@ -35,7 +35,9 @@
     "update": "Update",
     "submit": "Submit",
     "save": "Ask for translation",
-    "send": "Send"
+    "send": "Send",
+    "original": "Original",
+    "changed": "Transleted"
   },
   "placeholder": {
     "title": "Put a fancy title here...",
@@ -60,5 +62,8 @@
   },
   "map": {
     "current": "Current Location"
+  },
+  "title": {
+    "pendboard": "Posts to be translated..."
   }
 }

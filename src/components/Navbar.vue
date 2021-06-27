@@ -2,7 +2,14 @@
   <div>
     <div>
       <b-navbar toggleable="sm" type="light" variant="light">
-        <b-navbar-brand @click="transfer('home')">POME</b-navbar-brand>
+        <b-navbar-brand @click="transfer('home')"
+          ><img
+            class="logo"
+            src="https://cdn.discordapp.com/attachments/843825527608967179/858014500921409546/unknown.png"
+            alt=""
+            width="80px"
+            height="30px"
+        /></b-navbar-brand>
 
         <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
 
@@ -98,3 +105,9 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.logo:hover {
+  cursor: pointer;
+}
+</style>

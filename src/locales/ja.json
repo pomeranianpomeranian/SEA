@@ -35,7 +35,9 @@
     "update": "更新する",
     "submit": "投稿する",
     "save": "翻訳を依頼する",
-    "send": "送る"
+    "send": "送る",
+    "original": "元の投稿",
+    "changed": "変更後"
   },
   "placeholder": {
     "title": "素敵な題名をつけてください",
@@ -60,5 +62,8 @@
   },
   "map": {
     "current": "現在地"
+  },
+  "title": {
+    "pendboard": "翻訳待ちの投稿"
   }
 }

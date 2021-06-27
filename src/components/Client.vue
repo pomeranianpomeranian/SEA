@@ -1,12 +1,14 @@
 <template>
-  <div class="container">
-    <div class="holder">
-      <p class="header">{{ $t("form.title") }}:</p>
-      <p class="body">{{ postContents.title }}</p>
+  <div class="card">
+    <div class="card-header mb-0">
+      <span>{{ $t("form.title") }} :</span>
+      <h4 class="text-center">{{ postContents.title }}</h4>
     </div>
-    <div class="holder">
-      <p class="header">{{ $t("form.description") }}:</p>
-      <p class="body">{{ postContents.description }}</p>
+    <div class="card-body">
+      <blockquote class="blockquote mb-0">
+        <span>{{ $t("form.description") }} :</span>
+        <p class="my-5 text-center">{{ postContents.description }}</p>
+      </blockquote>
     </div>
   </div>
 </template>
@@ -22,26 +24,14 @@ export default {
   created() {
     this.$store.dispatch("getDetails", this.postId);
   },
+  destroyed() {
+    this.$store.commit("clearContents");
+  },
 };
 </script>
 
 <style scoped>
-.container {
-  display: flex;
-  flex-direction: column;
-  width: 40%;
-  border: 1px solid black;
-  border-radius: 10px;
-  padding: 5px;
-}
-.holder {
-  border: 1px solid darkgray;
-  border-radius: 5px;
-  padding: 5px;
-  margin: 20px 0;
-}
-.header {
-  text-align: start;
-  font-weight: bold;
+span {
+  font-size: 1rem;
 }
 </style>
