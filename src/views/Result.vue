@@ -21,7 +21,7 @@
             </h5>
             <p class="card-text">{{ post.description }}</p>
             <p class="card-text">
-              <small class="text-muted">Last updated 3 mins ago</small>
+              <small class="text-muted">{{ post.date }}</small>
             </p>
             <div class="fav">
               <div
