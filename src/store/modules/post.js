@@ -44,7 +44,7 @@ const mutations = {
       const likedPosts = this.state.auth.userDetails.likedPosts;
       posts.forEach((post) => {
         const timestamp = post.data().createdAt.toDate();
-        if (likedPosts.includes(post.id)) {
+        if (likedPosts && likedPosts.includes(post.id)) {
           state.posts.push({
             postId: post.id,
             isLiked: true,
