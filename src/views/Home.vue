@@ -1,6 +1,7 @@
 <template>
-  <div>
-    <div class="backGround" v-if="!userId">
+  <div class="home px-5 py-3">
+    <navbar />
+    <div v-if="!userId">
       <div class="form-container" v-if="$i18n.locale === 'ja'">
         <div>
           <span
@@ -33,19 +34,16 @@
         </div>
       </div>
     </div>
-    <div class="backGround" id="homeSetting" v-if="userId">
-      <p class="siteTtl">welcome to suSEAnaSEA</p>
-      <!--<h2 class="slogan">welcome to</h2>
-      <h1 class="siteTtl">suSEAnaSEA</h1>-->
-    </div>
   </div>
 </template>
 
 <script>
+import navbar from "../components/Navbar-home.vue";
 import signinForm from "../components/SignIn";
 import signupForm from "../components/SignUp";
 export default {
   components: {
+    navbar,
     signinForm,
     signupForm,
   },
@@ -70,17 +68,13 @@ export default {
 </script>
 
 <style scoped>
-.backGround {
-  background-image: url("~@/images/seabackground.jpg");
+.home {
+  height: 100vh;
+  background: linear-gradient(0deg, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)),
+    url(~@/images/sorasak-_UIN-pFfJ7c-unsplash-min.jpg);
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
-  width: 100%;
-  height: 800px;
-}
-#homeSetting {
-  display: flex;
-  justify-content: center;
 }
 .form-container {
   padding-top: 100px;
@@ -104,40 +98,5 @@ span {
 }
 .activeTab {
   color: darkgray;
-}
-.slogan {
-  color: white;
-  text-align: center;
-  padding-top: 300px;
-  font-size: 50px;
-}
-.siteTtl {
-  color: white;
-  text-align: center;
-  font-size: 100px;
-}
-
-@keyframes typing {
-  from {
-    width: 0;
-  }
-}
-@keyframes caret {
-  50% {
-    border-color: transparent;
-  }
-}
-
-.siteTtl {
-  font-family: monospace;
-  width: 21ch;
-  height: 5rem;
-  border-right: 0.08em solid;
-  overflow: hidden;
-  font-size: 4em;
-  white-space: nowrap;
-  animation: typing 5s steps(21, end), caret 0.5s step-end infinite;
-  text-align: center;
-  margin-top: 30px;
 }
 </style>
