@@ -69,7 +69,7 @@
                   :placeholder="$t('form.password')"
                 ></b-form-input>
                 <b-button
-                  variant="outline-secondary"
+                  variant="outline-primary"
                   class="mt-1"
                   size="sm"
                   @click="signIn({ email, password })"
