@@ -11,7 +11,8 @@
     "delete": "Delete",
     "signin": "Sign in",
     "signout": "Sign out",
-    "signup": "Sign up"
+    "signup": "Sign up",
+    "guest": "Use as a guest"
   },
   "comment": {
     "nocomment": "There has been no comment yet",

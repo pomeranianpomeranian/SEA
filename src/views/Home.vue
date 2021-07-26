@@ -2,7 +2,10 @@
   <div class="home px-5 py-3">
     <navbar />
 
-    <div v-if="!userId">
+    <div class="contents" v-if="!userId">
+      <div class="comment">
+        <comment />
+      </div>
       <div class="form-container" v-if="$i18n.locale === 'ja'">
         <div>
           <b-tabs content-class="mt-3">
@@ -39,16 +42,19 @@
         </div>
       </div>
     </div>
+    <comment v-if="userId" />
   </div>
 </template>
 
 <script>
 import navbar from "../components/Navbar-home.vue";
+import comment from "../components/HomeComment.vue";
 import signinForm from "../components/SignIn";
 import signupForm from "../components/SignUp";
 export default {
   components: {
     navbar,
+    comment,
     signinForm,
     signupForm,
   },
@@ -75,24 +81,38 @@ export default {
 <style scoped>
 .home {
   height: 100vh;
-  background: linear-gradient(0deg, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
+  background: radial-gradient(
+      72.4% 143.17% at 20% 50%,
+      rgba(0, 0, 0, 0.8) 8.75%,
+      rgba(0, 0, 0, 0) 100%
+    ),
     url(~@/images/sorasak-_UIN-pFfJ7c-unsplash-min.jpg);
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
 }
+.contents {
+  margin-top: 15vh;
+  max-height: 100%;
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-start;
+}
 .form-container {
-  width: 300px;
+  width: 350px;
+  min-width: 200px;
   border-radius: 4px;
-  margin-top: 100px;
   padding: 30px 0;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-color: rgba(255, 255, 255, 0.8);
+  background-color: rgba(255, 255, 255, 0.9);
 }
 .form {
   margin-top: 10px;
+}
+.comment {
+  max-width: 50%;
 }
 </style>
