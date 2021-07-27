@@ -1,7 +1,7 @@
 <template>
   <div>
     <div>
-      <b-navbar toggleable="md" type="light" variant="light" fixed="top">
+      <b-navbar toggleable="md" type="light" variant="faded" fixed="top">
         <b-navbar-brand class="ml-3" @click="transfer('home')"
           ><img
             src="../images/suSEAnaSEA.png"

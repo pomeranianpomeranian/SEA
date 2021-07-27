@@ -3,38 +3,36 @@
     <navbar />
     <div class="container top">
       <div v-if="$i18n.locale === 'ja'">
-        <b-card no-body>
-          <b-tabs card>
-            <b-tab
-              v-bind="{ active: ja.selectedTab === tab }"
-              v-for="(tab, index) in ja.tabs"
-              :key="index"
-              :title="tab"
-              @click="ja.selectedTab = tab"
-            >
-            </b-tab>
-            <myPosts v-if="ja.selectedTab === '投稿'"></myPosts>
-            <okiniiri v-if="ja.selectedTab === 'お気に入り'"></okiniiri>
-            <pendingposts v-if="ja.selectedTab === '翻訳待ち'"></pendingposts>
-          </b-tabs>
-        </b-card>
+        <b-tabs align="center">
+          <b-tab
+            class="mb-5"
+            v-bind="{ active: ja.selectedTab === tab }"
+            v-for="(tab, index) in ja.tabs"
+            :key="index"
+            :title="tab"
+            @click="ja.selectedTab = tab"
+          >
+          </b-tab>
+          <myPosts v-if="ja.selectedTab === '投稿'"></myPosts>
+          <okiniiri v-if="ja.selectedTab === 'お気に入り'"></okiniiri>
+          <pendingposts v-if="ja.selectedTab === '翻訳待ち'"></pendingposts>
+        </b-tabs>
       </div>
 
       <div v-if="$i18n.locale === 'en'">
-        <b-card no-body>
-          <b-tabs card>
-            <b-tab
-              v-bind="{ active: en.selectedTab === tab }"
-              v-for="(tab, index) in en.tabs"
-              :key="index"
-              :title="tab"
-              @click="en.selectedTab = tab"
-            >
-            </b-tab>
-            <myPosts v-if="en.selectedTab === 'My Posts'"></myPosts>
-            <okiniiri v-if="en.selectedTab === 'Liked Posts'"></okiniiri>
-          </b-tabs>
-        </b-card>
+        <b-tabs align="center">
+          <b-tab
+            class="mb-5"
+            v-bind="{ active: en.selectedTab === tab }"
+            v-for="(tab, index) in en.tabs"
+            :key="index"
+            :title="tab"
+            @click="en.selectedTab = tab"
+          >
+          </b-tab>
+          <myPosts v-if="en.selectedTab === 'My Posts'"></myPosts>
+          <okiniiri v-if="en.selectedTab === 'Liked Posts'"></okiniiri>
+        </b-tabs>
       </div>
     </div>
   </div>
@@ -71,3 +69,9 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.navlink.active {
+  background-color: #f5f7fa;
+}
+</style>

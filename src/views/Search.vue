@@ -1,11 +1,11 @@
 <template>
-  <div class="container">
+  <div class="container top">
     <navbar />
     <GmapMap
       :center="currentPosition"
       :zoom="10"
       map-type-id="terrain"
-      style="width: 100%; height: 70vh; margin-top: 100px"
+      style="width: 100%; height: 70vh"
       justifiy-content-center
     >
       <GmapInfoWindow

@@ -18,7 +18,12 @@ export default {
 </script>
 
 <style>
+#app {
+  min-height: 100vh;
+  background-color: #f5f7fa;
+}
 .top {
-  margin: 100px auto 40px auto;
+  padding: 100px 0 40px 0;
+  margin: 0 auto 0 auto;
 }
 </style>
