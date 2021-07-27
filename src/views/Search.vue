@@ -1,10 +1,11 @@
 <template>
-  <div class="container mt-3">
+  <div class="container">
+    <navbar />
     <GmapMap
-      :center="currentPotion"
+      :center="currentPosition"
       :zoom="10"
       map-type-id="terrain"
-      style="width: 100%; height: 600px"
+      style="width: 100%; height: 70vh; margin-top: 100px"
       justifiy-content-center
     >
       <GmapInfoWindow
@@ -35,7 +36,7 @@
       />
     </GmapMap>
 
-    <div class="selectCategory">
+    <div class="categories">
       <b-button
         v-for="(category, index) in categories"
         :key="index"
@@ -50,8 +51,12 @@
 </template>
 
 <script>
+import navbar from "../components/Navbar.vue";
 import firebase from "firebase";
 export default {
+  components: {
+    navbar,
+  },
   data() {
     return {
       selectedMarker: {},
@@ -97,7 +102,7 @@ export default {
           value: "view",
         },
       ],
-      currentPotion: {},
+      currentPosition: {},
       markers: [],
       infoOptions: {
         pixelOffset: {
@@ -146,10 +151,10 @@ export default {
   },
   created() {
     this.$getLocation().then((coordinates) => {
-      this.currentPotion = coordinates;
+      this.currentPosition = coordinates;
       this.markers.push({
         title: this.$t("map.current"),
-        position: this.currentPotion,
+        position: this.currentPosition,
       });
     });
     firebase
@@ -192,18 +197,10 @@ export default {
 </script>
 
 <style>
-.selected {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-}
-.selected h2 {
-  color: rgba(0, 0, 0, 0.5);
-}
-.selectCategory {
+.categories {
   display: flex;
   justify-content: space-around;
   padding: 30px 150px;
+  margin-top: 20px;
 }
 </style>

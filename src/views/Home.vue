@@ -2,11 +2,11 @@
   <div class="home px-5 py-3">
     <navbar />
 
-    <div class="contents" v-if="!userId">
+    <div class="contents">
       <div class="comment">
         <comment />
       </div>
-      <div class="form-container" v-if="$i18n.locale === 'ja'">
+      <div class="form-container" v-if="$i18n.locale === 'ja' && !userId">
         <div>
           <b-tabs content-class="mt-3">
             <b-tab
@@ -24,7 +24,7 @@
           <signupForm v-if="ja.selectedTab === 'サインアップ'" />
         </div>
       </div>
-      <div class="form-container" v-if="$i18n.locale === 'en'">
+      <div class="form-container" v-if="$i18n.locale === 'en' && !userId">
         <div>
           <b-tabs content-class="mt-3">
             <b-tab
@@ -42,7 +42,6 @@
         </div>
       </div>
     </div>
-    <comment v-if="userId" />
   </div>
 </template>
 

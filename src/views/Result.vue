@@ -1,56 +1,59 @@
 <template>
-  <div class="container d-flex flex-column align-items-center mt-3">
-    <div
-      class="card mb-3"
-      v-for="(post, index) in results"
-      :key="index"
-      style="width: 80%"
-    >
-      <div class="row g-0">
-        <div class="col-md-4">
-          <img
-            class="img-thumbnail"
-            :src="post.imagesRef[0].url"
-            alt=""
-            width="100%"
-            height="100%"
-          />
-        </div>
-        <div class="col-md-8">
-          <div class="card-body d-flex flex-column justify-content-between">
-            <div>
-              <router-link
-                class="title"
-                :to="{ name: 'details', params: { postId: post.postId } }"
-                >{{ post.title }}</router-link
-              >
-            </div>
-            <p class="card-text pr-5">{{ post.description }}</p>
-            <div>
-              <span
-                class="badge bg-info text-light"
-                v-for="(category, index) in post.categories"
-                :key="index"
-              >
-                #{{ category }}
-              </span>
-            </div>
-            <div class="d-flex justify-content-between h5 mb-0">
+  <div>
+    <navbar />
+    <div class="container d-flex flex-column align-items-center top">
+      <div
+        class="card mb-3"
+        v-for="(post, index) in results"
+        :key="index"
+        style="width: 80%"
+      >
+        <div class="row g-0">
+          <div class="col-md-4">
+            <img
+              class="img-thumbnail"
+              :src="post.imagesRef[0].url"
+              alt=""
+              width="100%"
+              height="100%"
+            />
+          </div>
+          <div class="col-md-8">
+            <div class="card-body d-flex flex-column justify-content-between">
               <div>
-                <span class="text-muted">{{ post.date }}</span>
+                <router-link
+                  class="title"
+                  :to="{ name: 'details', params: { postId: post.postId } }"
+                  >{{ post.title }}</router-link
+                >
               </div>
+              <p class="card-text pr-5">{{ post.description }}</p>
               <div>
-                <b-icon
-                  icon="heart-fill"
-                  v-if="post.isLiked"
-                  variant="danger"
-                  @click="updateLike(index)"
-                ></b-icon>
-                <b-icon
-                  icon="heart"
-                  v-if="!post.isLiked"
-                  @click="updateLike(index)"
-                ></b-icon>
+                <span
+                  class="badge bg-info text-light"
+                  v-for="(category, index) in post.categories"
+                  :key="index"
+                >
+                  #{{ category }}
+                </span>
+              </div>
+              <div class="d-flex justify-content-between h5 mb-0">
+                <div>
+                  <span class="text-muted">{{ post.date }}</span>
+                </div>
+                <div>
+                  <b-icon
+                    icon="heart-fill"
+                    v-if="post.isLiked"
+                    variant="danger"
+                    @click="updateLike(index)"
+                  ></b-icon>
+                  <b-icon
+                    icon="heart"
+                    v-if="!post.isLiked"
+                    @click="updateLike(index)"
+                  ></b-icon>
+                </div>
               </div>
             </div>
           </div>
@@ -61,8 +64,12 @@
 </template>
 
 <script>
+import navbar from "../components/Navbar.vue";
 export default {
   props: ["category"],
+  components: {
+    navbar,
+  },
   methods: {
     updateLike(index) {
       if (this.userId) this.$store.dispatch("updateLike", index);

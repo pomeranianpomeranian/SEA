@@ -17,4 +17,8 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+.top {
+  margin: 100px auto 40px auto;
+}
+</style>

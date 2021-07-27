@@ -11,8 +11,7 @@
     "delete": "削除する",
     "signin": "ログイン",
     "signout": "ログアウト",
-    "signup": "サインアップ",
-    "guest": "ゲストとして使う"
+    "signup": "サインアップ"
   },
   "comment": {
     "nocomment": "まだコメントはありません",

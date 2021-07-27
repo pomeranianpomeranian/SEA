@@ -1,66 +1,71 @@
 <template>
-  <b-container>
-    <b-row class="submit-form">
-      <b-col cols="6 mt-3">
-        <postForm />
-      </b-col>
-      <b-col cols="6">
-        <p class="mt-3 mb-2">{{ $t("form.location") }}</p>
-        <GmapMap
-          class=""
-          :center="currentPosition"
-          :zoom="10"
-          map-type-id="terrain"
-          style="width: 100%; height: 600px"
-          @click="getPosition($event)"
-        >
-          <GmapInfoWindow
-            :options="infoOptions"
-            :position="postContents.position"
-            :opened="infoWinOpen"
-            @closeclick="infoWinOpen = false"
+  <div>
+    <navbar />
+    <b-container class="top">
+      <b-row class="submit-form">
+        <b-col cols="6 mt-3">
+          <postForm />
+        </b-col>
+        <b-col cols="6">
+          <p class="mt-3 mb-2">{{ $t("form.location") }}</p>
+          <GmapMap
+            class=""
+            :center="currentPosition"
+            :zoom="10"
+            map-type-id="terrain"
+            style="width: 100%; height: 600px"
+            @click="getPosition($event)"
           >
-            {{ windowTitle }}</GmapInfoWindow
-          >
-          <GmapMarker
-            :key="index"
-            v-for="(m, index) in markers"
-            :position="m.position"
-            :clickable="true"
-            :draggable="true"
-            @click="toggleInfoWindow(m.position)"
-          />
-        </GmapMap>
-        <div class="mt-4">
-          <b-button
-            class="col-6"
-            variant="outline-info"
-            type="button"
-            size="lg"
-            @click="submitPost(false)"
-            v-bind="{ disabled: !completed }"
-            >{{ $t("form.submit") }}</b-button
-          >
-          <b-button
-            class="col-6"
-            variant="outline-dark"
-            type="button"
-            size="lg"
-            @click="submitPost(true)"
-            v-bind="{ disabled: !completed }"
-            >{{ $t("form.save") }}</b-button
-          >
-        </div>
-      </b-col>
-    </b-row>
-  </b-container>
+            <GmapInfoWindow
+              :options="infoOptions"
+              :position="postContents.position"
+              :opened="infoWinOpen"
+              @closeclick="infoWinOpen = false"
+            >
+              {{ windowTitle }}</GmapInfoWindow
+            >
+            <GmapMarker
+              :key="index"
+              v-for="(m, index) in markers"
+              :position="m.position"
+              :clickable="true"
+              :draggable="true"
+              @click="toggleInfoWindow(m.position)"
+            />
+          </GmapMap>
+          <div class="mt-4">
+            <b-button
+              class="col-6"
+              variant="outline-info"
+              type="button"
+              size="lg"
+              @click="submitPost(false)"
+              v-bind="{ disabled: !completed }"
+              >{{ $t("form.submit") }}</b-button
+            >
+            <b-button
+              class="col-6"
+              variant="outline-dark"
+              type="button"
+              size="lg"
+              @click="submitPost(true)"
+              v-bind="{ disabled: !completed }"
+              >{{ $t("form.save") }}</b-button
+            >
+          </div>
+        </b-col>
+      </b-row>
+    </b-container>
+  </div>
 </template>
 
 <script>
+import navbar from "../components/Navbar";
 import postForm from "../components/Form";
 import { mapActions } from "vuex";
 export default {
   components: {
+    navbar,
     postForm,
   },
   data() {
