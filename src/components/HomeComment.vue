@@ -58,14 +58,6 @@
   max-height: 60vh;
   overflow-y: scroll;
 }
-.en-head {
-  font-family: "Noto Serif", serif;
-  font-weight: 700;
-}
-.ja-head {
-  font-family: "Noto Serif JP", serif;
-  font-weight: 900;
-}
 .japan {
   color: rgb(226, 124, 57);
 }

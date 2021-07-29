@@ -1,16 +1,10 @@
 <template>
   <div id="app">
-    <!-- <Navbar></Navbar> -->
     <router-view />
   </div>
 </template>
 <script>
-// import Navbar from "./components/Navbar";
-
 export default {
-  // components: {
-  //   Navbar,
-  // },
   created() {
     this.$store.dispatch("autoSignIn");
   },
@@ -18,12 +12,18 @@ export default {
 </script>
 
 <style>
-#app {
+.page-outline {
   min-height: 100vh;
   background-color: #f5f7fa;
+  padding-top: 100px;
+  padding-bottom: 40px;
 }
-.top {
-  padding: 100px 0 40px 0;
-  margin: 0 auto 0 auto;
+.en-head {
+  font-family: "Noto Serif", serif;
+  font-weight: 700;
+}
+.ja-head {
+  font-family: "Noto Serif JP", serif;
+  font-weight: 900;
 }
 </style>

@@ -1,51 +1,56 @@
 <template>
-  <div class="container top">
-    <navbar />
-    <GmapMap
-      :center="currentPosition"
-      :zoom="10"
-      map-type-id="terrain"
-      style="width: 100%; height: 70vh"
-      justifiy-content-center
-    >
-      <GmapInfoWindow
-        :options="infoOptions"
-        :position="infoWindowPos"
-        :opened="infoWinOpen"
-        @closeclick="infoWinOpen = false"
-        ><span v-if="!selectedMarker.postId">{{ selectedMarker.title }}</span>
-        <div v-else>
-          <img
-            :src="getIcon(selectedMarker.icon)"
-            width="30rem"
-            height="30rem"
-          />
-          <router-link
-            :to="{ name: 'details', params: { postId: selectedMarker.postId } }"
-            >{{ selectedMarker.title }}
-          </router-link>
-        </div></GmapInfoWindow
+  <div class="page-outline">
+    <div class="container">
+      <navbar />
+      <GmapMap
+        :center="currentPosition"
+        :zoom="10"
+        map-type-id="terrain"
+        style="width: 100%; height: 70vh"
+        justifiy-content-center
       >
-      <GmapMarker
-        :key="index"
-        v-for="(m, index) in markers"
-        :position="m.position"
-        :clickable="true"
-        :draggable="true"
-        @click="getPosition(m)"
-      />
-    </GmapMap>
+        <GmapInfoWindow
+          :options="infoOptions"
+          :position="infoWindowPos"
+          :opened="infoWinOpen"
+          @closeclick="infoWinOpen = false"
+          ><span v-if="!selectedMarker.postId">{{ selectedMarker.title }}</span>
+          <div v-else>
+            <img
+              :src="getIcon(selectedMarker.icon)"
+              width="30rem"
+              height="30rem"
+            />
+            <router-link
+              :to="{
+                name: 'details',
+                params: { postId: selectedMarker.postId },
+              }"
+              >{{ selectedMarker.title }}
+            </router-link>
+          </div></GmapInfoWindow
+        >
+        <GmapMarker
+          :key="index"
+          v-for="(m, index) in markers"
+          :position="m.position"
+          :clickable="true"
+          :draggable="true"
+          @click="getPosition(m)"
+        />
+      </GmapMap>
 
-    <div class="categories">
-      <b-button
-        v-for="(category, index) in categories"
-        :key="index"
-        v-b-popover.hover.top="category.text"
-        variant="outline-info"
-        @click="search(category.value)"
-      >
-        <img :src="getIcon(category.icon)" width="50rem" height="50rem" />
-      </b-button>
+      <div class="categories">
+        <b-button
+          v-for="(category, index) in categories"
+          :key="index"
+          v-b-popover.hover.top="category.text"
+          variant="outline-info"
+          @click="search(category.value)"
+        >
+          <img :src="getIcon(category.icon)" width="50rem" height="50rem" />
+        </b-button>
+      </div>
     </div>
   </div>
 </template>

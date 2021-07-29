@@ -1,7 +1,7 @@
 <template>
-  <div>
+  <div class="page-outline">
     <navbar />
-    <div class="container top">
+    <div class="container">
       <div v-if="$i18n.locale === 'ja'">
         <b-tabs align="center">
           <b-tab

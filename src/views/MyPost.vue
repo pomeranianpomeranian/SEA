@@ -1,59 +1,56 @@
 <template>
-  <div>
+  <div class="page-outline">
     <navbar />
-    <div class="container top">
-      <b-card no-body class="overflow-hidden">
-        <b-row no-gutters>
-          <b-col cols="4">
-            <div class="images-container d-flex p-3">
-              <b-card-img
-                class="img-thumbnail"
-                v-for="(image, index) in postContents.imagesRef"
-                :key="index"
-                :src="image.url"
-              ></b-card-img>
-            </div>
-          </b-col>
-          <b-col cols="8">
-            <b-card-body
-              class="card-body container"
-              :title="postContents.title"
+    <b-container class="top">
+      <b-row>
+        <b-col class="p-0" cols="6">
+          <b-carousel class="slide-show" :interval="4000" controls indicators>
+            <b-carousel-slide
+              v-for="(image, index) in postContents.imagesRef"
+              :key="index"
+              :caption="image.caption"
             >
-              <div>
-                <b-card-text>
-                  {{ postContents.description }}
-                </b-card-text>
-              </div>
-              <div>
-                <span
-                  class="badge bg-info text-light"
-                  v-for="(category, index) in postContents.categories"
-                  :key="index"
-                  >#{{ category }}</span
-                >
-              </div>
-              <div>
-                <comment :postId="postId"></comment>
-              </div>
-              <div>
-                <b-button class="col-6" variant="outline-info" @click="edit">{{
-                  $t("nav.edit")
-                }}</b-button>
-                <b-button
-                  class="col-6"
-                  variant="outline-danger"
-                  @click="deleteFiles"
-                  >{{ $t("nav.delete") }}</b-button
-                >
-              </div>
-            </b-card-body>
-          </b-col>
-        </b-row>
-        <template #footer>
-          <p class="footer mb-0 text-muted">Last updated : {{ date }}</p>
-        </template>
-      </b-card>
-    </div>
+              <template #img>
+                <div
+                  class="slide-img d-block img-fluid w-100"
+                  :style="{
+                    'background-image': 'url(' + image.url + ')',
+                  }"
+                ></div>
+              </template>
+            </b-carousel-slide>
+          </b-carousel>
+        </b-col>
+
+        <b-col class="post-content p-5" cols="6" offset="">
+          <div>
+            <h1 class="en-head">{{ postContents.title }}</h1>
+            <!--make each category an icon later-->
+            <span
+              v-for="(category, index) in postContents.categories"
+              :key="index"
+            >
+              {{ category }}
+            </span>
+            <p class="mt-5">{{ postContents.description }}</p>
+          </div>
+          <div>
+            <comment :postId="postId" />
+            <div class="mt-2">
+              <b-button class="col-6" variant="outline-warning" @click="edit">{{
+                $t("nav.edit")
+              }}</b-button>
+              <b-button
+                class="col-6"
+                variant="outline-danger"
+                @click="deleteFiles"
+                >{{ $t("nav.delete") }}</b-button
+              >
+            </div>
+          </div>
+        </b-col>
+      </b-row>
+    </b-container>
   </div>
 </template>
 <script>
@@ -102,21 +99,23 @@ export default {
 </script>
 
 <style scoped>
-.images-container {
-  width: 100%;
-  overflow-x: scroll;
+.container {
+  background-color: white;
 }
-.badge {
-  font-size: 1rem;
-  margin-right: 0.5rem;
+.slide-show {
+  border-radius: 2px;
+  overflow: hidden;
+  text-shadow: 1px 1px 2px #333;
 }
-.card-body {
-  height: 100%;
+.slide-img {
+  height: 80vh;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+.post-content {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-}
-.footer {
-  text-align: end;
 }
 </style>
