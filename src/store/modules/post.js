@@ -31,12 +31,19 @@ const mutations = {
   },
   registerComment(state, comment) {
     const timestamp = comment.createdAt.toDate();
-    state.comments.push({
+    let day = timestamp.getDate();
+    let month = timestamp.getMonth() + 1;
+    const year = timestamp.getFullYear();
+    if (day < 10) {
+      day = `0${day}`;
+    }
+    if (month < 10) {
+      month = `0${month}`;
+    }
+    return state.comments.push({
       username: comment.username,
       comment: comment.comment,
-      date: `${timestamp.getFullYear()}/${
-        timestamp.getMonth() + 1
-      }/${timestamp.getDate()}`,
+      date: `${day}/${month}/${year}`,
     });
   },
   registerPosts(state, posts) {

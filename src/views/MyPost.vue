@@ -1,7 +1,7 @@
 <template>
   <div class="page-outline">
     <navbar />
-    <b-container class="top">
+    <b-container>
       <b-row>
         <b-col class="p-0" cols="6">
           <b-carousel class="slide-show" :interval="4000" controls indicators>
@@ -22,7 +22,7 @@
           </b-carousel>
         </b-col>
 
-        <b-col class="post-content p-5" cols="6" offset="">
+        <b-col class="post-content px-5 pt-3" cols="6" offset="">
           <div>
             <h1 class="en-head">{{ postContents.title }}</h1>
             <!--make each category an icon later-->
@@ -35,18 +35,15 @@
             <p class="mt-5">{{ postContents.description }}</p>
           </div>
           <div>
-            <comment :postId="postId" />
-            <div class="mt-2">
-              <b-button class="col-6" variant="outline-warning" @click="edit">{{
-                $t("nav.edit")
-              }}</b-button>
-              <b-button
-                class="col-6"
-                variant="outline-danger"
-                @click="deleteFiles"
-                >{{ $t("nav.delete") }}</b-button
-              >
-            </div>
+            <b-button class="col-6" variant="outline-warning" @click="edit">{{
+              $t("nav.edit")
+            }}</b-button>
+            <b-button
+              class="col-6"
+              variant="outline-danger"
+              @click="deleteFiles"
+              >{{ $t("nav.delete") }}</b-button
+            >
           </div>
         </b-col>
       </b-row>
@@ -55,12 +52,10 @@
 </template>
 <script>
 import navbar from "../components/Navbar.vue";
-import comment from "../components/Comment.vue";
 export default {
   props: ["postId"],
   components: {
     navbar,
-    comment,
   },
   methods: {
     edit() {

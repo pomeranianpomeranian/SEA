@@ -7,25 +7,36 @@
         v-for="(comment, index) in comments"
         :key="index"
       >
-        <p class="comment">{{ comment.comment }}</p>
-        <div class="info">
-          <p class="username">{{ comment.username }}</p>
-          <p class="date">{{ comment.date }}</p>
+        <div class="user-info">
+          <div
+            class="avatar"
+            v-if="comment.avatar"
+            :style="{
+              'backgorund-image': 'url(' + comment.avatar + ')',
+            }"
+          ></div>
+          <div class="avatar" v-else>
+            <b-icon icon="person-fill"></b-icon>
+          </div>
+          <span>{{ comment.username }}</span>
+          <span>|</span>
+          <span>{{ comment.date }}</span>
         </div>
+        <p class="comment">{{ comment.comment }}</p>
       </div>
-    </div>
-    <div v-if="userId && $route.name !== 'mypost'">
-      <b-input-group class="mt-3" sixe="lg">
-        <b-form-textarea
-          v-model="input"
-          :placeholder="$t('comment.placeholder')"
-        ></b-form-textarea>
-        <b-input-group-append>
-          <b-button variant="outline-info" @click="submit">{{
-            $t("comment.send")
-          }}</b-button>
-        </b-input-group-append>
-      </b-input-group>
+      <div class="comment-input" v-if="userId">
+        <b-input-group class="mt-3" sixe="lg">
+          <b-form-textarea
+            v-model="input"
+            :placeholder="$t('comment.placeholder')"
+          ></b-form-textarea>
+          <b-input-group-append>
+            <b-button variant="info" @click="submit">{{
+              $t("comment.send")
+            }}</b-button>
+          </b-input-group-append>
+        </b-input-group>
+      </div>
     </div>
   </div>
 </template>
@@ -69,20 +80,18 @@ export default {
   width: 100%;
 }
 .comment-container {
-  border: 1px solid black;
-  border-radius: 10px;
-  width: 100%;
-  height: 150px;
+  position: relative;
+  border: 1px solid lightgray;
+  border-radius: 4px;
+  height: 500px;
   overflow-y: scroll;
-  padding: 10px;
 }
 .comment-holder {
+  min-height: 100px;
   box-shadow: 5px 2px 2px lightgray;
   border-radius: 5px;
-  display: flex;
-  flex-direction: column;
-  padding: 5px;
-  margin: 3px 0;
+  padding: 10px;
+  margin: 0;
 }
 .comment {
   width: 100%;
@@ -90,18 +99,29 @@ export default {
   margin: 0;
   padding: 5px;
 }
-.info {
+span {
+  margin: 0 5px;
+}
+.user-info {
   display: flex;
-  justify-content: flex-end;
+  align-items: center;
+  color: rgba(0, 0, 0, 0.5);
 }
-.username {
-  font-weight: bold;
-  margin: 0;
-  padding: 0 3px;
+.avatar {
+  display: inline-block;
+  background-color: darkgray;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  text-align: center;
+  font-size: 24px;
+  color: white;
 }
-.date {
-  font-weight: lighter;
-  color: darkgrey;
-  margin: 0;
+.comment-input {
+  position: sticky;
+  bottom: 0;
 }
 </style>
