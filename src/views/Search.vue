@@ -1,55 +1,33 @@
 <template>
   <div class="page-outline">
-    <div class="container">
-      <navbar />
-      <GmapMap
-        :center="currentPosition"
-        :zoom="10"
-        map-type-id="terrain"
-        style="width: 100%; height: 70vh"
-        justifiy-content-center
-      >
-        <GmapInfoWindow
-          :options="infoOptions"
-          :position="infoWindowPos"
-          :opened="infoWinOpen"
-          @closeclick="infoWinOpen = false"
-          ><span v-if="!selectedMarker.postId">{{ selectedMarker.title }}</span>
-          <div v-else>
-            <img
-              :src="getIcon(selectedMarker.icon)"
-              width="30rem"
-              height="30rem"
-            />
-            <router-link
-              :to="{
-                name: 'details',
-                params: { postId: selectedMarker.postId },
-              }"
-              >{{ selectedMarker.title }}
-            </router-link>
-          </div></GmapInfoWindow
-        >
-        <GmapMarker
-          :key="index"
-          v-for="(m, index) in markers"
-          :position="m.position"
-          :clickable="true"
-          :draggable="true"
-          @click="getPosition(m)"
-        />
-      </GmapMap>
-
+    <navbar />
+    <div class="container p-3">
       <div class="categories">
         <b-button
           v-for="(category, index) in categories"
           :key="index"
           v-b-popover.hover.top="category.text"
           variant="outline-info"
-          @click="search(category.value)"
+          @click="changeCategory(category.value)"
         >
           <img :src="getIcon(category.icon)" width="50rem" height="50rem" />
         </b-button>
+      </div>
+      <!-- <h1>{{ categoryDesplay }}</h1> -->
+      <div class="row">
+        <div class="col-4 mb-5" v-for="(post, index) in posts" :key="index">
+          <div class="holder" @click="transfer(post.postId)">
+            <div
+              class="thumbnail-img"
+              :style="{
+                'background-image': 'url(' + post.imagesRef[0].url + ')',
+              }"
+            ></div>
+            <div class="card-content">
+              <h4>{{ post.title }}</h4>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -57,14 +35,13 @@
 
 <script>
 import navbar from "../components/Navbar.vue";
-import firebase from "firebase";
 export default {
   components: {
     navbar,
   },
   data() {
     return {
-      selectedMarker: {},
+      selectedCategory: "all",
       categories: [
         {
           text: this.$t("category.all"),
@@ -107,105 +84,66 @@ export default {
           value: "view",
         },
       ],
-      currentPosition: {},
-      markers: [],
-      infoOptions: {
-        pixelOffset: {
-          width: 0,
-          height: -35,
-        },
-      },
-      infoWindowPos: null,
-      infoWinOpen: false,
-      headers: {
-        "Content-Type": "application/json;charset=UTF-8",
-        "Access-Control-Allow-Origin": "*",
-      },
     };
   },
   methods: {
-    toggleInfoWindow(marker) {
-      this.infoWindowPos = marker.position;
-      this.infoWinOpen = true;
-    },
-    search(category) {
+    transfer(postId) {
       this.$router.push({
-        name: "result",
-        params: { category },
+        name: "details",
+        params: { postId },
       });
     },
-    getPosition(marker) {
-      this.selectedMarker = {
-        ...marker,
-        icon: this.selectIcon(marker),
-      };
-      this.toggleInfoWindow(marker);
+    changeCategory(category) {
+      this.selectedCategory = category;
+      this.$store.dispatch("searchPosts", category);
     },
     getIcon(icon) {
       return require(`@/images/${icon}`);
     },
-    selectIcon(marker) {
-      if (marker.categories) {
-        for (let category of this.categories) {
-          if (category.value === marker.categories[0]) {
-            return category.icon;
-          }
-        }
-      }
+  },
+  computed: {
+    posts() {
+      return this.$store.state.post.posts;
+    },
+    userId() {
+      return this.$store.state.auth.userId;
+    },
+    categoryDesplay() {
+      return this.$t(`category.${this.selectedCategory}`);
     },
   },
   created() {
-    this.$getLocation().then((coordinates) => {
-      this.currentPosition = coordinates;
-      this.markers.push({
-        title: this.$t("map.current"),
-        position: this.currentPosition,
-      });
-    });
-    firebase
-      .firestore()
-      .collection("posts")
-      .get()
-      .then((snapshot) => {
-        snapshot.docs.forEach((doc) => {
-          this.markers.push({
-            id: this.markers.length,
-            postId: doc.id,
-            ...doc.data(),
-          });
-        });
-      });
-  },
-  mounted() {
-    let origin = "41.43206,-81.38992";
-    let destination = "46.43206,-80.38992";
-    let key = "AIzaSyBdqpd-ViC5zdoC3XS1lOjhSNfNBcaznkw";
-    let url =
-      "/maps/api/directions/json?origin=" +
-      origin +
-      "&destination=" +
-      destination +
-      "&key=" +
-      key;
-
-    fetch(url, {
-      mode: "no-cors",
-    })
-      .then((res) => {
-        return res.json();
-      })
-      .catch((err) => {
-        console.log("err", err);
-      });
+    this.$store.dispatch("searchPosts", "all");
   },
 };
 </script>
 
-<style>
-.categories {
-  display: flex;
-  justify-content: space-around;
-  padding: 30px 150px;
-  margin-top: 20px;
+<style scoped>
+.holder {
+  padding: 0;
+  margin: auto;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: white;
+  transition-property: box-shadow, transform;
+  transition-duration: 200ms;
+  transition-timing-function: ease-out;
+}
+.holder:hover {
+  cursor: pointer;
+  box-shadow: 0 15px 30px rgba(26, 49, 88, 0.15);
+  transform: translateY(-2px);
+}
+.thumbnail-img {
+  height: 300px;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+.card-content {
+  font-family: "Noto Serif", serif;
+  font-weight: 400;
+  padding: 15px 0;
+  text-align: center;
 }
 </style>

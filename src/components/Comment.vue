@@ -1,6 +1,6 @@
 <template>
-  <div class="comment-box">
-    <div class="comment-container">
+  <div class="comment-container">
+    <div class="comments">
       <p v-if="!comments[0]">{{ $t("comment.nocomment") }}</p>
       <div
         class="comment-holder"
@@ -24,19 +24,19 @@
         </div>
         <p class="comment">{{ comment.comment }}</p>
       </div>
-      <div class="comment-input" v-if="userId">
-        <b-input-group class="mt-3" sixe="lg">
-          <b-form-textarea
-            v-model="input"
-            :placeholder="$t('comment.placeholder')"
-          ></b-form-textarea>
-          <b-input-group-append>
-            <b-button variant="info" @click="submit">{{
-              $t("comment.send")
-            }}</b-button>
-          </b-input-group-append>
-        </b-input-group>
-      </div>
+    </div>
+    <div class="comment-input" v-if="userId">
+      <b-input-group class="mt-3" sixe="lg">
+        <b-form-textarea
+          v-model="input"
+          :placeholder="$t('comment.placeholder')"
+        ></b-form-textarea>
+        <b-input-group-append>
+          <b-button variant="info" @click="submit">{{
+            $t("comment.send")
+          }}</b-button>
+        </b-input-group-append>
+      </b-input-group>
     </div>
   </div>
 </template>
@@ -76,14 +76,17 @@ export default {
 </script>
 
 <style scoped>
-.comment-box {
-  width: 100%;
-}
 .comment-container {
-  position: relative;
+  width: 100%;
+  height: 500px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   border: 1px solid lightgray;
   border-radius: 4px;
-  height: 500px;
+}
+.comments {
+  height: 420px;
   overflow-y: scroll;
 }
 .comment-holder {
@@ -119,9 +122,5 @@ span {
   text-align: center;
   font-size: 24px;
   color: white;
-}
-.comment-input {
-  position: sticky;
-  bottom: 0;
 }
 </style>

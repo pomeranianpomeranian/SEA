@@ -15,6 +15,9 @@
 
         <b-collapse id="nav-collapse" is-nav>
           <b-navbar-nav>
+            <b-nav-item @click="transfer('map')">{{
+              $t("nav.map")
+            }}</b-nav-item>
             <b-nav-item @click="transfer('search')">{{
               $t("nav.search")
             }}</b-nav-item>

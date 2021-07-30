@@ -1,6 +1,7 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 import Home from "../views/Home.vue";
+import Map from "../views/Map.vue";
 import Search from "../views/Search.vue";
 import Result from "../views/Result.vue";
 import Details from "../views/Details.vue";
@@ -31,7 +32,12 @@ const routes = [
     props: true,
   },
   {
-    path: "/search",
+    path: "/map",
+    name: "map",
+    component: Map,
+  },
+  {
+    path: "/search/:category",
     name: "search",
     component: Search,
   },
@@ -42,7 +48,7 @@ const routes = [
     props: true,
   },
   {
-    path: "/result/:postId",
+    path: "/search/:postId",
     name: "details",
     component: Details,
     props: true,
