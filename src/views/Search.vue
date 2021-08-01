@@ -10,7 +10,11 @@
           variant="outline-info"
           @click="changeCategory(category.value)"
         >
-          <img :src="getIcon(category.icon)" width="50rem" height="50rem" />
+          <img
+            :src="getIcon(`${category.value}.png`)"
+            width="50rem"
+            height="50rem"
+          />
         </b-button>
       </div>
       <!-- <h1>{{ categoryDesplay }}</h1> -->
@@ -45,42 +49,34 @@ export default {
       categories: [
         {
           text: this.$t("category.all"),
-          icon: "T_HIKOKI.png",
           value: "all",
         },
         {
           text: this.$t("category.culture"),
-          icon: "H_SHODO.png",
           value: "culture",
         },
         {
           text: this.$t("category.nature"),
-          icon: "H_KODO.png",
           value: "nature",
         },
         {
           text: this.$t("category.sports"),
-          icon: "H_SUMO.png",
           value: "sports",
         },
         {
           text: this.$t("category.food"),
-          icon: "F_WASHOKU.png",
           value: "food",
         },
         {
           text: this.$t("category.shopping"),
-          icon: "B_BAITEN.png",
           value: "shopping",
         },
         {
           text: this.$t("category.history"),
-          icon: "H_SHIRO-ATO.png",
           value: "history",
         },
         {
           text: this.$t("category.view"),
-          icon: "N_HINODE.png",
           value: "view",
         },
       ],

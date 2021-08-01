@@ -17,7 +17,9 @@
           ><span v-if="!selectedMarker.postId">{{ selectedMarker.title }}</span>
           <div v-else>
             <img
-              :src="getIcon(selectedMarker.icon)"
+              v-for="(category, index) in selectedMarker.categories"
+              :key="index"
+              :src="getIcon(`${category}.png`)"
               width="30rem"
               height="30rem"
             />
@@ -32,24 +34,29 @@
         >
         <GmapMarker
           :key="index"
-          v-for="(m, index) in markers"
-          :position="m.position"
+          v-for="(marker, index) in selectedMarkers"
+          :position="marker.position"
           :clickable="true"
-          :draggable="true"
-          @click="getPosition(m)"
+          :draggable="false"
+          @click="getPosition(marker)"
         />
       </GmapMap>
 
-      <!-- <div class="categories">
+      <div class="categories">
         <b-button
           v-for="(category, index) in categories"
           :key="index"
           v-b-popover.hover.top="category.text"
           variant="outline-info"
+          @click="selectedCategory = category.value"
         >
-          <img :src="getIcon(category.icon)" width="50rem" height="50rem" />
+          <img
+            :src="getIcon(`${category.value}.png`)"
+            width="50rem"
+            height="50rem"
+          />
         </b-button>
-      </div> -->
+      </div>
     </div>
   </div>
 </template>
@@ -63,46 +70,39 @@ export default {
   },
   data() {
     return {
+      selectedCategory: "all",
       selectedMarker: {},
       categories: [
         {
           text: this.$t("category.all"),
-          icon: "T_HIKOKI.png",
           value: "all",
         },
         {
           text: this.$t("category.culture"),
-          icon: "H_SHODO.png",
           value: "culture",
         },
         {
           text: this.$t("category.nature"),
-          icon: "H_KODO.png",
           value: "nature",
         },
         {
           text: this.$t("category.sports"),
-          icon: "H_SUMO.png",
           value: "sports",
         },
         {
           text: this.$t("category.food"),
-          icon: "F_WASHOKU.png",
           value: "food",
         },
         {
           text: this.$t("category.shopping"),
-          icon: "B_BAITEN.png",
           value: "shopping",
         },
         {
           text: this.$t("category.history"),
-          icon: "H_SHIRO-ATO.png",
           value: "history",
         },
         {
           text: this.$t("category.view"),
-          icon: "N_HINODE.png",
           value: "view",
         },
       ],
@@ -130,21 +130,20 @@ export default {
     getPosition(marker) {
       this.selectedMarker = {
         ...marker,
-        icon: this.selectIcon(marker),
       };
       this.toggleInfoWindow(marker);
     },
     getIcon(icon) {
       return require(`@/images/${icon}`);
     },
-    selectIcon(marker) {
-      if (marker.categories) {
-        for (let category of this.categories) {
-          if (category.value === marker.categories[0]) {
-            return category.icon;
-          }
-        }
-      }
+  },
+  computed: {
+    selectedMarkers() {
+      if (this.selectedCategory === "all") return this.markers;
+      else
+        return this.markers.filter((marker) =>
+          marker.categories.includes(this.selectedCategory)
+        );
     },
   },
   created() {
@@ -153,6 +152,7 @@ export default {
       this.markers.push({
         title: this.$t("map.current"),
         position: this.currentPosition,
+        categories: [],
       });
     });
     firebase
