@@ -67,5 +67,9 @@
   },
   "title": {
     "pendboard": "Posts to be translated..."
+  },
+  "user": {
+    "edit": "Edit profile",
+    "avatar": "Change picture"
   }
 }
