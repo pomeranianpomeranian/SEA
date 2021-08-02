@@ -17,7 +17,8 @@
   "comment": {
     "nocomment": "There has been no comment yet",
     "send": "Send",
-    "placeholder": "comment"
+    "placeholder": "comment",
+    "validation": "Please login to send your comment."
   },
   "form": {
     "title": "Title",

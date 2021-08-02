@@ -17,7 +17,8 @@
   "comment": {
     "nocomment": "まだコメントはありません",
     "send": "送る",
-    "placeholder": "コメントを入力してください"
+    "placeholder": "コメントを入力してください",
+    "validation": "ログインしてください。"
   },
   "form": {
     "title": "題名",

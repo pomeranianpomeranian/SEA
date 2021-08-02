@@ -25,17 +25,26 @@
         <p class="comment">{{ comment.comment }}</p>
       </div>
     </div>
-    <div class="comment-input" v-if="userId">
-      <b-input-group class="mt-3" sixe="lg">
+    <div>
+      <b-input-group sixe="lg">
         <b-form-textarea
+          class="comment-input"
           v-model="input"
+          :state="loginState"
           :placeholder="$t('comment.placeholder')"
+          aria-describedby="validation"
         ></b-form-textarea>
         <b-input-group-append>
-          <b-button variant="info" @click="submit">{{
-            $t("comment.send")
-          }}</b-button>
+          <b-button
+            variant="info"
+            @click="submit"
+            style="border-bottom-right-radius: 3px"
+            >{{ $t("comment.send") }}</b-button
+          >
         </b-input-group-append>
+        <b-form-invalid-feedback id="validation">
+          {{ $t("comment.validation") }}
+        </b-form-invalid-feedback>
       </b-input-group>
     </div>
   </div>
@@ -47,15 +56,18 @@ export default {
   data() {
     return {
       input: "",
+      loginState: null,
     };
   },
   methods: {
     submit() {
-      this.$store.dispatch("submitComments", {
-        comment: this.input,
-        postId: this.postId,
-      });
-      this.input = "";
+      if (this.userId) {
+        this.$store.dispatch("submitComments", {
+          comment: this.input,
+          postId: this.postId,
+        });
+        this.input = "";
+      } else this.loginState = false;
     },
   },
   computed: {
@@ -86,7 +98,7 @@ export default {
   border-radius: 4px;
 }
 .comments {
-  height: 420px;
+  height: 438px;
   overflow-y: scroll;
 }
 .comment-holder {
@@ -122,5 +134,13 @@ span {
   text-align: center;
   font-size: 24px;
   color: white;
+}
+.comment-input {
+  border-radius: 0;
+  border-bottom-left-radius: 3px;
+}
+#validation {
+  position: absolute;
+  bottom: -20px;
 }
 </style>
