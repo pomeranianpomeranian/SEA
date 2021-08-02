@@ -12,7 +12,7 @@
             class="avatar"
             v-if="comment.avatar"
             :style="{
-              'backgorund-image': 'url(' + comment.avatar + ')',
+              'background-image': 'url(' + comment.avatar + ')',
             }"
           ></div>
           <div class="avatar" v-else>
