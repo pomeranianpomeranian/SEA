@@ -50,7 +50,7 @@
               size="lg"
               @click="submitPost(true)"
               v-bind="{ disabled: !completed }"
-              >{{ $t("form.save") }}</b-button
+              >{{ $t("form.translate") }}</b-button
             >
           </div>
         </b-col>

@@ -9,6 +9,7 @@ import NewPost from "../views/NewPost.vue";
 import MyPost from "../views/MyPost.vue";
 import Edit from "../views/Edit.vue";
 import User from "../views/User.vue";
+import Profile from "../views/Profile.vue";
 import PendingBoard from "../views/PendingBoard.vue";
 import Translate from "../views/Translate.vue";
 
@@ -57,6 +58,15 @@ const routes = [
     path: "/user/:userId",
     name: "user",
     component: User,
+    props: true,
+    meta: {
+      requireAuth: true,
+    },
+  },
+  {
+    path: "/user/:userId/profile",
+    name: "profile",
+    component: Profile,
     props: true,
     meta: {
       requireAuth: true,

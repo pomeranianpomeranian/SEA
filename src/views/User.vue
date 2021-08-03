@@ -33,6 +33,7 @@
               style="padding: 0"
               v-b-tooltip.hover
               :title="$t('user.edit')"
+              @click="$router.push({ name: 'profile', params: { userId } })"
               ><b-icon icon="pencil-square"></b-icon
             ></b-button>
           </div>

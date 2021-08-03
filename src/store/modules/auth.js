@@ -129,6 +129,17 @@ const actions = {
       .then((userCredential) => commit("signUp", userCredential))
       .then(() => dispatch("registerUser", userData.userDetails));
   },
+  updateBio({ state, dispatch }, updatedProfile) {
+    userRef
+      .doc(state.userId)
+      .update({
+        ...updatedProfile,
+      })
+      .then(() => dispatch("fetchUserData", state.userId))
+      .then(() =>
+        router.push({ name: "user", params: { userId: state.userId } })
+      );
+  },
 };
 
 export default {
