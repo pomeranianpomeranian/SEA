@@ -31,6 +31,10 @@
     "suggestion": "受け取った翻訳案",
     "email": "メールアドレス",
     "password": "パスワード",
+    "newPassword": "新しいパスワード",
+    "confirmPassword": "パスワード再入力",
+    "changePassword": "パスワードを変更する",
+    "changeEmail": "メールアドレスを変更する",
     "username": "ユーザーネーム",
     "language": "言語",
     "bio": "ひとこと",
@@ -42,7 +46,18 @@
     "reset": "リセット",
     "send": "送る",
     "original": "元の投稿",
-    "changed": "変更後"
+    "changed": "変更後",
+    "reauthenticate": "現在のアドレス/パスワードでログインしてください。",
+    "validation": {
+      "length": "パスワードは最低８文字です。",
+      "match": "パスワードが一致しません。"
+    },
+    "alert": {
+      "emailSuccess": "メールアドレスが変更されました。",
+      "emailFail": "申し訳ございません。エラーが起きたようです。もう一度お願いします。",
+      "passwordSuccess": "パスワードが変更されました。",
+      "passwordFail": "申し訳ございません。エラーが起きたようです。もう一度お願いします。"
+    }
   },
   "placeholder": {
     "title": "素敵な題名をつけてください",

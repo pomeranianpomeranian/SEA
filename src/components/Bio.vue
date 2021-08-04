@@ -1,64 +1,62 @@
 <template>
-  <div>
-    <b-form>
-      <div class="user">
-        <div class="user-avatar">
-          <div
-            class="avatar-img"
-            v-if="userDetails.avatar"
-            :style="{
-              'background-image': 'url(' + userDetails.avatar + ')',
-            }"
-          ></div>
-          <div class="avatar-img" v-else>
-            <b-icon icon="person-fill"></b-icon>
-          </div>
-          <div class="overlay" @click="openFile">
-            <p class="overlay-text">{{ $t("user.avatar") }}</p>
-            <input
-              type="file"
-              id="avatar"
-              accept=".jpg, .jpeg, .png"
-              style="display: none"
-              @change="changeAvatar"
-            />
-          </div>
+  <b-form @submit.prevent="updateBio" @reset.prevent="reset">
+    <div class="user">
+      <div class="user-avatar">
+        <div
+          class="avatar-img"
+          v-if="userDetails.avatar"
+          :style="{
+            'background-image': 'url(' + userDetails.avatar + ')',
+          }"
+        ></div>
+        <div class="avatar-img" v-else>
+          <b-icon icon="person-fill"></b-icon>
         </div>
-        <div>
-          <h2>{{ updatedProfile.username }}</h2>
-          <p>{{ updatedProfile.bio }}</p>
+        <div class="overlay" @click="openFile">
+          <p class="overlay-text">{{ $t("user.avatar") }}</p>
+          <input
+            type="file"
+            id="avatar"
+            accept=".jpg, .jpeg, .png"
+            style="display: none"
+            @change="changeAvatar"
+          />
         </div>
       </div>
+      <div>
+        <h2>{{ updatedProfile.username }}</h2>
+        <p>{{ updatedProfile.bio }}</p>
+      </div>
+    </div>
 
-      <b-form-group :label="`${$t('form.username')} :`" label-for="username">
-        <b-form-input
-          id="username"
-          type="text"
-          v-model="updatedProfile.username"
-          required
-        />
-      </b-form-group>
+    <b-form-group :label="`${$t('form.username')} :`" label-for="username">
+      <b-form-input
+        id="username"
+        type="text"
+        v-model="updatedProfile.username"
+        required
+      />
+    </b-form-group>
 
-      <b-form-group :label="`${$t('form.bio')} :`" label-for="bio">
-        <b-form-textarea id="bio" v-model="updatedProfile.bio" rows="6" />
-      </b-form-group>
+    <b-form-group :label="`${$t('form.bio')} :`" label-for="bio">
+      <b-form-textarea id="bio" v-model="updatedProfile.bio" rows="6" />
+    </b-form-group>
 
-      <b-form-group :label="`${$t('form.language')} :`" label-for="lang">
-        <b-form-select
-          id="lang"
-          v-model="updatedProfile.language"
-          :options="langOptions"
-          required
-        />
-      </b-form-group>
-    </b-form>
-    <b-button class="button" variant="outline-info" @click="updateBio">{{
+    <b-form-group :label="`${$t('form.language')} :`" label-for="lang">
+      <b-form-select
+        id="lang"
+        v-model="updatedProfile.language"
+        :options="langOptions"
+        required
+      />
+    </b-form-group>
+    <b-button type="submit" class="button" variant="outline-info">{{
       $t("form.save")
     }}</b-button>
-    <b-button class="button" variant="outline-secondary" @click="reset">{{
+    <b-button type="reset" class="button" variant="outline-secondary">{{
       $t("form.reset")
     }}</b-button>
-  </div>
+  </b-form>
 </template>
 
 <script>

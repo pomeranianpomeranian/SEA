@@ -9,6 +9,7 @@ const storage = firebase.storage();
 const state = {
   userId: null,
   userDetails: null,
+  userEmail: null,
 };
 
 const mutations = {
@@ -23,9 +24,6 @@ const mutations = {
     state.userId = userId;
     router.push({ name: "user", params: { userId: state.userId } });
   },
-  // autoSignIn(state, userId) {
-  //   state.userId = userId;
-  // },
   signOut(state) {
     state.userId = null;
     state.userDetails = null;
@@ -34,16 +32,12 @@ const mutations = {
   signUp(state, userCredential) {
     state.userId = userCredential.user.uid;
   },
-  // fetchUserData(state, userData) {
-  //   state.userDetails = userData;
-  // },
 };
 
 const actions = {
   autoSignIn({ state, dispatch }) {
     authRef.onAuthStateChanged((user) => {
       if (user) {
-        // commit("autoSignIn", user.uid);
         state.userId = user.uid;
         dispatch("fetchUserData", user.uid);
       }
@@ -78,7 +72,6 @@ const actions = {
       .doc(userId)
       .get()
       .then((doc) => {
-        // commit("fetchUserData", doc.data());
         state.userDetails = doc.data();
         commit("setLang");
       });
@@ -93,6 +86,10 @@ const actions = {
           avatar: url,
         });
       });
+  },
+  getAuthData({ state }) {
+    const user = authRef.currentUser;
+    state.userEmail = user.email;
   },
   registerUser({ commit, state }, userDetails) {
     userRef
