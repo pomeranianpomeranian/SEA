@@ -24,7 +24,23 @@
 
         <b-col class="contents pr-2 pt-3" cols="6">
           <div>
-            <h1 class="en-head">{{ postContents.title }}</h1>
+            <div class="header">
+              <h1 class="en-head">{{ postContents.title }}</h1>
+              <b-button variant="faded" @click="updateLike">
+                <b-icon
+                  class="icon"
+                  v-if="!postContents.isLiked"
+                  icon="bookmark"
+                  variant="secondary"
+                ></b-icon>
+                <b-icon
+                  v-else
+                  class="icon"
+                  icon="bookmark-check-fill"
+                  variant="secondary"
+                ></b-icon>
+              </b-button>
+            </div>
             <div class="user-info">
               <div
                 class="avatar"
@@ -48,13 +64,14 @@
               v-for="(category, index) in postContents.categories"
               :key="index"
             >
-              <img :id="category" class="icon" :src="getIcon(category)" />
-              <b-tooltip
-                :target="category"
-                triggers="hover"
-                variant="warning"
-                >{{ $t(`category.${category}`) }}</b-tooltip
-              >
+              <img
+                :id="category"
+                class="category-icon"
+                :src="getIcon(category)"
+              />
+              <b-tooltip :target="category" triggers="hover" variant="light">{{
+                $t(`category.${category}`)
+              }}</b-tooltip>
             </div>
           </div>
         </b-col>
@@ -141,6 +158,9 @@ export default {
         if (item.value === category) return item.icon;
       }
     },
+    updateLike() {
+      this.$store.dispatch("updateLike", this.postId);
+    },
   },
   computed: {
     userId() {
@@ -167,16 +187,15 @@ export default {
     },
   },
   created() {
-    this.$getLocation()
-      .then((coordinates) => {
-        this.currentPosition = coordinates;
-        this.markers.push({
-          title: this.$t("map.current"),
-          position: this.currentPosition,
-        });
-      })
-      .then(() => this.$store.dispatch("getDetails", this.postId));
-    this.markers.push(this.postContents);
+    this.$store.dispatch("getDetails", this.postId);
+    this.$getLocation().then((coordinates) => {
+      this.currentPosition = coordinates;
+      this.markers.push({
+        title: this.$t("map.current"),
+        position: this.currentPosition,
+      });
+      this.markers.push(this.postContents);
+    });
   },
   mounted() {
     let origin = "41.43206,-81.38992";
@@ -200,6 +219,9 @@ export default {
         console.log("err", err);
       });
   },
+  destroyed() {
+    this.$store.commit("clearContents");
+  },
 };
 </script>
 
@@ -221,6 +243,10 @@ export default {
 .contents {
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
+}
+.header {
+  display: flex;
   justify-content: space-between;
 }
 span {
@@ -254,9 +280,13 @@ span {
   display: inline-block;
   margin-right: 10px;
 }
-.icon {
+.category-icon {
   width: 50px;
   height: 50px;
+}
+.icon {
+  width: 30px;
+  height: 30px;
 }
 .map-container {
   border-radius: 2px;

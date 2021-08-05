@@ -21,13 +21,7 @@ const state = {
 
 const mutations = {
   clearContents(state) {
-    return (state.postContents = {
-      title: null,
-      categories: [],
-      imagesRef: [],
-      description: null,
-      position: null,
-    });
+    return (state.postContents = null);
   },
   registerComment(state, comment) {
     const timestamp = comment.createdAt.toDate();
@@ -90,15 +84,14 @@ const mutations = {
 };
 
 const actions = {
-  addLike({ state, rootState }, index) {
-    const target = state.posts[index];
+  addLike({ state, rootState }, postId) {
     userRef
       .doc(rootState.auth.userId)
       .update({
-        likedPosts: firebase.firestore.FieldValue.arrayUnion(target.postId),
+        likedPosts: firebase.firestore.FieldValue.arrayUnion(postId),
       })
       .then(() => {
-        target.isLiked = true;
+        state.postContents.isLiked = true;
       });
   },
   deleteFiles({ dispatch, state }, postId) {
@@ -146,15 +139,24 @@ const actions = {
         })
       );
   },
-  getDetails({ state, dispatch }, postId) {
+  getDetails({ rootState, state, dispatch }, postId) {
     state.postContents = null;
+    const likedPosts = rootState.auth.userDetails.likedPosts;
     postRef
       .doc(postId)
       .get()
       .then((post) => {
-        state.postContents = {
-          ...post.data(),
-        };
+        if (likedPosts.includes(postId)) {
+          state.postContents = {
+            ...post.data(),
+            isLiked: true,
+          };
+        } else {
+          state.postContents = {
+            ...post.data(),
+            isLiked: false,
+          };
+        }
         dispatch("getSuggestions", postId);
       });
   },
@@ -244,15 +246,14 @@ const actions = {
   //       })
   //       .catch((err) => console.log(err));
   //   },
-  removeLike({ state, rootState }, index) {
-    const target = state.posts[index];
+  removeLike({ state, rootState }, postId) {
     userRef
       .doc(rootState.auth.userId)
       .update({
-        likedPosts: firebase.firestore.FieldValue.arrayRemove(target.postId),
+        likedPosts: firebase.firestore.FieldValue.arrayRemove(postId),
       })
       .then(() => {
-        target.isLiked = false;
+        state.postContents.isLiked = false;
       });
   },
   searchPosts({ commit, state }, category) {
@@ -333,23 +334,23 @@ const actions = {
         });
       });
   },
-  updateLike({ dispatch, state }, index) {
-    const target = postRef.doc(state.posts[index].postId);
-    if (!state.posts[index].isLiked) {
-      target
+  updateLike({ dispatch, state }, postId) {
+    const post = postRef.doc(postId);
+    if (!state.postContents.isLiked) {
+      post
         .update({
           numLike: firebase.firestore.FieldValue.increment(1),
         })
         .then(() => {
-          dispatch("addLike", index);
+          dispatch("addLike", postId);
         });
     } else {
-      target
+      post
         .update({
           numLike: firebase.firestore.FieldValue.increment(-1),
         })
         .then(() => {
-          dispatch("removeLike", index);
+          dispatch("removeLike", postId);
         });
     }
   },

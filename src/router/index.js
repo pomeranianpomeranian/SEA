@@ -3,7 +3,6 @@ import VueRouter from "vue-router";
 import Home from "../views/Home.vue";
 import Map from "../views/Map.vue";
 import Search from "../views/Search.vue";
-import Result from "../views/Result.vue";
 import Details from "../views/Details.vue";
 import NewPost from "../views/NewPost.vue";
 import MyPost from "../views/MyPost.vue";
@@ -41,12 +40,6 @@ const routes = [
     path: "/search/:category",
     name: "search",
     component: Search,
-  },
-  {
-    path: "/result/:category",
-    name: "result",
-    component: Result,
-    props: true,
   },
   {
     path: "/search/:postId",

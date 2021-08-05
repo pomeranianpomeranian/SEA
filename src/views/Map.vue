@@ -19,7 +19,7 @@
             <img
               v-for="(category, index) in selectedMarker.categories"
               :key="index"
-              :src="getIcon(`${category}.png`)"
+              :src="getIcon(category)"
               width="30rem"
               height="30rem"
             />
@@ -94,6 +94,11 @@ export default {
         ...marker,
       };
       this.toggleInfoWindow(marker);
+    },
+    getIcon(category) {
+      for (let item of this.categories) {
+        if (item.value === category) return item.icon;
+      }
     },
   },
   computed: {
