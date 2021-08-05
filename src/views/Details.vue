@@ -43,13 +43,19 @@
             <p class="mt-5">{{ postContents.description }}</p>
           </div>
           <div>
-            <!-- make each category an icon later -->
-            <span
+            <div
+              class="icon-container"
               v-for="(category, index) in postContents.categories"
               :key="index"
             >
-              {{ category }}
-            </span>
+              <img :id="category" class="icon" :src="getIcon(category)" />
+              <b-tooltip
+                :target="category"
+                triggers="hover"
+                variant="warning"
+                >{{ $t(`category.${category}`) }}</b-tooltip
+              >
+            </div>
           </div>
         </b-col>
         <div class="line"></div>
@@ -80,7 +86,6 @@
                 v-for="(m, index) in markers"
                 :position="m.position"
                 :clickable="true"
-                :draggable="true"
                 @click="getPosition(m)"
               />
             </GmapMap>
@@ -131,6 +136,11 @@ export default {
       this.selectedMarker = marker;
       this.toggleInfoWindow(marker);
     },
+    getIcon(category) {
+      for (let item of this.categories) {
+        if (item.value === category) return item.icon;
+      }
+    },
   },
   computed: {
     userId() {
@@ -151,6 +161,9 @@ export default {
         month = `0${month}`;
       }
       return `${day}/${month}/${year}`;
+    },
+    categories() {
+      return this.$store.state.category.categories;
     },
   },
   created() {
@@ -236,6 +249,14 @@ span {
   width: 70%;
   margin: 60px auto;
   background-color: rgba(0, 0, 0, 0.1);
+}
+.icon-container {
+  display: inline-block;
+  margin-right: 10px;
+}
+.icon {
+  width: 50px;
+  height: 50px;
 }
 .map-container {
   border-radius: 2px;

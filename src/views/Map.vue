@@ -46,15 +46,11 @@
         <b-button
           v-for="(category, index) in categories"
           :key="index"
-          v-b-popover.hover.top="category.text"
+          v-b-popover.hover.top="$t(`category.${category.value}`)"
           variant="outline-info"
           @click="selectedCategory = category.value"
         >
-          <img
-            :src="getIcon(`${category.value}.png`)"
-            width="50rem"
-            height="50rem"
-          />
+          <img :src="category.icon" width="50rem" height="50rem" />
         </b-button>
       </div>
     </div>
@@ -72,40 +68,6 @@ export default {
     return {
       selectedCategory: "all",
       selectedMarker: {},
-      categories: [
-        {
-          text: this.$t("category.all"),
-          value: "all",
-        },
-        {
-          text: this.$t("category.culture"),
-          value: "culture",
-        },
-        {
-          text: this.$t("category.nature"),
-          value: "nature",
-        },
-        {
-          text: this.$t("category.sports"),
-          value: "sports",
-        },
-        {
-          text: this.$t("category.food"),
-          value: "food",
-        },
-        {
-          text: this.$t("category.shopping"),
-          value: "shopping",
-        },
-        {
-          text: this.$t("category.history"),
-          value: "history",
-        },
-        {
-          text: this.$t("category.view"),
-          value: "view",
-        },
-      ],
       currentPosition: {},
       markers: [],
       infoOptions: {
@@ -133,9 +95,6 @@ export default {
       };
       this.toggleInfoWindow(marker);
     },
-    getIcon(icon) {
-      return require(`@/images/${icon}`);
-    },
   },
   computed: {
     selectedMarkers() {
@@ -144,6 +103,9 @@ export default {
         return this.markers.filter((marker) =>
           marker.categories.includes(this.selectedCategory)
         );
+    },
+    categories() {
+      return this.$store.state.category.categories;
     },
   },
   created() {

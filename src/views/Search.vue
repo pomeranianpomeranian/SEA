@@ -6,15 +6,11 @@
         <b-button
           v-for="(category, index) in categories"
           :key="index"
-          v-b-popover.hover.top="category.text"
+          v-b-popover.hover.top="$t(`category.${category.value}`)"
           variant="outline-info"
           @click="changeCategory(category.value)"
         >
-          <img
-            :src="getIcon(`${category.value}.png`)"
-            width="50rem"
-            height="50rem"
-          />
+          <img :src="category.icon" width="50rem" height="50rem" />
         </b-button>
       </div>
       <!-- <h1>{{ categoryDesplay }}</h1> -->
@@ -46,40 +42,6 @@ export default {
   data() {
     return {
       selectedCategory: "all",
-      categories: [
-        {
-          text: this.$t("category.all"),
-          value: "all",
-        },
-        {
-          text: this.$t("category.culture"),
-          value: "culture",
-        },
-        {
-          text: this.$t("category.nature"),
-          value: "nature",
-        },
-        {
-          text: this.$t("category.sports"),
-          value: "sports",
-        },
-        {
-          text: this.$t("category.food"),
-          value: "food",
-        },
-        {
-          text: this.$t("category.shopping"),
-          value: "shopping",
-        },
-        {
-          text: this.$t("category.history"),
-          value: "history",
-        },
-        {
-          text: this.$t("category.view"),
-          value: "view",
-        },
-      ],
     };
   },
   methods: {
@@ -93,9 +55,6 @@ export default {
       this.selectedCategory = category;
       this.$store.dispatch("searchPosts", category);
     },
-    getIcon(icon) {
-      return require(`@/images/${icon}`);
-    },
   },
   computed: {
     posts() {
@@ -106,6 +65,9 @@ export default {
     },
     categoryDesplay() {
       return this.$t(`category.${this.selectedCategory}`);
+    },
+    categories() {
+      return this.$store.state.category.categories;
     },
   },
   created() {

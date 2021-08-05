@@ -25,14 +25,22 @@
         <b-col class="post-content px-5 pt-3" cols="6" offset="">
           <div>
             <h1 class="en-head">{{ postContents.title }}</h1>
-            <!--make each category an icon later-->
-            <span
-              v-for="(category, index) in postContents.categories"
-              :key="index"
-            >
-              {{ category }}
-            </span>
-            <p class="mt-5">{{ postContents.description }}</p>
+            <p class="my-5">{{ postContents.description }}</p>
+            <div>
+              <div
+                class="icon-container"
+                v-for="(category, index) in postContents.categories"
+                :key="index"
+              >
+                <img :id="category" class="icon" :src="getIcon(category)" />
+                <b-tooltip
+                  :target="category"
+                  triggers="hover"
+                  variant="warning"
+                  >{{ $t(`category.${category}`) }}</b-tooltip
+                >
+              </div>
+            </div>
           </div>
           <div>
             <b-button class="col-6" variant="outline-warning" @click="edit">{{
@@ -69,6 +77,11 @@ export default {
         this.$store.dispatch("deleteFiles", this.postId);
       }
     },
+    getIcon(category) {
+      for (let item of this.categories) {
+        if (item.value === category) return item.icon;
+      }
+    },
   },
   computed: {
     userId() {
@@ -82,6 +95,9 @@ export default {
       return `${timestamp.getFullYear()}/${
         timestamp.getMonth() + 1
       }/${timestamp.getDate()}`;
+    },
+    categories() {
+      return this.$store.state.category.categories;
     },
   },
   created() {
@@ -112,5 +128,13 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+}
+.icon-container {
+  display: inline-block;
+  margin-right: 10px;
+}
+.icon {
+  width: 50px;
+  height: 50px;
 }
 </style>
