@@ -25,7 +25,7 @@
         <b-col class="post-content px-5 pt-3" cols="6" offset="">
           <div>
             <h1 class="en-head">{{ postContents.title }}</h1>
-            <p class="my-5">{{ postContents.description }}</p>
+            <p class="description mt-5 mb-3">{{ postContents.description }}</p>
             <div>
               <div
                 class="icon-container"
@@ -36,7 +36,7 @@
                 <b-tooltip
                   :target="category"
                   triggers="hover"
-                  variant="warning"
+                  variant="light"
                   >{{ $t(`category.${category}`) }}</b-tooltip
                 >
               </div>
@@ -136,5 +136,9 @@ export default {
 .icon {
   width: 50px;
   height: 50px;
+}
+.description {
+  height: 50vh;
+  overflow-y: scroll;
 }
 </style>

@@ -50,13 +50,25 @@
     "reauthenticate": "Please login with your old email/password to continue",
     "validation": {
       "length": "Password must be at least 8 characters.",
-      "match": "It doesn't match with your new password."
+      "match": "It doesn't match with your new password.",
+      "submit": "Please make sure to fill out all the inputs before submit!"
     },
     "alert": {
       "emailSuccess": "Email address successfully updated!",
       "emailFail": "Oops! Failed submitting new email address... Try it again!",
       "passwordSuccess": "Password successfully changed!",
       "passwordFail": "Uh oh, Sorry something went wrong... Try it again!"
+    },
+    "instruction": {
+      "title": "Title is up to 30 characters.",
+      "category": "Select at least 1 category.",
+      "image": "You can upload up to 5 photos.",
+      "caption": "Caption is up to 50 characters."
+    },
+    "modal": {
+      "caption": "Caption",
+      "save": "Save",
+      "delete": "Delete this image"
     }
   },
   "placeholder": {

@@ -22,11 +22,11 @@
           </b-carousel>
         </b-col>
 
-        <b-col class="contents pr-2 pt-3" cols="6">
+        <b-col class="contents pr-4 pt-3" cols="6">
           <div>
             <div class="header">
               <h1 class="en-head">{{ postContents.title }}</h1>
-              <b-button variant="faded" @click="updateLike">
+              <b-button class="p-0" variant="faded" @click="updateLike">
                 <b-icon
                   class="icon"
                   v-if="!postContents.isLiked"
@@ -56,7 +56,7 @@
               <span>|</span>
               <span>{{ date }}</span>
             </div>
-            <p class="mt-5">{{ postContents.description }}</p>
+            <p class="description">{{ postContents.description }}</p>
           </div>
           <div>
             <div
@@ -269,6 +269,11 @@ span {
   text-align: center;
   font-size: 24px;
   color: white;
+}
+.description {
+  margin-top: 30px;
+  max-height: 50vh;
+  overflow-y: scroll;
 }
 .line {
   height: 1px;

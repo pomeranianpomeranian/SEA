@@ -26,4 +26,10 @@ export default {
   font-family: "Noto Serif JP", serif;
   font-weight: 900;
 }
+.pointer:hover {
+  cursor: pointer;
+}
+.zoom:hover {
+  cursor: zoom-in;
+}
 </style>
