@@ -1,16 +1,10 @@
 <template>
   <div id="app">
-    <Navbar></Navbar>
     <router-view />
   </div>
 </template>
 <script>
-import Navbar from "./components/Navbar";
-
 export default {
-  components: {
-    Navbar,
-  },
   created() {
     this.$store.dispatch("autoSignIn");
   },
@@ -18,11 +12,24 @@ export default {
 </script>
 
 <style>
-/* #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-} */
+.page-outline {
+  min-height: 100vh;
+  background-color: #f5f7fa;
+  padding-top: 100px;
+  padding-bottom: 40px;
+}
+.en-head {
+  font-family: "Noto Serif", serif;
+  font-weight: 700;
+}
+.ja-head {
+  font-family: "Noto Serif JP", serif;
+  font-weight: 900;
+}
+.pointer:hover {
+  cursor: pointer;
+}
+.zoom:hover {
+  cursor: zoom-in;
+}
 </style>

@@ -1,78 +1,129 @@
 <template>
-  <div class="container mt-5">
-    <b-card no-body class="overflow-hidden">
-      <b-row no-gutters>
-        <b-col cols="4">
-          <div class="images-container d-flex p-3">
-            <b-card-img
-              class="img-thumbnail"
+  <div class="page-outline">
+    <navbar />
+    <b-container>
+      <b-row>
+        <b-col class="pl-0" cols="6">
+          <b-carousel class="slide-show" :interval="4000" controls indicators>
+            <b-carousel-slide
               v-for="(image, index) in postContents.imagesRef"
               :key="index"
-              :src="image.url"
-            ></b-card-img>
+              :caption="image.caption"
+            >
+              <template #img>
+                <div
+                  class="slide-img d-block img-fluid w-100"
+                  :style="{
+                    'background-image': 'url(' + image.url + ')',
+                  }"
+                ></div>
+              </template>
+            </b-carousel-slide>
+          </b-carousel>
+        </b-col>
+
+        <b-col class="contents pr-4 pt-3" cols="6">
+          <div>
+            <div class="header">
+              <h1 class="en-head">{{ postContents.title }}</h1>
+              <b-button class="p-0" variant="faded" @click="updateLike">
+                <b-icon
+                  class="icon"
+                  v-if="!postContents.isLiked"
+                  icon="bookmark"
+                  variant="secondary"
+                ></b-icon>
+                <b-icon
+                  v-else
+                  class="icon"
+                  icon="bookmark-check-fill"
+                  variant="secondary"
+                ></b-icon>
+              </b-button>
+            </div>
+            <div class="user-info">
+              <div
+                class="avatar"
+                v-if="postContents.avatar"
+                :style="{
+                  'background-image': 'url(' + postContents.avatar + ')',
+                }"
+              ></div>
+              <div class="avatar" v-else>
+                <b-icon icon="person-fill"></b-icon>
+              </div>
+              <span>{{ postContents.username }}</span>
+              <span>|</span>
+              <span>{{ date }}</span>
+            </div>
+            <p class="description">{{ postContents.description }}</p>
+          </div>
+          <div>
+            <div
+              class="icon-container"
+              v-for="(category, index) in postContents.categories"
+              :key="index"
+            >
+              <img
+                :id="category"
+                class="category-icon"
+                :src="getIcon(category)"
+              />
+              <b-tooltip :target="category" triggers="hover" variant="light">{{
+                $t(`category.${category}`)
+              }}</b-tooltip>
+            </div>
           </div>
         </b-col>
-        <b-col cols="8">
-          <b-card-body class="card-body container" :title="postContents.title">
-            <div>
-              <b-card-text>
-                {{ postContents.description }}
-              </b-card-text>
-            </div>
-            <div>
-              <span
-                class="badge bg-info text-light"
-                v-for="(category, index) in postContents.categories"
+        <div class="line"></div>
+      </b-row>
+    </b-container>
+    <b-container>
+      <b-row>
+        <b-col class="pl-0" cols="6">
+          <div class="map-container">
+            <GmapMap
+              :center="currentPosition"
+              :zoom="10"
+              map-type-id="terrain"
+              style="width: 100%; height: 500px"
+              justifiy-content-center
+            >
+              <GmapInfoWindow
+                :options="infoOptions"
+                :position="infoWindowPos"
+                :opened="infoWinOpen"
+                @closeclick="infoWinOpen = false"
+                ><span>
+                  {{ selectedMarker.title }}
+                </span>
+              </GmapInfoWindow>
+              <GmapMarker
                 :key="index"
-                >#{{ category }}</span
-              >
-            </div>
-            <div>
-              <comment :postId="postId"></comment>
-            </div>
-          </b-card-body>
+                v-for="(m, index) in markers"
+                :position="m.position"
+                :clickable="true"
+                @click="getPosition(m)"
+              />
+            </GmapMap>
+          </div>
+        </b-col>
+        <b-col class="pr-0" cols="6">
+          <comment :postId="postId" />
         </b-col>
       </b-row>
-      <div class="container p-5">
-        <GmapMap
-          :center="currentPosition"
-          :zoom="10"
-          map-type-id="terrain"
-          style="width: 100%; height: 600px"
-          justifiy-content-center
-        >
-          <GmapInfoWindow
-            :options="infoOptions"
-            :position="infoWindowPos"
-            :opened="infoWinOpen"
-            @closeclick="infoWinOpen = false"
-            ><span>
-              {{ selectedMarker.title }}
-            </span>
-          </GmapInfoWindow>
-          <GmapMarker
-            :key="index"
-            v-for="(m, index) in markers"
-            :position="m.position"
-            :clickable="true"
-            :draggable="true"
-            @click="getPosition(m)"
-          />
-        </GmapMap>
-      </div>
-      <template #footer>
-        <p class="footer mb-0 text-muted">Last updated : {{ date }}</p>
-      </template>
-    </b-card>
+    </b-container>
   </div>
 </template>
 
 <script>
 import comment from "../components/Comment";
+import navbar from "../components/Navbar.vue";
 export default {
   props: ["postId"],
   components: {
     comment,
+    navbar,
   },
   data() {
     return {
@@ -102,6 +153,14 @@ export default {
       this.selectedMarker = marker;
       this.toggleInfoWindow(marker);
     },
+    getIcon(category) {
+      for (let item of this.categories) {
+        if (item.value === category) return item.icon;
+      }
+    },
+    updateLike() {
+      this.$store.dispatch("updateLike", this.postId);
+    },
   },
   computed: {
     userId() {
@@ -112,22 +171,31 @@ export default {
     },
     date() {
       const timestamp = this.postContents.createdAt.toDate();
-      return `${timestamp.getFullYear()}/${
-        timestamp.getMonth() + 1
-      }/${timestamp.getDate()}`;
+      let day = timestamp.getDate();
+      let month = timestamp.getMonth() + 1;
+      const year = timestamp.getFullYear();
+      if (day < 10) {
+        day = `0${day}`;
+      }
+      if (month < 10) {
+        month = `0${month}`;
+      }
+      return `${day}/${month}/${year}`;
+    },
+    categories() {
+      return this.$store.state.category.categories;
     },
   },
   created() {
-    this.$getLocation()
-      .then((coordinates) => {
-        this.currentPosition = coordinates;
-        this.markers.push({
-          title: this.$t("map.current"),
-          position: this.currentPosition,
-        });
-      })
-      .then(() => this.$store.dispatch("getDetails", this.postId));
-    this.markers.push(this.postContents);
+    this.$store.dispatch("getDetails", this.postId);
+    this.$getLocation().then((coordinates) => {
+      this.currentPosition = coordinates;
+      this.markers.push({
+        title: this.$t("map.current"),
+        position: this.currentPosition,
+      });
+      this.markers.push(this.postContents);
+    });
   },
   mounted() {
     let origin = "41.43206,-81.38992";
@@ -151,25 +219,82 @@ export default {
         console.log("err", err);
       });
   },
+  destroyed() {
+    this.$store.commit("clearContents");
+  },
 };
 </script>
 
 <style scoped>
-.images-container {
-  width: 100%;
-  overflow-x: scroll;
+.container {
+  background-color: white;
 }
-.badge {
-  font-size: 1rem;
-  margin-right: 0.5rem;
+.slide-show {
+  border-radius: 2px;
+  overflow: hidden;
+  text-shadow: 1px 1px 2px #333;
 }
-.card-body {
-  height: 100%;
+.slide-img {
+  height: 80vh;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+.contents {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
 }
-.footer {
-  text-align: end;
+.header {
+  display: flex;
+  justify-content: space-between;
+}
+span {
+  margin: 0 10px;
+}
+.user-info {
+  display: flex;
+  align-items: center;
+  color: rgba(0, 0, 0, 0.5);
+}
+.avatar {
+  display: inline-block;
+  background-color: darkgray;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  text-align: center;
+  font-size: 24px;
+  color: white;
+}
+.description {
+  margin-top: 30px;
+  max-height: 50vh;
+  overflow-y: scroll;
+}
+.line {
+  height: 1px;
+  width: 70%;
+  margin: 60px auto;
+  background-color: rgba(0, 0, 0, 0.1);
+}
+.icon-container {
+  display: inline-block;
+  margin-right: 10px;
+}
+.category-icon {
+  width: 50px;
+  height: 50px;
+}
+.icon {
+  width: 30px;
+  height: 30px;
+}
+.map-container {
+  border-radius: 2px;
+  overflow: hidden;
 }
 </style>

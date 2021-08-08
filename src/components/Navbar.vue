@@ -1,8 +1,8 @@
 <template>
   <div>
     <div>
-      <b-navbar toggleable="sm" type="light" variant="light">
-        <b-navbar-brand @click="transfer('home')"
+      <b-navbar toggleable="md" type="light" variant="faded" fixed="top">
+        <b-navbar-brand class="ml-3" @click="transfer('home')"
           ><img
             src="../images/suSEAnaSEA.png"
             class="logo"
@@ -15,6 +15,9 @@
 
         <b-collapse id="nav-collapse" is-nav>
           <b-navbar-nav>
+            <b-nav-item @click="transfer('map')">{{
+              $t("nav.map")
+            }}</b-nav-item>
             <b-nav-item @click="transfer('search')">{{
               $t("nav.search")
             }}</b-nav-item>
@@ -23,7 +26,7 @@
             }}</b-nav-item>
           </b-navbar-nav>
 
-          <b-navbar-nav class="ml-auto">
+          <b-navbar-nav class="ml-auto mr-3">
             <b-nav-item-dropdown :text="$t('form.language')" right>
               <b-dropdown-item @click="$i18n.locale = 'en'"
                 >English</b-dropdown-item
@@ -56,20 +59,23 @@
             >
               <b-nav-form>
                 <b-form-input
-                  size="sm"
+                  size="md"
                   type="email"
                   v-model="email"
                   :placeholder="$t('form.email')"
                 ></b-form-input>
                 <b-form-input
-                  size="sm"
+                  size="md"
                   type="password"
                   v-model="password"
                   :placeholder="$t('form.password')"
                 ></b-form-input>
-                <b-button size="sm" @click="signIn({ email, password })">{{
-                  $t("nav.signin")
-                }}</b-button>
+                <b-button
+                  variant="outline-primary"
+                  size="sm"
+                  @click="signIn({ email, password })"
+                  >{{ $t("nav.signin") }}</b-button
+                >
               </b-nav-form>
             </b-nav-item-dropdown>
           </b-navbar-nav>
@@ -109,5 +115,11 @@ export default {
 <style scoped>
 .logo:hover {
   cursor: pointer;
+}
+.form-inline {
+  flex-flow: unset;
+  align-items: unset;
+  flex-direction: column;
+  padding: 0 0.2rem;
 }
 </style>

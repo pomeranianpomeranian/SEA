@@ -6,37 +6,47 @@ const postRef = firebase.firestore().collection("posts");
 const userRef = firebase.firestore().collection("users");
 const storage = firebase.storage();
 
-const heicDetector = function (path) {
-  if (path.split("").reverse().slice(0, 4).reverse().join("") === "heic")
-    return true;
-  else return false;
-};
+// const heicDetector = function (path) {
+//   if (path.split("").reverse().slice(0, 4).reverse().join("") === "heic")
+//     return true;
+//   else return false;
+// };
 
 const state = {
   comments: [],
   posts: [],
   postContents: null,
+  submitContents: {
+    categories: [],
+    imagesRef: [],
+    pending: false,
+  },
   suggestions: [],
 };
 
 const mutations = {
   clearContents(state) {
     return (state.postContents = {
-      title: null,
-      categories: [],
       imagesRef: [],
-      description: null,
-      position: null,
+      categories: [],
+      pending: false,
     });
   },
   registerComment(state, comment) {
     const timestamp = comment.createdAt.toDate();
-    state.comments.push({
+    let day = timestamp.getDate();
+    let month = timestamp.getMonth() + 1;
+    const year = timestamp.getFullYear();
+    if (day < 10) {
+      day = `0${day}`;
+    }
+    if (month < 10) {
+      month = `0${month}`;
+    }
+    return state.comments.push({
       username: comment.username,
       comment: comment.comment,
-      date: `${timestamp.getFullYear()}/${
-        timestamp.getMonth() + 1
-      }/${timestamp.getDate()}`,
+      date: `${day}/${month}/${year}`,
     });
   },
   registerPosts(state, posts) {
@@ -83,15 +93,14 @@ const mutations = {
 };
 
 const actions = {
-  addLike({ state, rootState }, index) {
-    const target = state.posts[index];
+  addLike({ state, rootState }, postId) {
     userRef
       .doc(rootState.auth.userId)
       .update({
-        likedPosts: firebase.firestore.FieldValue.arrayUnion(target.postId),
+        likedPosts: firebase.firestore.FieldValue.arrayUnion(postId),
       })
       .then(() => {
-        target.isLiked = true;
+        state.postContents.isLiked = true;
       });
   },
   deleteFiles({ dispatch, state }, postId) {
@@ -107,14 +116,25 @@ const actions = {
         });
     }
   },
-  deleteImage({ state }, index) {
+  deleteImage({ state }, path) {
     storage
-      .ref(state.postContents.imagesRef[index].path)
+      .ref(path)
       .delete()
       .then(() => {
+        const index = state.postContents.imagesRef.findIndex(
+          (ref) => (ref.path = path)
+        );
         state.postContents.imagesRef.splice(index, 1);
       });
   },
+  // deleteImage({ state }, index) {
+  //   storage
+  //     .ref(state.postContents.imagesRef[index].path)
+  //     .delete()
+  //     .then(() => {
+  //       state.postContents.imagesRef.splice(index, 1);
+  //     });
+  // },
   deletePost({ rootState }, postId) {
     postRef
       .doc(postId)
@@ -139,21 +159,33 @@ const actions = {
         })
       );
   },
-  getDetails({ state, dispatch }, postId) {
-    state.postContents = null;
+  getDetails({ rootState, state, commit }, postId) {
+    commit("clearContents");
+    const likedPosts = rootState.auth.userDetails.likedPosts;
     postRef
       .doc(postId)
       .get()
       .then((post) => {
-        state.postContents = {
-          ...post.data(),
+        if (likedPosts.includes(postId)) {
+          state.postContents = {
+            ...post.data(),
+            isLiked: true,
+          };
+        } else {
+          state.postContents = {
+            ...post.data(),
+            isLiked: false,
+          };
+        }
+        state.submitContents = {
+          ...state.postContents,
         };
-        dispatch("getSuggestions", postId);
+        // dispatch("getSuggestions", postId);
       });
   },
   getImageURL({ state }, path) {
-    if (!state.postContents) {
-      state.postContents = { imagesRef: [] };
+    if (!state.postContents.imagesRef) {
+      state.postContents.imagesRef = [];
     }
     storage
       .ref(path)
@@ -237,15 +269,14 @@ const actions = {
   //       })
   //       .catch((err) => console.log(err));
   //   },
-  removeLike({ state, rootState }, index) {
-    const target = state.posts[index];
+  removeLike({ state, rootState }, postId) {
     userRef
       .doc(rootState.auth.userId)
       .update({
-        likedPosts: firebase.firestore.FieldValue.arrayRemove(target.postId),
+        likedPosts: firebase.firestore.FieldValue.arrayRemove(postId),
       })
       .then(() => {
-        target.isLiked = false;
+        state.postContents.isLiked = false;
       });
   },
   searchPosts({ commit, state }, category) {
@@ -282,24 +313,23 @@ const actions = {
       });
   },
   storeImage({ dispatch, rootState }, event) {
-    const file = event.target.files[0];
-    const path = `${rootState.auth.userId}/${file.name}`;
-    if (heicDetector(path))
-      alert(
-        "Invalid file format. Make sure the format is 'jpg', 'jpeg' or 'png'"
-      );
-    else {
+    // const file = event.target.files[0];
+    const files = event.target.files;
+    files.forEach((file) => {
+      const path = `${rootState.auth.userId}/${file.name}`;
       storage
         .ref(path)
         .put(file)
         .then(() => {
           dispatch("getImageURL", path);
         });
-    }
+    });
   },
   submitComments({ commit, rootState }, contents) {
     const newComment = {
       username: rootState.auth.userDetails.username,
+      userId: rootState.auth.userId,
+      avatar: rootState.auth.userDetails.avatar,
       comment: contents.comment,
       createdAt: firebase.firestore.Timestamp.now(),
     };
@@ -311,38 +341,44 @@ const actions = {
         commit("registerComment", newComment);
       });
   },
-  submitPost({ commit, state, rootState }, pending) {
+  submitPost({ commit, state, rootState }) {
     postRef
       .add({
-        ...state.postContents,
+        ...state.submitContents,
+        avatar: rootState.auth.userDetails.avatar,
         userId: rootState.auth.userId,
+        username: rootState.auth.userDetails.username,
         createdAt: firebase.firestore.Timestamp.now(),
-        pending,
       })
       .then((res) => {
         commit("transfer", {
           userId: rootState.auth.userId,
           postId: res.id,
         });
+        state.submitContents = {
+          categories: [],
+          imagesRef: [],
+          pending: false,
+        };
       });
   },
-  updateLike({ dispatch, state }, index) {
-    const target = postRef.doc(state.posts[index].postId);
-    if (!state.posts[index].isLiked) {
-      target
+  updateLike({ dispatch, state }, postId) {
+    const post = postRef.doc(postId);
+    if (!state.postContents.isLiked) {
+      post
         .update({
           numLike: firebase.firestore.FieldValue.increment(1),
         })
         .then(() => {
-          dispatch("addLike", index);
+          dispatch("addLike", postId);
         });
     } else {
-      target
+      post
         .update({
           numLike: firebase.firestore.FieldValue.increment(-1),
         })
         .then(() => {
-          dispatch("removeLike", index);
+          dispatch("removeLike", postId);
         });
     }
   },
@@ -350,10 +386,11 @@ const actions = {
     postRef
       .doc(postId)
       .set({
-        ...state.postContents,
+        ...state.submitContents,
         userId: rootState.auth.userId,
+        username: rootState.auth.userDetails.username,
+        avatar: rootState.auth.userDetails.avatar,
         createdAt: firebase.firestore.Timestamp.now(),
-        pending: false,
       })
       .then(() => {
         commit("transfer", {

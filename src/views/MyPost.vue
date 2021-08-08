@@ -1,61 +1,69 @@
 <template>
-  <div class="container mt-5">
-    <b-card no-body class="overflow-hidden">
-      <b-row no-gutters>
-        <b-col cols="4">
-          <div class="images-container d-flex p-3">
-            <b-card-img
-              class="img-thumbnail"
+  <div class="page-outline">
+    <navbar />
+    <b-container>
+      <b-row>
+        <b-col class="p-0" cols="6">
+          <b-carousel class="slide-show" :interval="4000" controls indicators>
+            <b-carousel-slide
               v-for="(image, index) in postContents.imagesRef"
               :key="index"
-              :src="image.url"
-            ></b-card-img>
-          </div>
+              :caption="image.caption"
+            >
+              <template #img>
+                <div
+                  class="slide-img d-block img-fluid w-100"
+                  :style="{
+                    'background-image': 'url(' + image.url + ')',
+                  }"
+                ></div>
+              </template>
+            </b-carousel-slide>
+          </b-carousel>
         </b-col>
-        <b-col cols="8">
-          <b-card-body class="card-body container" :title="postContents.title">
+
+        <b-col class="post-content px-5 pt-3" cols="6" offset="">
+          <div>
+            <h1 class="en-head">{{ postContents.title }}</h1>
+            <p class="description mt-5 mb-3">{{ postContents.description }}</p>
             <div>
-              <b-card-text>
-                {{ postContents.description }}
-              </b-card-text>
-            </div>
-            <div>
-              <span
-                class="badge bg-info text-light"
+              <div
+                class="icon-container"
                 v-for="(category, index) in postContents.categories"
                 :key="index"
-                >#{{ category }}</span
               >
+                <img :id="category" class="icon" :src="getIcon(category)" />
+                <b-tooltip
+                  :target="category"
+                  triggers="hover"
+                  variant="light"
+                  >{{ $t(`category.${category}`) }}</b-tooltip
+                >
+              </div>
             </div>
-            <div>
-              <comment :postId="postId"></comment>
-            </div>
-            <div>
-              <b-button class="col-6" variant="outline-info" @click="edit">{{
-                $t("nav.edit")
-              }}</b-button>
-              <b-button
-                class="col-6"
-                variant="outline-danger"
-                @click="deleteFiles"
-                >{{ $t("nav.delete") }}</b-button
-              >
-            </div>
-          </b-card-body>
+          </div>
+          <div>
+            <b-button class="col-6" variant="outline-warning" @click="edit">{{
+              $t("nav.edit")
+            }}</b-button>
+            <b-button
+              class="col-6"
+              variant="outline-danger"
+              @click="deleteFiles"
+              >{{ $t("nav.delete") }}</b-button
+            >
+          </div>
         </b-col>
       </b-row>
-      <template #footer>
-        <p class="footer mb-0 text-muted">Last updated : {{ date }}</p>
-      </template>
-    </b-card>
+    </b-container>
   </div>
 </template>
 <script>
-import comment from "../components/Comment.vue";
+import navbar from "../components/Navbar.vue";
 export default {
   props: ["postId"],
   components: {
-    comment,
+    navbar,
   },
   methods: {
     edit() {
@@ -67,6 +75,11 @@ export default {
     deleteFiles() {
       if (confirm("Are you sure?")) {
         this.$store.dispatch("deleteFiles", this.postId);
+      }
+    },
+    getIcon(category) {
+      for (let item of this.categories) {
+        if (item.value === category) return item.icon;
       }
     },
   },
@@ -83,6 +96,9 @@ export default {
         timestamp.getMonth() + 1
       }/${timestamp.getDate()}`;
     },
+    categories() {
+      return this.$store.state.category.categories;
+    },
   },
   created() {
     this.$store.dispatch("getDetails", this.postId);
@@ -94,21 +110,35 @@ export default {
 </script>
 
 <style scoped>
-.images-container {
-  width: 100%;
-  overflow-x: scroll;
+.container {
+  background-color: white;
 }
-.badge {
-  font-size: 1rem;
-  margin-right: 0.5rem;
+.slide-show {
+  border-radius: 2px;
+  overflow: hidden;
+  text-shadow: 1px 1px 2px #333;
 }
-.card-body {
-  height: 100%;
+.slide-img {
+  height: 80vh;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+.post-content {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
 }
-.footer {
-  text-align: end;
+.icon-container {
+  display: inline-block;
+  margin-right: 10px;
+}
+.icon {
+  width: 50px;
+  height: 50px;
+}
+.description {
+  height: 50vh;
+  overflow-y: scroll;
 }
 </style>

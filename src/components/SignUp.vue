@@ -1,12 +1,11 @@
 <template>
   <b-container>
     <b-form-row>
-      <b-form @submit="signUp">
+      <b-form class="signup-form" @submit="signUp">
         <b-form-group :label="`${$t('form.username')} :`" label-for="name">
           <b-form-input
             v-model="userDetails.username"
             id="name"
-            placeholder="Enter name"
             required
           ></b-form-input>
         </b-form-group>
@@ -25,7 +24,6 @@
             v-model="authData.email"
             id="email"
             type="email"
-            placeholder="Enter email"
             required
           ></b-form-input>
         </b-form-group>
@@ -35,14 +33,16 @@
             v-model="authData.password"
             id="password"
             type="password"
-            placeholder="Enter password"
             required
           ></b-form-input>
         </b-form-group>
 
-        <b-button type="submit" variant="secondary">{{
-          $t("nav.signup")
-        }}</b-button>
+        <b-button
+          class="submit-button"
+          type="submit"
+          variant="outline-primary"
+          >{{ $t("nav.signup") }}</b-button
+        >
       </b-form>
     </b-form-row>
   </b-container>
@@ -53,11 +53,6 @@ export default {
   data() {
     return {
       langOptions: [
-        {
-          value: "",
-          text: "Please select your preferred language",
-          disabled: true,
-        },
         { value: "en", text: "English" },
         { value: "ja", text: "日本語" },
       ],
@@ -82,3 +77,14 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.signup-form {
+  display: flex;
+  flex-direction: column;
+}
+.submit-button {
+  width: 70%;
+  margin: 20px auto 0 auto;
+}
+</style>

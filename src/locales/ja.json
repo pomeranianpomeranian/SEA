@@ -2,6 +2,7 @@
   "nav": {
     "home": "ホーム",
     "mypage": "マイページ",
+    "map": "地図",
     "search": "検索",
     "pend": "翻訳",
     "newpost": "新規投稿",
@@ -16,7 +17,8 @@
   "comment": {
     "nocomment": "まだコメントはありません",
     "send": "送る",
-    "placeholder": "コメントを入力してください"
+    "placeholder": "コメントを入力してください",
+    "validation": "ログインしてください。"
   },
   "form": {
     "title": "題名",
@@ -29,15 +31,45 @@
     "suggestion": "受け取った翻訳案",
     "email": "メールアドレス",
     "password": "パスワード",
+    "newPassword": "新しいパスワード",
+    "confirmPassword": "パスワード再入力",
+    "changePassword": "パスワードを変更する",
+    "changeEmail": "メールアドレスを変更する",
     "username": "ユーザーネーム",
     "language": "言語",
+    "bio": "ひとこと",
     "add": "追加",
     "update": "更新する",
     "submit": "投稿する",
-    "save": "翻訳を依頼する",
+    "translate": "翻訳を依頼する",
+    "save": "保存",
+    "reset": "リセット",
     "send": "送る",
     "original": "元の投稿",
-    "changed": "変更後"
+    "changed": "変更後",
+    "reauthenticate": "現在のアドレス/パスワードでログインしてください。",
+    "validation": {
+      "length": "パスワードは最低８文字です。",
+      "match": "パスワードが一致しません。",
+      "submit": "すべての項目が記入されているか確認してください。"
+    },
+    "alert": {
+      "emailSuccess": "メールアドレスが変更されました。",
+      "emailFail": "申し訳ございません。エラーが起きたようです。もう一度お願いします。",
+      "passwordSuccess": "パスワードが変更されました。",
+      "passwordFail": "申し訳ございません。エラーが起きたようです。もう一度お願いします。"
+    },
+    "instruction": {
+      "title": "最大で30文字です。",
+      "category": "最低1つ選択してください。",
+      "image": "画像は5枚までアップロード可能です。",
+      "caption": "最大で50文字です。"
+    },
+    "modal": {
+      "caption": "キャプション",
+      "save": "保存する",
+      "delete": "画像を消去する"
+    }
   },
   "placeholder": {
     "title": "素敵な題名をつけてください",
@@ -65,5 +97,9 @@
   },
   "title": {
     "pendboard": "翻訳待ちの投稿"
+  },
+  "user": {
+    "edit": "プロフィールを編集する",
+    "avatar": "画像を変更する"
   }
 }

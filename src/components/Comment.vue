@@ -1,30 +1,50 @@
 <template>
-  <div class="comment-box">
-    <div class="comment-container">
+  <div class="comment-container">
+    <div class="comments">
       <p v-if="!comments[0]">{{ $t("comment.nocomment") }}</p>
       <div
         class="comment-holder"
         v-for="(comment, index) in comments"
         :key="index"
       >
-        <p class="comment">{{ comment.comment }}</p>
-        <div class="info">
-          <p class="username">{{ comment.username }}</p>
-          <p class="date">{{ comment.date }}</p>
+        <div class="user-info">
+          <div
+            class="avatar"
+            v-if="comment.avatar"
+            :style="{
+              'background-image': 'url(' + comment.avatar + ')',
+            }"
+          ></div>
+          <div class="avatar" v-else>
+            <b-icon icon="person-fill"></b-icon>
+          </div>
+          <span>{{ comment.username }}</span>
+          <span>|</span>
+          <span>{{ comment.date }}</span>
         </div>
+        <p class="comment">{{ comment.comment }}</p>
       </div>
     </div>
-    <div v-if="userId && $route.name !== 'mypost'">
-      <b-input-group class="mt-3" sixe="lg">
+    <div>
+      <b-input-group sixe="lg">
         <b-form-textarea
+          class="comment-input"
           v-model="input"
+          :state="loginState"
           :placeholder="$t('comment.placeholder')"
+          aria-describedby="validation"
         ></b-form-textarea>
         <b-input-group-append>
-          <b-button variant="outline-info" @click="submit">{{
-            $t("comment.send")
-          }}</b-button>
+          <b-button
+            variant="info"
+            @click="submit"
+            style="border-bottom-right-radius: 3px"
+            >{{ $t("comment.send") }}</b-button
+          >
         </b-input-group-append>
+        <b-form-invalid-feedback id="validation">
+          {{ $t("comment.validation") }}
+        </b-form-invalid-feedback>
       </b-input-group>
     </div>
   </div>
@@ -36,15 +56,18 @@ export default {
   data() {
     return {
       input: "",
+      loginState: null,
     };
   },
   methods: {
     submit() {
-      this.$store.dispatch("submitComments", {
-        comment: this.input,
-        postId: this.postId,
-      });
-      this.input = "";
+      if (this.userId) {
+        this.$store.dispatch("submitComments", {
+          comment: this.input,
+          postId: this.postId,
+        });
+        this.input = "";
+      } else this.loginState = false;
     },
   },
   computed: {
@@ -65,24 +88,25 @@ export default {
 </script>
 
 <style scoped>
-.comment-box {
-  width: 100%;
-}
 .comment-container {
-  border: 1px solid black;
-  border-radius: 10px;
   width: 100%;
-  height: 150px;
-  overflow-y: scroll;
-  padding: 10px;
-}
-.comment-holder {
-  box-shadow: 5px 2px 2px lightgray;
-  border-radius: 5px;
+  height: 500px;
   display: flex;
   flex-direction: column;
-  padding: 5px;
-  margin: 3px 0;
+  justify-content: space-between;
+  border: 1px solid lightgray;
+  border-radius: 4px;
+}
+.comments {
+  height: 438px;
+  overflow-y: scroll;
+}
+.comment-holder {
+  min-height: 100px;
+  box-shadow: 5px 2px 2px lightgray;
+  border-radius: 5px;
+  padding: 10px;
+  margin: 0;
 }
 .comment {
   width: 100%;
@@ -90,18 +114,33 @@ export default {
   margin: 0;
   padding: 5px;
 }
-.info {
+span {
+  margin: 0 5px;
+}
+.user-info {
   display: flex;
-  justify-content: flex-end;
+  align-items: center;
+  color: rgba(0, 0, 0, 0.5);
 }
-.username {
-  font-weight: bold;
-  margin: 0;
-  padding: 0 3px;
+.avatar {
+  display: inline-block;
+  background-color: darkgray;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  text-align: center;
+  font-size: 24px;
+  color: white;
 }
-.date {
-  font-weight: lighter;
-  color: darkgrey;
-  margin: 0;
+.comment-input {
+  border-radius: 0;
+  border-bottom-left-radius: 3px;
+}
+#validation {
+  position: absolute;
+  bottom: -20px;
 }
 </style>

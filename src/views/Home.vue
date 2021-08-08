@@ -1,15 +1,22 @@
 <template>
-  <div>
-    <div class="backGround" v-if="!userId">
-      <div class="form-container" v-if="$i18n.locale === 'ja'">
+  <div class="home px-5 py-3">
+    <navbar />
+
+    <div class="contents">
+      <div class="comment">
+        <comment />
+      </div>
+      <div class="form-container" v-if="$i18n.locale === 'ja' && !userId">
         <div>
-          <span
-            v-for="(tab, index) in ja.tabs"
-            @click="ja.selectedTab = tab"
-            :class="{ activeTab: ja.selectedTab === tab }"
-            :key="index"
-            >{{ tab }}</span
-          >
+          <b-tabs content-class="mt-3">
+            <b-tab
+              v-for="(tab, index) in ja.tabs"
+              @click="ja.selectedTab = tab"
+              v-bind="{ active: ja.selectedTab === tab }"
+              :key="index"
+              :title="tab"
+            ></b-tab>
+          </b-tabs>
         </div>
 
         <div class="form">
@@ -17,15 +24,17 @@
           <signupForm v-if="ja.selectedTab === 'サインアップ'" />
         </div>
       </div>
-      <div class="form-container" v-if="$i18n.locale === 'en'">
+      <div class="form-container" v-if="$i18n.locale === 'en' && !userId">
         <div>
-          <span
-            v-for="(tab, index) in en.tabs"
-            @click="en.selectedTab = tab"
-            :class="{ activeTab: en.selectedTab === tab }"
-            :key="index"
-            >{{ tab }}</span
-          >
+          <b-tabs content-class="mt-3">
+            <b-tab
+              v-for="(tab, index) in en.tabs"
+              @click="en.selectedTab = tab"
+              v-bind="{ active: en.selectedTab === tab }"
+              :key="index"
+              :title="tab"
+            ></b-tab>
+          </b-tabs>
         </div>
         <div class="form">
           <signinForm v-if="en.selectedTab === 'Sign in'" />
@@ -33,19 +42,18 @@
         </div>
       </div>
     </div>
-    <div class="backGround" id="homeSetting" v-if="userId">
-      <p class="siteTtl">welcome to suSEAnaSEA</p>
-      <!--<h2 class="slogan">welcome to</h2>
-      <h1 class="siteTtl">suSEAnaSEA</h1>-->
-    </div>
   </div>
 </template>
 
 <script>
+import navbar from "../components/Navbar-home.vue";
+import comment from "../components/HomeComment.vue";
 import signinForm from "../components/SignIn";
 import signupForm from "../components/SignUp";
 export default {
   components: {
+    navbar,
+    comment,
     signinForm,
     signupForm,
   },
@@ -70,74 +78,40 @@ export default {
 </script>
 
 <style scoped>
-.backGround {
-  background-image: url("~@/images/seabackground.jpg");
+.home {
+  height: 100vh;
+  background: radial-gradient(
+      72.4% 143.17% at 20% 50%,
+      rgba(0, 0, 0, 0.8) 8.75%,
+      rgba(0, 0, 0, 0) 100%
+    ),
+    url(~@/images/sorasak-_UIN-pFfJ7c-unsplash-min.jpg);
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
-  width: 100%;
-  height: 800px;
 }
-#homeSetting {
+.contents {
+  margin-top: 15vh;
+  max-height: 100%;
   display: flex;
-  justify-content: center;
+  justify-content: space-around;
+  align-items: flex-start;
 }
 .form-container {
-  padding-top: 100px;
+  width: 350px;
+  min-width: 200px;
+  border-radius: 4px;
+  padding: 30px 0;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-}
-.changeTab {
-  display: flex;
-  flex-direction: row;
-}
-span {
-  margin: 10px;
-  color: white;
+  background-color: rgba(255, 255, 255, 0.9);
 }
 .form {
   margin-top: 10px;
-  display: flex;
-  justify-content: space-around;
 }
-.activeTab {
-  color: darkgray;
-}
-.slogan {
-  color: white;
-  text-align: center;
-  padding-top: 300px;
-  font-size: 50px;
-}
-.siteTtl {
-  color: white;
-  text-align: center;
-  font-size: 100px;
-}
-
-@keyframes typing {
-  from {
-    width: 0;
-  }
-}
-@keyframes caret {
-  50% {
-    border-color: transparent;
-  }
-}
-
-.siteTtl {
-  font-family: monospace;
-  width: 21ch;
-  height: 5rem;
-  border-right: 0.08em solid;
-  overflow: hidden;
-  font-size: 4em;
-  white-space: nowrap;
-  animation: typing 5s steps(21, end), caret 0.5s step-end infinite;
-  text-align: center;
-  margin-top: 30px;
+.comment {
+  max-width: 50%;
 }
 </style>

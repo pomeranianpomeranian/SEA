@@ -1,13 +1,14 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 import Home from "../views/Home.vue";
+import Map from "../views/Map.vue";
 import Search from "../views/Search.vue";
-import Result from "../views/Result.vue";
 import Details from "../views/Details.vue";
 import NewPost from "../views/NewPost.vue";
 import MyPost from "../views/MyPost.vue";
 import Edit from "../views/Edit.vue";
 import User from "../views/User.vue";
+import Profile from "../views/Profile.vue";
 import PendingBoard from "../views/PendingBoard.vue";
 import Translate from "../views/Translate.vue";
 
@@ -31,18 +32,17 @@ const routes = [
     props: true,
   },
   {
-    path: "/search",
+    path: "/map",
+    name: "map",
+    component: Map,
+  },
+  {
+    path: "/search/:category",
     name: "search",
     component: Search,
   },
   {
-    path: "/result/:category",
-    name: "result",
-    component: Result,
-    props: true,
-  },
-  {
-    path: "/result/:postId",
+    path: "/search/:postId",
     name: "details",
     component: Details,
     props: true,
@@ -51,6 +51,15 @@ const routes = [
     path: "/user/:userId",
     name: "user",
     component: User,
+    props: true,
+    meta: {
+      requireAuth: true,
+    },
+  },
+  {
+    path: "/user/:userId/profile",
+    name: "profile",
+    component: Profile,
     props: true,
     meta: {
       requireAuth: true,
