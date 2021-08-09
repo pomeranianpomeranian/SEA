@@ -1,28 +1,18 @@
 <template>
-  <div>
+  <div class="page-outline">
     <navbar />
-    <div class="container top">
-      <h2 class="text-center mb-5">{{ $t("title.pendboard") }}</h2>
-      <div
-        class="card my-3 col-8 offset-2"
-        v-for="(post, index) in posts"
-        @click="transfer(post.postId)"
-        :key="index"
-      >
-        <div class="row g-0">
-          <div class="col-md-4">
-            <img
-              class="img-thumbnail"
-              :src="post.imagesRef[0].url"
-              alt=""
-              width="100%"
-              height="100%"
-            />
-          </div>
-          <div class="col-md-8">
-            <div class="card-body d-flex flex-column justify-content-around">
-              <h4 class="card-title">{{ post.title }}</h4>
-              <p class="card-text">{{ post.description }}</p>
+    <div class="container p-3">
+      <div class="row">
+        <div class="col-4 mb-5" v-for="(post, index) in posts" :key="index">
+          <div class="holder" @click="transfer(post.postId)">
+            <div
+              class="thumbnail-img"
+              :style="{
+                'background-image': 'url(' + post.imagesRef[0].url + ')',
+              }"
+            ></div>
+            <div class="card-content">
+              <h4>{{ post.title }}</h4>
             </div>
           </div>
         </div>
@@ -54,24 +44,31 @@ export default {
 </script>
 
 <style scoped>
-.card:hover {
+.holder {
+  padding: 0;
+  margin: auto;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: white;
+  transition-property: box-shadow, transform;
+  transition-duration: 200ms;
+  transition-timing-function: ease-out;
+}
+.holder:hover {
   cursor: pointer;
+  box-shadow: 0 15px 30px rgba(26, 49, 88, 0.15);
+  transform: translateY(-2px);
 }
-.card-body {
-  height: 100%;
+.thumbnail-img {
+  height: 300px;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
 }
-.card-text {
-  font-size: 1.2rem;
-}
-.post-box {
-  width: 80%;
-  min-height: 300px;
-  padding: 30px;
-  border: 2px solid darkgrey;
-  border-radius: 10px;
-}
-.post-holder {
-  border: 1px solid darkgray;
-  border-radius: 5px;
+.card-content {
+  font-family: "Noto Serif", serif;
+  font-weight: 400;
+  padding: 15px 0;
+  text-align: center;
 }
 </style>

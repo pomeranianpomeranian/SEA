@@ -301,7 +301,7 @@ const actions = {
       .add({
         title: suggestion.title,
         description: suggestion.description,
-        name: rootState.auth.userDetails.username,
+        userId: rootState.auth.userId,
       })
       .then(() => {
         postRef.doc(suggestion.postId).update({
