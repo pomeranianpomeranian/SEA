@@ -4,11 +4,11 @@
       <b-navbar toggleable="md" type="light" variant="faded" fixed="top">
         <b-navbar-brand class="ml-3" @click="transfer('home')"
           ><img
-            src="../images/suSEAnaSEA.png"
+            src="../images/SEA-logo.svg"
             class="logo"
             alt=""
             width="80px"
-            height="30px"
+            height="40px"
         /></b-navbar-brand>
 
         <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>

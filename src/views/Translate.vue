@@ -133,6 +133,7 @@ export default {
 
 <style scoped>
 .client {
+  height: 100%;
   background-color: white;
   border-radius: 2px;
   overflow: hidden;
