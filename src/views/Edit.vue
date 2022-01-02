@@ -2,18 +2,21 @@
   <div class="page-outline">
     <navbar />
     <b-container>
-      <b-alert :show="suggestions.length" fade variant="info"
-        >You got {{ suggestions.length }} suggestions!</b-alert
-      >
-      <b-alert :show="!suggestions.length" fade variant="secondary"
-        >You haven't got any suggestion yet. Hang on!</b-alert
-      >
+      <div v-if="originalContents.pending === true">
+        <b-alert :show="suggestions.length" fade variant="info"
+          >You got {{ suggestions.length }} suggestions!</b-alert
+        >
+        <b-alert :show="!suggestions.length" fade variant="secondary"
+          >You haven't got any suggestion yet. Hang on!</b-alert
+        >
+      </div>
       <b-row>
         <postForm :postId="postId" />
       </b-row>
     </b-container>
     <div v-if="suggestions.length" class="overflow-auto p-3">
       <b-pagination
+        v-if="originalContents.pending === true"
         align="center"
         pills
         v-model="selected"

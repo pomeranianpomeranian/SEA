@@ -12,10 +12,11 @@
             >
               <template #img>
                 <div
-                  class="slide-img d-block img-fluid w-100"
+                  class="slide-img zoom img-fluid w-100"
                   :style="{
                     'background-image': 'url(' + image.url + ')',
                   }"
+                  @click="openModal(index)"
                 ></div>
               </template>
             </b-carousel-slide>
@@ -113,6 +114,16 @@
         </b-col>
       </b-row>
     </b-container>
+    <b-modal ref="img-modal" hide-footer centered size="xl">
+      <div
+        class="slide-img img-modal img-fluid"
+        :style="{
+          'background-image': 'url(' + selectedImage.url + ')',
+        }"
+      >
+        <p>{{ selectedImage.caption }}</p>
+      </div>
+    </b-modal>
   </div>
 </template>
 
@@ -127,6 +138,7 @@ export default {
   },
   data() {
     return {
+      selectedImage: {},
       selectedMarker: {},
       markers: [],
       currentPosition: {},
@@ -160,6 +172,12 @@ export default {
     },
     updateLike() {
       this.$store.dispatch("updateLike", this.postId);
+    },
+    openModal(index) {
+      this.selectedImage = {
+        ...this.postContents.imagesRef[index],
+      };
+      this.$refs["img-modal"].show();
     },
   },
   computed: {
@@ -239,6 +257,16 @@ export default {
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
+}
+.img-modal {
+  background-size: contain;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  font-size: 20px;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  color: white;
 }
 .contents {
   display: flex;

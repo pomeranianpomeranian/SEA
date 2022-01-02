@@ -51,7 +51,7 @@
     "validation": {
       "length": "Password must be at least 8 characters.",
       "match": "It doesn't match with your new password.",
-      "submit": "Please make sure to fill out all the inputs before submit!"
+      "submit": "Please make sure that all the inputs are correctly filled out!"
     },
     "alert": {
       "emailSuccess": "Email address successfully updated!",

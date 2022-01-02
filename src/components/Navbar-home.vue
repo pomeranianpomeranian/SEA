@@ -9,11 +9,11 @@
     >
       <b-navbar-brand @click="transfer('home')"
         ><img
-          src="../images/suSEAnaSEA.png"
+          src="../images/SEA-logo.svg"
           class="logo"
           alt=""
           width="80px"
-          height="30px"
+          height="40px"
       /></b-navbar-brand>
 
       <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
@@ -117,6 +117,11 @@ export default {
 </script>
 
 <style scoped>
+.logo {
+  background-color: rgba(255, 255, 255);
+  padding: 0 3px;
+  border-radius: 2px;
+}
 .logo:hover {
   cursor: pointer;
 }

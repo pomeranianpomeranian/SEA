@@ -271,7 +271,7 @@ export default {
       else return this.postContents.description.length > 0;
     },
     captionValidation() {
-      if (!this.selectedImage.caption) return null;
+      if (this.selectedImage.caption == null) return null;
       else return this.selectedImage.caption.length <= 50;
     },
     imageValidation() {
