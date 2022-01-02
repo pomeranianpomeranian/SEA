@@ -161,12 +161,12 @@ const actions = {
   },
   getDetails({ rootState, state, commit }, postId) {
     commit("clearContents");
-    const likedPosts = rootState.auth.userDetails.likedPosts;
+    const userDetails = rootState.auth.userDetails;
     postRef
       .doc(postId)
       .get()
       .then((post) => {
-        if (likedPosts.includes(postId)) {
+        if (userDetails != null && userDetails.likedPosts.includes(postId)) {
           state.postContents = {
             ...post.data(),
             isLiked: true,
